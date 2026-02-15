@@ -68,7 +68,7 @@ export function HeroSection() {
         }}
       />
 
-      <div className="mx-auto max-w-6xl px-4 py-16 lg:px-8 lg:py-24">
+      <div className="mx-auto max-w-6xl px-4 pt-16 pb-8 lg:px-8 lg:pt-24 lg:pb-12">
         <div className="grid items-center gap-12 lg:grid-cols-2 lg:gap-16">
           {/* --- Text block with staggered fade-in --- */}
           <div className="flex flex-col gap-6">
