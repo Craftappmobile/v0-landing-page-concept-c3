@@ -12,9 +12,10 @@ const testimonials = [
     stars: 5,
   },
   {
-    name: "Тетяна К.",
+    name: "Мар'яна Б.",
     role: "Майстриня в'язання",
-    avatar: "/images/avatar-2.jpg",
+    avatar: "/images/avatar-maryana.png",
+    profileUrl: "https://www.facebook.com/maryana.boiko.2025",
     text: "Облік пряжі — моя улюблена функція. Тепер я точно знаю, що лежить у кожній скриньці, і більше не купую зайве. Економлю і час, і гроші!",
     stars: 5,
   },
