@@ -6,7 +6,7 @@ import { Button } from "@/components/ui/button"
 import { ArrowRight, Play } from "lucide-react"
 
 const YOUTUBE_VIDEO_ID = "5w-8U1mGz3o"
-const POSTER_URL = `https://img.youtube.com/vi/${YOUTUBE_VIDEO_ID}/maxresdefault.jpg`
+const POSTER_URL = "/images/video-poster.jpg"
 
 export function HeroSection() {
   const [isPlaying, setIsPlaying] = useState(false)
