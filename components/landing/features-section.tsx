@@ -1,4 +1,3 @@
-import Image from "next/image"
 import { Calculator, BarChart3, ImageIcon, Package } from "lucide-react"
 
 const features = [
@@ -65,18 +64,7 @@ export function FeaturesSection() {
           ))}
         </div>
 
-        <div className="mt-16 flex justify-center">
-          <div className="relative w-full max-w-lg">
-            <div className="absolute -inset-4 rounded-3xl bg-primary/5 blur-2xl" />
-            <Image
-              src="/images/app-mockup.jpg"
-              alt="Інтерфейс мобільного додатку"
-              width={520}
-              height={400}
-              className="relative rounded-2xl object-cover shadow-xl"
-            />
-          </div>
-        </div>
+
       </div>
     </section>
   )
