@@ -16,8 +16,8 @@ const plans = [
     price: "599.99",
     period: "6 міс",
     perMonth: "100 грн/місяць",
-    badge: "Економія ~310 грн",
-    badgeStyle: "bg-primary/10 text-primary",
+    badge: null,
+    badgeStyle: "",
     highlighted: false,
   },
   {
@@ -34,8 +34,8 @@ const plans = [
     price: "4 585",
     period: "назавжди",
     perMonth: null,
-    badge: "Безліміт",
-    badgeStyle: "bg-accent text-accent-foreground",
+    badge: null,
+    badgeStyle: "",
     highlighted: false,
     isUnlimited: true,
   },
@@ -77,7 +77,7 @@ export function PricingSection() {
                 </div>
               ) : null}
 
-              <h3 className="text-lg font-bold text-foreground">{plan.name}</h3>
+              <h3 className={`text-lg font-bold text-foreground ${plan.highlighted ? "text-center" : ""}`}>{plan.name}</h3>
 
               {!plan.highlighted && plan.badge && (
                 <span
@@ -88,7 +88,7 @@ export function PricingSection() {
                 </span>
               )}
 
-              <div className="mt-5 flex items-baseline gap-1.5">
+              <div className={`mt-5 flex items-baseline gap-1.5 ${plan.highlighted ? "justify-center" : ""}`}>
                 <span className="text-4xl font-bold text-foreground">
                   {plan.price}
                 </span>
@@ -101,7 +101,7 @@ export function PricingSection() {
               </div>
 
               {plan.perMonth && (
-                <p className="mt-1 text-sm font-medium text-primary">
+                <p className={`mt-1 text-sm font-medium text-primary ${plan.highlighted ? "text-center" : ""}`}>
                   {plan.perMonth}
                 </p>
               )}
