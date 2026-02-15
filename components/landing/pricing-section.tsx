@@ -88,14 +88,14 @@ export function PricingSection() {
                 </span>
               )}
 
-              <div className={`mt-5 flex items-baseline gap-1.5 ${plan.highlighted ? "justify-center" : ""}`}>
-                <span className="text-4xl font-bold text-foreground">
+              <div className={`mt-5 flex flex-wrap items-baseline gap-x-1.5 gap-y-0 ${plan.highlighted ? "justify-center" : ""}`}>
+                <span className="whitespace-nowrap text-2xl font-bold text-foreground sm:text-3xl">
                   {plan.price}
                 </span>
-                <span className="text-base text-muted-foreground">
+                <span className="text-sm text-muted-foreground sm:text-base">
                   {"грн"}
                 </span>
-                <span className="text-base text-muted-foreground">
+                <span className="text-sm text-muted-foreground sm:text-base">
                   {"/ " + plan.period}
                 </span>
               </div>
