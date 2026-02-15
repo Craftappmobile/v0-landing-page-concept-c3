@@ -25,7 +25,7 @@ export function CommunitySection() {
               {"Не просто інструмент, а родина в'язальниць"}
             </h2>
             <p className="text-lg leading-relaxed text-muted-foreground">
-              {"Публікуйте свої готові роботи, отримуйте підтримку, знаходьте натхнення за хештегами та діліться досвідом з тисячами майстринь з усього світу!"}
+              {"Публікуйте свої готові роботи, отримуйте підтримку, знаходьте натхнення за хештегами та діліться досвідом з тисячами майстринь з України!"}
             </p>
 
             <div className="flex flex-col gap-4">
@@ -40,7 +40,7 @@ export function CommunitySection() {
                 },
                 {
                   icon: MessageCircle,
-                  text: "Спілкуйтеся з майстринями з усього світу",
+                  text: "Спілкуйтеся з майстринями з України",
                 },
               ].map((item, i) => (
                 <div key={i} className="flex items-center gap-3">
