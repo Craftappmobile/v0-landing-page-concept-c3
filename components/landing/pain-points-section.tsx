@@ -1,4 +1,12 @@
-function YarnBall({ color, highlight }: { color: string; highlight: string }) {
+function YarnBall({
+  color,
+  highlight,
+  index = 0,
+}: {
+  color: string
+  highlight: string
+  index?: number
+}) {
   return (
     <svg
       width="40"
@@ -7,6 +15,8 @@ function YarnBall({ color, highlight }: { color: string; highlight: string }) {
       fill="none"
       xmlns="http://www.w3.org/2000/svg"
       aria-hidden="true"
+      className="yarn-ball"
+      style={{ animationDelay: `${index * 0.6}s` }}
     >
       <circle cx="20" cy="20" r="16" fill={color} />
       <circle cx="20" cy="20" r="16" fill="url(#yarn-shade)" fillOpacity="0.15" />
@@ -91,6 +101,35 @@ const painPoints = [
 export function PainPointsSection() {
   return (
     <section className="bg-secondary/50 pt-10 pb-16 lg:pt-12 lg:pb-20">
+      <style
+        dangerouslySetInnerHTML={{
+          __html: `
+            @keyframes yarn-bounce {
+              0%, 100% { transform: translateY(0) rotate(0deg); }
+              25%      { transform: translateY(-6px) rotate(-8deg); }
+              50%      { transform: translateY(0) rotate(0deg); }
+              75%      { transform: translateY(-3px) rotate(5deg); }
+            }
+            .yarn-ball {
+              animation: yarn-bounce 3s ease-in-out infinite;
+              transition: transform 0.3s ease;
+            }
+            .group:hover .yarn-ball {
+              animation: none;
+              transform: rotate(360deg) scale(1.15);
+              transition: transform 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
+            }
+            @media (prefers-reduced-motion: reduce) {
+              .yarn-ball {
+                animation: none;
+              }
+              .group:hover .yarn-ball {
+                transform: none;
+              }
+            }
+          `,
+        }}
+      />
       <div className="mx-auto max-w-6xl px-4 lg:px-8">
         <div className="mb-12 text-center">
           <h2 className="font-serif text-3xl tracking-tight text-foreground sm:text-4xl text-balance">
@@ -108,7 +147,7 @@ export function PainPointsSection() {
               className="group flex gap-4 rounded-xl bg-card p-5 shadow-sm transition-all hover:shadow-md"
             >
               <div className="shrink-0">
-                <YarnBall color={point.color} highlight={point.highlight} />
+                <YarnBall color={point.color} highlight={point.highlight} index={i} />
               </div>
               <div>
                 <h3 className="font-semibold text-foreground">{point.text}</h3>
