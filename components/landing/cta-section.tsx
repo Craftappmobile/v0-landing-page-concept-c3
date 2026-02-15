@@ -15,7 +15,7 @@ export function CtaSection() {
           {"Почніть в'язати розумніше вже сьогодні"}
         </h2>
         <p className="mx-auto mt-4 max-w-xl text-lg leading-relaxed text-primary-foreground/80">
-          {"Приєднуйтесь до 10,000+ майстринь, які вже довірили свої розрахунки додатку. 7 днів безкоштовного Premium-доступу!"}
+          {"Приєднуйтесь до 1000+ майстринь, які вже довірили свої розрахунки додатку."}
         </p>
         <div className="mt-8 flex flex-col items-center justify-center gap-3 sm:flex-row">
           <Button
@@ -25,7 +25,7 @@ export function CtaSection() {
             asChild
           >
             <Link href="#pricing">
-              {"Спробувати 7 днів безкоштовно"}
+              {"Хочу ідеальні вироби з першого разу"}
               <ArrowRight className="h-4 w-4" />
             </Link>
           </Button>
