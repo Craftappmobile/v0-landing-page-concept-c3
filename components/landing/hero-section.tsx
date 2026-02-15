@@ -1,9 +1,17 @@
-import Image from "next/image"
+"use client"
+
+import { useState } from "react"
 import Link from "next/link"
+import Image from "next/image"
 import { Button } from "@/components/ui/button"
-import { ArrowRight } from "lucide-react"
+import { ArrowRight, Play } from "lucide-react"
+
+const YOUTUBE_VIDEO_ID = "5w-8U1mGz3o"
+const POSTER_URL = `https://img.youtube.com/vi/${YOUTUBE_VIDEO_ID}/maxresdefault.jpg`
 
 export function HeroSection() {
+  const [isPlaying, setIsPlaying] = useState(false)
+
   return (
     <section className="relative overflow-hidden bg-background">
       {/* Animation keyframes */}
@@ -14,14 +22,9 @@ export function HeroSection() {
               from { opacity: 0; transform: translateY(24px); }
               to   { opacity: 1; transform: translateY(0); }
             }
-            @keyframes hero-image-reveal {
+            @keyframes hero-video-reveal {
               from { opacity: 0; transform: scale(0.92); }
               to   { opacity: 1; transform: scale(1); }
-            }
-            @keyframes hero-ken-burns {
-              0%   { transform: scale(1)    translate(0, 0); }
-              50%  { transform: scale(1.06) translate(-1%, -1%); }
-              100% { transform: scale(1)    translate(0, 0); }
             }
             @keyframes hero-glow-pulse {
               0%, 100% { opacity: 0.4; transform: scale(1); }
@@ -40,12 +43,9 @@ export function HeroSection() {
               opacity: 0;
               animation: hero-fade-in 0.8s ease-out 0.5s forwards;
             }
-            .hero-image-container {
+            .hero-video-container {
               opacity: 0;
-              animation: hero-image-reveal 1s ease-out 0.4s forwards;
-            }
-            .hero-image-animated {
-              animation: hero-ken-burns 18s ease-in-out infinite;
+              animation: hero-video-reveal 1s ease-out 0.4s forwards;
             }
             .hero-glow {
               animation: hero-glow-pulse 4s ease-in-out infinite;
@@ -55,11 +55,10 @@ export function HeroSection() {
               .hero-text-1,
               .hero-text-2,
               .hero-text-3,
-              .hero-image-container {
+              .hero-video-container {
                 opacity: 1;
                 animation: none;
               }
-              .hero-image-animated,
               .hero-glow {
                 animation: none;
               }
@@ -93,19 +92,51 @@ export function HeroSection() {
             </div>
           </div>
 
-          {/* --- Image with fade-in + scale entrance + Ken Burns loop --- */}
+          {/* --- YouTube Shorts video with lazy load --- */}
           <div className="relative flex items-center justify-center lg:justify-end">
-            <div className="hero-image-container relative w-full max-w-md">
+            <div className="hero-video-container relative w-full max-w-[280px] sm:max-w-[300px]">
               <div className="hero-glow absolute -inset-4 rounded-3xl bg-primary/5 blur-2xl" />
-              <div className="relative overflow-hidden rounded-2xl shadow-xl">
-                <Image
-                  src="/images/hero-knitting.jpg"
-                  alt="В'язання з додатком Розрахуй і В'яжи"
-                  width={520}
-                  height={580}
-                  className="hero-image-animated block w-full object-cover"
-                  priority
-                />
+              <div className="relative overflow-hidden rounded-2xl shadow-xl bg-foreground/5 aspect-[9/16]">
+                {!isPlaying ? (
+                  <button
+                    onClick={() => setIsPlaying(true)}
+                    className="group relative block h-full w-full cursor-pointer border-0 bg-transparent p-0"
+                    aria-label="Відтворити відео про додаток Розрахуй і В'яжи"
+                  >
+                    {/* Poster thumbnail */}
+                    <Image
+                      src={POSTER_URL}
+                      alt="Превью відео додатку Розрахуй і В'яжи"
+                      fill
+                      className="object-cover transition-transform duration-500 group-hover:scale-105"
+                      sizes="300px"
+                      priority
+                    />
+                    {/* Dark overlay */}
+                    <div className="absolute inset-0 bg-foreground/20 transition-colors duration-300 group-hover:bg-foreground/10" />
+                    {/* Play button */}
+                    <div className="absolute inset-0 flex items-center justify-center">
+                      <div className="flex h-16 w-16 items-center justify-center rounded-full bg-primary text-primary-foreground shadow-lg transition-transform duration-300 group-hover:scale-110">
+                        <Play className="h-7 w-7 translate-x-0.5" fill="currentColor" />
+                      </div>
+                    </div>
+                    {/* Label */}
+                    <div className="absolute bottom-4 left-0 right-0 text-center">
+                      <span className="rounded-full bg-background/80 px-3 py-1 text-xs font-medium text-foreground backdrop-blur-sm">
+                        {"Дивитись демо додатку"}
+                      </span>
+                    </div>
+                  </button>
+                ) : (
+                  <iframe
+                    src={`https://www.youtube-nocookie.com/embed/${YOUTUBE_VIDEO_ID}?autoplay=1&rel=0&modestbranding=1&playsinline=1`}
+                    title="Демо додатку Розрахуй і В'яжи"
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                    allowFullScreen
+                    className="absolute inset-0 h-full w-full border-0"
+                    loading="lazy"
+                  />
+                )}
               </div>
             </div>
           </div>
