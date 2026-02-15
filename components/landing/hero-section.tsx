@@ -29,26 +29,7 @@ export function HeroSection() {
               </Button>
             </div>
 
-            <div className="flex items-center gap-4 pt-2">
-              <div className="flex -space-x-2">
-                {["/images/avatar-1.jpg", "/images/avatar-2.jpg", "/images/avatar-3.jpg"].map(
-                  (src, i) => (
-                    <Image
-                      key={i}
-                      src={src}
-                      alt="Користувач додатку"
-                      width={36}
-                      height={36}
-                      className="rounded-full border-2 border-background object-cover"
-                    />
-                  )
-                )}
-              </div>
-              <div className="text-sm text-muted-foreground">
-                <span className="font-semibold text-foreground">{"10,000+"}</span>{" "}
-                {"майстринь вже обрали нас"}
-              </div>
-            </div>
+
           </div>
 
           <div className="relative flex items-center justify-center lg:justify-end">
