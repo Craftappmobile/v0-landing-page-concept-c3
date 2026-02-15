@@ -1,3 +1,4 @@
+import Image from "next/image"
 import Link from "next/link"
 import { Mail } from "lucide-react"
 
@@ -8,9 +9,13 @@ export function Footer() {
         <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-4">
           <div className="sm:col-span-2 lg:col-span-1">
             <Link href="/" className="flex items-center gap-2">
-              <span className="flex h-9 w-9 items-center justify-center rounded-lg bg-primary text-primary-foreground font-serif text-lg">
-                P
-              </span>
+              <Image
+                src="/images/logo.jpg"
+                alt="Розрахуй і В'яжи логотип"
+                width={36}
+                height={36}
+                className="h-9 w-9 rounded-lg object-cover"
+              />
               <span className="text-lg font-semibold tracking-tight text-foreground">
                 {"Розрахуй і В'яжи"}
               </span>

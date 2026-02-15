@@ -1,6 +1,7 @@
 "use client"
 
 import { useState } from "react"
+import Image from "next/image"
 import Link from "next/link"
 import { Menu, X } from "lucide-react"
 import { Button } from "@/components/ui/button"
@@ -12,9 +13,13 @@ export function Header() {
     <header className="sticky top-0 z-50 w-full border-b border-border/40 bg-background/80 backdrop-blur-md">
       <div className="mx-auto flex max-w-6xl items-center justify-between px-4 py-3 lg:px-8">
         <Link href="/" className="flex items-center gap-2">
-          <span className="flex h-9 w-9 items-center justify-center rounded-lg bg-primary text-primary-foreground font-serif text-lg">
-            P
-          </span>
+          <Image
+              src="/images/logo.jpg"
+              alt="Розрахуй і В'яжи логотип"
+              width={36}
+              height={36}
+              className="h-9 w-9 rounded-lg object-cover"
+            />
           <span className="text-lg font-semibold tracking-tight text-foreground">
             {"Розрахуй і В'яжи"}
           </span>
