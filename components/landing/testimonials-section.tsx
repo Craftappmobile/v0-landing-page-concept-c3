@@ -1,11 +1,13 @@
 import Image from "next/image"
+import Link from "next/link"
 import { Star } from "lucide-react"
 
 const testimonials = [
   {
-    name: "Оксана М.",
+    name: "Оксана Г.",
     role: "В'яже 5 років",
-    avatar: "/images/avatar-1.jpg",
+    avatar: "/images/avatar-oksana.png",
+    profileUrl: "https://www.facebook.com/oksana.gruseckaa.180964",
     text: "Нарешті я перестала витрачати вечори на перерахунки! Калькулятор реглану — це магія. Один раз ввела свої мірки, і все ідеально сіло.",
     stars: 5,
   },
@@ -64,7 +66,18 @@ export function TestimonialsSection() {
                   className="rounded-full object-cover"
                 />
                 <div>
-                  <p className="text-sm font-semibold text-foreground">{t.name}</p>
+                  {t.profileUrl ? (
+                    <Link
+                      href={t.profileUrl}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-sm font-semibold text-foreground underline-offset-2 hover:underline"
+                    >
+                      {t.name}
+                    </Link>
+                  ) : (
+                    <p className="text-sm font-semibold text-foreground">{t.name}</p>
+                  )}
                   <p className="text-xs text-muted-foreground">{t.role}</p>
                 </div>
               </div>
