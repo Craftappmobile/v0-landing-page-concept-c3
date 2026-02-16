@@ -42,6 +42,10 @@ export function HeroSection() {
               opacity: 0;
               animation: hero-fade-in 0.8s ease-out 0.5s forwards;
             }
+            .hero-text-4 {
+              opacity: 0;
+              animation: hero-fade-in 0.8s ease-out 0.7s forwards;
+            }
             .hero-video-container {
               opacity: 0;
               animation: hero-video-reveal 1s ease-out 0.4s forwards;
@@ -54,6 +58,7 @@ export function HeroSection() {
               .hero-text-1,
               .hero-text-2,
               .hero-text-3,
+              .hero-text-4,
               .hero-video-container {
                 opacity: 1;
                 animation: none;
@@ -69,16 +74,47 @@ export function HeroSection() {
       <div className="mx-auto max-w-6xl px-4 pt-16 pb-8 lg:px-8 lg:pt-24 lg:pb-12">
         <div className="grid items-center gap-8 lg:grid-cols-[1fr_320px] lg:gap-10">
           {/* --- Text block with staggered fade-in --- */}
-          <div className="flex flex-col gap-6">
+          <div className="flex flex-col gap-5">
             <h1 className="hero-text-1 font-serif text-4xl leading-tight tracking-tight text-foreground sm:text-5xl lg:text-6xl text-balance">
               {"В'яжіть із задоволенням, а складні розрахунки залиште нам!"}
             </h1>
 
-            <p className="hero-text-2 max-w-lg text-lg leading-relaxed text-muted-foreground">
-              {"30 професійних калькуляторів, розумний облік пряжі, трекер проєктів та натхнення від тисяч в'язальниць — у вашій кишені."}
+            <p className="hero-text-2 max-w-xl text-lg leading-relaxed text-muted-foreground">
+              {"Перший в Україні додаток, де є все для в'язання. 30 професійних калькуляторів, розумний облік пряжі, зручний трекер проєктів та спільнота однодумців. Заощаджуйте години на математиці та присвятьте їх творчості."}
             </p>
 
-            <div className="hero-text-3 flex flex-col gap-3 sm:flex-row">
+            {/* Key selling points */}
+            <div className="hero-text-3 flex flex-col gap-3">
+              <h2 className="text-base font-bold text-foreground">
+                {"Точна математика в один клік"}
+              </h2>
+              <div className="flex flex-col gap-2.5">
+                {[
+                  {
+                    title: "Адаптація чужих майстер-класів:",
+                    text: "Купили МК, але у вас інша пряжа? Окремий спеціальний калькулятор миттєво перерахує всі дані під вашу щільність — більше ніякої математики вручну.",
+                  },
+                  {
+                    title: "Мікс пряжі без стресу:",
+                    text: "В'яжете в декілька складань із різних ниток? Додаток за секунду вирахує загальний метраж, точну кількість пряжі для покупки та підкаже ідеальний розмір спиць.",
+                  },
+                  {
+                    title: "Складне стає простим:",
+                    text: "Не знаєте, скільки набрати петель або як розподілити їх для ідеального реглану? Наші калькулятори зроблять усі необхідні розрахунки за вас.",
+                  },
+                ].map((item, i) => (
+                  <div key={i} className="flex gap-2 text-sm leading-relaxed text-muted-foreground">
+                    <span className="mt-1.5 h-1.5 w-1.5 shrink-0 rounded-full bg-primary" />
+                    <p>
+                      <span className="font-semibold text-foreground">{item.title}</span>{" "}
+                      {item.text}
+                    </p>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            <div className="hero-text-4 flex flex-col gap-3 sm:flex-row">
               <Button size="lg" className="gap-2 text-base" asChild>
                 <Link href="#pricing">
                   {"Отримати Premium-доступ"}
