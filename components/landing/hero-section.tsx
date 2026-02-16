@@ -3,7 +3,7 @@
 import { useState } from "react"
 import Link from "next/link"
 import { Button } from "@/components/ui/button"
-import { ArrowRight } from "lucide-react"
+import { ArrowRight } from "lucide-react" // icons
 
 const YOUTUBE_VIDEO_ID = "5w-8U1mGz3o"
 const POSTER_URL = "/images/video-poster.jpg"
