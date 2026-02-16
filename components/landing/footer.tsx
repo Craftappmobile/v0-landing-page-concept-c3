@@ -95,7 +95,7 @@ export function Footer() {
 
         <div className="mt-10 border-t border-border pt-6 text-center">
           <p className="text-sm text-muted-foreground">
-            {"© 2026 Розрахуй і В'яжи. В'яжіть петля в петлю!"}
+            {"© 2026 Розрахуй і В'яжи петля в петлю!"}
           </p>
         </div>
       </div>
