@@ -30,6 +30,28 @@ export function HeroSection() {
               50%      { opacity: 0.7; transform: scale(1.05); }
             }
 
+            @keyframes gradient-shift {
+              0%   { background-position: 0% 50%; }
+              50%  { background-position: 100% 50%; }
+              100% { background-position: 0% 50%; }
+            }
+
+            .animated-gradient-text {
+              background: linear-gradient(
+                270deg,
+                hsl(var(--foreground)),
+                hsl(142, 40%, 35%),
+                hsl(25, 50%, 45%),
+                hsl(142, 40%, 35%),
+                hsl(var(--foreground))
+              );
+              background-size: 300% 100%;
+              -webkit-background-clip: text;
+              background-clip: text;
+              -webkit-text-fill-color: transparent;
+              animation: gradient-shift 6s ease-in-out infinite;
+            }
+
             .hero-text-1 {
               opacity: 0;
               animation: hero-fade-in 0.8s ease-out 0.1s forwards;
@@ -66,6 +88,11 @@ export function HeroSection() {
               .hero-glow {
                 animation: none;
               }
+              .animated-gradient-text {
+                animation: none;
+                -webkit-text-fill-color: unset;
+                background: none;
+              }
             }
           `,
         }}
@@ -75,7 +102,7 @@ export function HeroSection() {
         <div className="grid items-center gap-8 lg:grid-cols-[1fr_320px] lg:gap-10">
           {/* --- Text block with staggered fade-in --- */}
           <div className="flex flex-col gap-5">
-            <h1 className="hero-text-1 font-serif text-3xl leading-tight tracking-tight text-foreground sm:text-4xl lg:text-5xl text-balance">
+            <h1 className="hero-text-1 animated-gradient-text font-serif text-3xl leading-tight tracking-tight sm:text-4xl lg:text-5xl text-balance">
               {"В'яжіть із задоволенням, а складні розрахунки залиште нам!"}
             </h1>
 
