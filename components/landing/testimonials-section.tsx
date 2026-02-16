@@ -22,7 +22,8 @@ const testimonials = [
   {
     name: "irynka_kaminska",
     role: "В'яже понад 20 років",
-    avatar: "/images/avatar-3.jpg",
+    avatar: "/images/avatar-irynka.png",
+    profileUrl: "https://www.instagram.com/irynka_kaminska/",
     text: "Дуже зручний і цікавий застосунок! \uD83D\uDD25 В'язати шкарпетки по одній стало набагато простіше. І не треба кожен раз згадувати скільки убавок і додавань було зроблено. Те ж саме і з рукавами - вийшли однаковими з першого разу \uD83D\uDE02 Дякую за такого чудового помічника \u2764\uFE0F",
     stars: 5,
   },
