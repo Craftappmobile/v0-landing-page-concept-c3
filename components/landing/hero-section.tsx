@@ -75,7 +75,7 @@ export function HeroSection() {
         <div className="grid items-center gap-8 lg:grid-cols-[1fr_320px] lg:gap-10">
           {/* --- Text block with staggered fade-in --- */}
           <div className="flex flex-col gap-5">
-            <h1 className="hero-text-1 font-serif text-4xl leading-tight tracking-tight text-foreground sm:text-5xl lg:text-6xl text-balance">
+            <h1 className="hero-text-1 font-serif text-3xl leading-tight tracking-tight text-foreground sm:text-4xl lg:text-5xl text-balance">
               {"В'яжіть із задоволенням, а складні розрахунки залиште нам!"}
             </h1>
 
