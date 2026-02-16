@@ -31,7 +31,7 @@ export function CtaSection() {
           </Button>
         </div>
         <p className="mt-4 text-sm text-primary-foreground/60">
-          {"Без зобов'язань. Скасуйте в будь-який момент."}
+          {"Жодних прив'язок. Керуйте підпискою в 1 клік прямо зі свого смартфона."}
         </p>
       </div>
     </section>
