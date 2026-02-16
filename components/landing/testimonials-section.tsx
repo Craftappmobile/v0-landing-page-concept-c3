@@ -4,10 +4,10 @@ import { Star } from "lucide-react"
 
 const testimonials = [
   {
-    name: "Оксана Г.",
+    name: "oliamoshenska",
     role: "В'яже 5 років",
-    avatar: "/images/avatar-oksana.png",
-    profileUrl: "https://www.facebook.com/oksana.gruseckaa.180964",
+    avatar: "/images/avatar-olia.png",
+    profileUrl: "https://www.instagram.com/oliamoshenska/",
     text: "Це не просто додаток, це знахідка для в'язалочки. Всі проект, пряжа та розрахунки під рукою, в одному додатку. Я тестувала, цей додаток і хочу сказати, що тут є все, що потрібно. Зручні калькулятори, порахують все за нас, лічильник рядів, прогрес в'язання проекту і ще багато іншого можна знайти в цьому додатку. А ще можна зберігати купу картинок для натхнення. Дякую велике за такого незамінного помічника для в'язаллчки! Дуже рекомендую спробувати\u2764\uFE0F\u2764\uFE0F\u2764\uFE0F\u2764\uFE0F",
     stars: 5,
   },
