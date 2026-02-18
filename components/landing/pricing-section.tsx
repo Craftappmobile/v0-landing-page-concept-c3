@@ -107,7 +107,7 @@ export function PricingSection() {
               )}
               {plan.isUnlimited && (
                 <p className="mt-1 text-sm font-medium text-accent">
-                  {"Одноразовий платіж — доступ назавжди"}
+                  {"Довічний доступ"}
                 </p>
               )}
 
