@@ -101,7 +101,7 @@ export function PricingSection() {
               </div>
 
               {plan.perMonth && (
-                <p className={`mt-1 text-sm font-medium text-primary ${plan.highlighted ? "text-center" : ""}`}>
+                <p className="mt-1 text-sm font-medium text-primary text-center">
                   {plan.perMonth}
                 </p>
               )}
