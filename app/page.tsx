@@ -1,3 +1,18 @@
+/**
+ * Головна лендінгова сторінка "Розрахуй і В'яжи".
+ *
+ * Структура сторінки (зверху донизу):
+ * - Header         — навігація зі sticky-позиціонуванням
+ * - HeroSection    — заголовок, ключові переваги, YouTube відео
+ * - PainPointsSection — болі цільової аудиторії
+ * - FeaturesSection   — огляд функцій додатку
+ * - CommunitySection  — блок про спільноту
+ * - TestimonialsSection — відгуки користувачів
+ * - PricingSection    — тарифні плани з кнопками оплати
+ * - FaqSection        — відповіді на часті запитання
+ * - CtaSection        — фінальний заклик до дії
+ * - Footer            — контактна інформація та посилання
+ */
 import { Header } from "@/components/landing/header"
 import { HeroSection } from "@/components/landing/hero-section"
 import { PainPointsSection } from "@/components/landing/pain-points-section"
@@ -9,6 +24,10 @@ import { FaqSection } from "@/components/landing/faq-section"
 import { CtaSection } from "@/components/landing/cta-section"
 import { Footer } from "@/components/landing/footer"
 
+/**
+ * Серверний компонент головної сторінки (Next.js App Router).
+ * Складається з секцій, імпортованих з `components/landing/`.
+ */
 export default function Page() {
   return (
     <div className="flex min-h-screen flex-col">

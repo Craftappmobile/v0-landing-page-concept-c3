@@ -1,13 +1,34 @@
 "use client"
 
+/**
+ * Hero-секція — головний екран лендінгу.
+ *
+ * Ліва частина: заголовок з анімованим градієнтним текстом,
+ * ключові переваги у вигляді списку, дві CTA-кнопки.
+ *
+ * Права частина: YouTube Shorts відео у форматі 9:16.
+ * Реалізовано lazy-load: спочатку показується постер-зображення,
+ * по кліку завантажується iframe (уникає зайвого трафіку).
+ *
+ * CSS-анімації: staggered fade-in для тексту, reveal для відео,
+ * glow-pulse для підсвітки. Вимикаються при `prefers-reduced-motion`.
+ *
+ * @component Клієнтський (потребує useState для стану відтворення відео)
+ */
 import { useState } from "react"
 import Link from "next/link"
 import { Button } from "@/components/ui/button"
 import { ArrowRight } from "lucide-react" // icons
 
+/** ID YouTube-відео для демонстрації додатку */
 const YOUTUBE_VIDEO_ID = "5w-8U1mGz3o"
+/** Шлях до зображення-постера відео (завантажується одразу, відео — по кліку) */
 const POSTER_URL = "/images/video-poster.jpg"
 
+/**
+ * Головна hero-секція лендінгу з текстом та YouTube-відео.
+ * Стан `isPlaying` перемикає постер на iframe YouTube при кліку.
+ */
 export function HeroSection() {
   const [isPlaying, setIsPlaying] = useState(false)
 

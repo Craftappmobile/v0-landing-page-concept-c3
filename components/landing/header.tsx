@@ -1,11 +1,26 @@
 "use client"
 
+/**
+ * Компонент шапки сайту з адаптивним мобільним меню.
+ *
+ * Особливості:
+ * - Sticky позиціонування з розмитим фоном (`backdrop-blur`)
+ * - Навігаційні посилання на якорі секцій (#features, #community, #pricing, #faq)
+ * - Мобільне гамбургер-меню (відображається на екранах < md)
+ * - Кнопка "Спробувати PRO" → прокручує до секції #pricing
+ *
+ * @component Клієнтський (потребує useState для стану меню)
+ */
 import { useState } from "react"
 import Image from "next/image"
 import Link from "next/link"
 import { Menu, X } from "lucide-react"
 import { Button } from "@/components/ui/button"
 
+/**
+ * Sticky-шапка з логотипом, навігацією та кнопкою CTA.
+ * На мобільних пристроях відображає кнопку бургер-меню.
+ */
 export function Header() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
 
