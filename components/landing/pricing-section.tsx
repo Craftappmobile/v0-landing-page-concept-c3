@@ -106,7 +106,7 @@ export function PricingSection() {
                 </p>
               )}
               {plan.isUnlimited && (
-                <p className="mt-1 text-sm font-medium text-accent">
+                <p className="mt-1 text-sm font-medium text-accent text-center">
                   {"Довічний доступ"}
                 </p>
               )}
