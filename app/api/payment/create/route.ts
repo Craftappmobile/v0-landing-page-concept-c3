@@ -55,28 +55,34 @@ export async function POST(request: NextRequest) {
     }
 
     // --- Генерація даних замовлення ---
-    const merchantDomainName =
-      request.headers.get('host') || 'v0-landing-page-concept.vercel.app'
+    // Фіксований домен — має збігатися з доменом у кабінеті WayForPay
+    const merchantDomainName = 'rozrahuy-i-vyazhi.vercel.app'
     const orderReference = `WFP_${Date.now()}_${Math.random().toString(36).slice(2, 8)}`
-    const orderDate = Math.floor(Date.now() / 1000)
+    const orderDate = String(Math.floor(Date.now() / 1000))
+    const amount = String(plan.amount)
 
     // --- HMAC-MD5 підпис ---
+    // Формат: merchantAccount;merchantDomainName;orderReference;orderDate;amount;currency;productName;productCount;productPrice
     const signString = [
       merchantAccount,
       merchantDomainName,
       orderReference,
       orderDate,
-      plan.amount,
+      amount,
       'UAH',
       plan.name,
-      1,
-      plan.amount,
+      '1',
+      amount,
     ].join(';')
+
+    console.log('[WFP] signString:', signString)
 
     const merchantSignature = crypto
       .createHmac('md5', merchantSecret)
       .update(signString, 'utf8')
       .digest('hex')
+
+    console.log('[WFP] signature:', merchantSignature)
 
     // --- Збереження в Supabase ---
     const supabase = createAdminClient()
@@ -94,7 +100,7 @@ export async function POST(request: NextRequest) {
     }
 
     // --- Повернення даних для WayForPay Widget ---
-    // Розділення імені на ім'я та прізвище
+    // Всі значення як СТРОКИ (відповідно до прикладу WayForPay)
     const nameParts = name.trim().split(/\s+/)
     const firstName = nameParts[0]
     const lastName = nameParts.length > 1 ? nameParts.slice(1).join(' ') : firstName
@@ -102,15 +108,16 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({
       merchantAccount,
       merchantDomainName,
+      merchantTransactionSecureType: 'AUTO',
       authorizationType: 'SimpleSignature',
       merchantSignature,
       orderReference,
       orderDate,
-      amount: plan.amount,
+      amount,
       currency: 'UAH',
-      productName: [plan.name],
-      productCount: [1],
-      productPrice: [plan.amount],
+      productName: plan.name,
+      productCount: '1',
+      productPrice: amount,
       clientFirstName: firstName,
       clientLastName: lastName,
       clientEmail: email,
