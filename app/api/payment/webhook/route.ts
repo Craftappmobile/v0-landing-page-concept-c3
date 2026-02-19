@@ -16,7 +16,7 @@ const PLAN_DURATION: Record<string, { months: number; type: string }> = {
 }
 
 export async function POST(request: NextRequest) {
-  const merchantSecret = process.env.WAYFORPAY_SECRET
+  const merchantSecret = process.env.WAYFORPAY_SECRET?.trim()
   if (!merchantSecret) {
     console.error('WAYFORPAY_SECRET not configured')
     return NextResponse.json({ error: 'Not configured' }, { status: 500 })

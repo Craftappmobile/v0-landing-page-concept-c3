@@ -43,8 +43,8 @@ export async function POST(request: NextRequest) {
     }
 
     // --- Перевірка конфігурації ---
-    const merchantAccount = process.env.WAYFORPAY_MERCHANT
-    const merchantSecret = process.env.WAYFORPAY_SECRET
+    const merchantAccount = process.env.WAYFORPAY_MERCHANT?.trim()
+    const merchantSecret = process.env.WAYFORPAY_SECRET?.trim()
 
     if (!merchantAccount || !merchantSecret) {
       console.error('WayForPay not configured: WAYFORPAY_MERCHANT or WAYFORPAY_SECRET missing')

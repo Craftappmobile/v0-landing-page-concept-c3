@@ -11,7 +11,7 @@ import { Resend } from 'resend'
 
 /** Ініціалізація Resend-клієнта (тільки серверна сторона) */
 function getResendClient(): Resend {
-  const apiKey = process.env.RESEND_API_KEY
+  const apiKey = process.env.RESEND_API_KEY?.trim()
   if (!apiKey) {
     throw new Error('RESEND_API_KEY is not set')
   }
