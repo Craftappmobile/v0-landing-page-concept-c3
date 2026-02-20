@@ -74,6 +74,14 @@ export function Footer() {
                   {"Політика конфіденційності"}
                 </Link>
               </li>
+              <li>
+                <Link
+                  href="/refund"
+                  className="text-sm text-muted-foreground transition-colors hover:text-foreground"
+                >
+                  {"Умови повернення коштів"}
+                </Link>
+              </li>
             </ul>
           </div>
 
