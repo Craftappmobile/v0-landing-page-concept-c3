@@ -124,7 +124,7 @@ export function HeroSection() {
           {/* --- Text block with staggered fade-in --- */}
           <div className="flex flex-col gap-5">
             <h1 className="hero-text-1 animated-gradient-text font-serif text-3xl leading-tight tracking-tight sm:text-4xl lg:text-5xl text-balance">
-              {"В'яжіть із задоволенням, а складні розрахунки залиште нам!"}
+              {"Заощаджуйте час та гроші з нашим застосунком!"}
             </h1>
 
             <p className="hero-text-2 max-w-xl text-lg leading-relaxed text-muted-foreground">
