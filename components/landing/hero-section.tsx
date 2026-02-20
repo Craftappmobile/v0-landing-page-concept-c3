@@ -89,6 +89,10 @@ export function HeroSection() {
               opacity: 0;
               animation: hero-fade-in 0.8s ease-out 0.7s forwards;
             }
+            .hero-text-5 {
+              opacity: 0;
+              animation: hero-fade-in 0.8s ease-out 0.9s forwards;
+            }
             .hero-video-container {
               opacity: 0;
               animation: hero-video-reveal 1s ease-out 0.4s forwards;
@@ -102,6 +106,7 @@ export function HeroSection() {
               .hero-text-2,
               .hero-text-3,
               .hero-text-4,
+              .hero-text-5,
               .hero-video-container {
                 opacity: 1;
                 animation: none;
@@ -124,15 +129,19 @@ export function HeroSection() {
           {/* --- Text block with staggered fade-in --- */}
           <div className="flex flex-col gap-5">
             <h1 className="hero-text-1 animated-gradient-text font-serif text-3xl leading-tight tracking-tight sm:text-4xl lg:text-5xl text-balance">
-              {"Заощаджуйте час та гроші з нашим застосунком!"}
+              {"Заощаджуйте ваш час та гроші з нашим застосунком!"}
             </h1>
 
-            <p className="hero-text-2 max-w-xl text-lg leading-relaxed text-muted-foreground">
+            <p className="hero-text-2 text-xl font-semibold text-foreground">
+              {"Мінімум математики. Максимум в'язання."}
+            </p>
+
+            <p className="hero-text-3 max-w-xl text-lg leading-relaxed text-muted-foreground">
               {"Перший в Україні додаток, де є все для в'язання. 30 професійних калькуляторів, розумний облік пряжі, зручний трекер проєктів та спільнота однодумців. Заощаджуйте години на математиці та присвятьте їх творчості."}
             </p>
 
             {/* Key selling points */}
-            <div className="hero-text-3 flex flex-col gap-3">
+            <div className="hero-text-4 flex flex-col gap-3">
               <h2 className="text-base font-bold text-foreground">
                 {"Точна математика в один клік"}
               </h2>
@@ -162,7 +171,7 @@ export function HeroSection() {
               </div>
             </div>
 
-            <div className="hero-text-4 flex flex-col gap-3 sm:flex-row">
+            <div className="hero-text-5 flex flex-col gap-3 sm:flex-row">
               <Button size="lg" className="gap-2 text-base" asChild>
                 <Link href="#pricing">
                   {"Отримати Premium-доступ"}
