@@ -98,12 +98,17 @@ export function Footer() {
                 </a>
               </li>
             </ul>
+            <div className="mt-4 border-t border-border pt-3">
+              <p className="text-xs font-medium text-foreground">{"ФОП Дідух Роман Дмитрович"}</p>
+              <p className="mt-1 text-xs text-muted-foreground">{"ЄДРПОУ: 3993408236"}</p>
+              <p className="mt-0.5 text-xs text-muted-foreground">{"IBAN: UA22 305299 00000 26008046015269"}</p>
+            </div>
           </div>
         </div>
 
         <div className="mt-10 border-t border-border pt-6 text-center">
           <p className="text-sm text-muted-foreground">
-            {"© 2026 Розрахуй і В'яжи петля в петлю!"}
+            {"© 2026 ФОП Дідух Роман Дмитрович. Розрахуй і В'яжи петля в петлю!"}
           </p>
         </div>
       </div>
