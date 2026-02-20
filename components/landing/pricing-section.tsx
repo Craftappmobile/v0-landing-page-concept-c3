@@ -5,15 +5,9 @@
  * - Преміум 6 місяців: 599.99 грн
  * - Преміум 1 рік: 918 грн (виділений як найвигідніший)
  * - Безлімітна (lifetime): 4 585 грн
- *
- * Кнопка "Придбати підписку" відкриває PaymentModal для оформлення оплати через WayForPay.
  */
-'use client'
-
-import { useState } from "react"
 import { Check, Crown, Infinity } from "lucide-react"
 import { Button } from "@/components/ui/button"
-import { PaymentModal } from "@/components/landing/payment-modal"
 
 /**
  * Список можливостей, що входять до будь-якого преміум-плану.
@@ -29,23 +23,11 @@ const features = [
 
 /**
  * Конфігурація тарифних планів підписки.
- *
- * Поля:
- * - `name`       — назва тарифу для відображення
- * - `price`      — ціна в гривнях (рядок для форматування)
- * - `period`     — тривалість підписки
- * - `perMonth`   — вартість на місяць (null для безліміту)
- * - `badge`      — текст бейджа (null якщо без бейджа)
- * - `highlighted`— true для виділеного (рекомендованого) тарифу
- * - `isUnlimited`— true для lifetime підписки
- *
- * @remarks Кожен план має `planCode` для ідентифікації при оплаті через WayForPay.
  */
 const plans = [
   {
     name: "Преміум 6-місячна підписка",
     price: "599.99",
-    planCode: "plan_6m",
     period: "6 міс",
     perMonth: "100 грн/місяць",
     badge: null,
@@ -55,7 +37,6 @@ const plans = [
   {
     name: "Преміум річна підписка",
     price: "918",
-    planCode: "plan_1y",
     period: "рік",
     perMonth: "76.50 грн/місяць",
     badge: "Найвигідніша пропозиція",
@@ -65,7 +46,6 @@ const plans = [
   {
     name: "Безлімітна підписка",
     price: "4 585",
-    planCode: "plan_unlimited",
     period: "назавжди",
     perMonth: null,
     badge: null,
@@ -81,18 +61,6 @@ const plans = [
  * Виділений тариф (`highlighted: true`) має зелену рамку та бейдж.
  */
 export function PricingSection() {
-  const [modalOpen, setModalOpen] = useState(false)
-  const [selectedPlan, setSelectedPlan] = useState<{
-    code: string
-    name: string
-    amount: string
-  } | null>(null)
-
-  function openPayment(planCode: string, planName: string, amount: string) {
-    setSelectedPlan({ code: planCode, name: planName, amount })
-    setModalOpen(true)
-  }
-
   return (
     <section id="pricing" className="bg-secondary/50 py-16 lg:py-24">
       <div className="mx-auto max-w-6xl px-4 lg:px-8">
@@ -176,7 +144,6 @@ export function PricingSection() {
                   className="w-full"
                   size="lg"
                   variant={plan.highlighted ? "default" : "outline"}
-                  onClick={() => openPayment(plan.planCode, plan.name, plan.price)}
                 >
                   {"Придбати підписку"}
                 </Button>
@@ -185,16 +152,6 @@ export function PricingSection() {
           ))}
         </div>
       </div>
-
-      {selectedPlan && (
-        <PaymentModal
-          open={modalOpen}
-          onOpenChange={setModalOpen}
-          planCode={selectedPlan.code}
-          planName={selectedPlan.name}
-          amount={selectedPlan.amount}
-        />
-      )}
     </section>
   )
 }
