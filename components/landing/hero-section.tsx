@@ -169,11 +169,18 @@ export function HeroSection() {
             <h1 className="hero-text-1 animated-gradient-text font-serif text-3xl leading-tight tracking-tight sm:text-4xl lg:text-5xl text-balance">
               {"Мінімум математики."}
               <br />
-              {"Максимум в'язання."}
+              {"Максимум в'язання!"}
             </h1>
 
             <p className="hero-text-2 max-w-xl text-lg leading-relaxed text-muted-foreground">
-              {"Перший додаток з 30 калькуляторами для в'язання, обліком пряжі та спільнотою — все в одному місці."}
+              <Image
+                src="/images/ua-heart.png"
+                alt="Українське серце"
+                width={24}
+                height={24}
+                className="inline-block -mt-0.5 mr-1.5"
+              />
+              {"Перший українcький додаток з 30 калькуляторами для в'язання, обліком пряжі та спільнотою — все в одному місці."}
             </p>
 
             {/* Social proof */}
