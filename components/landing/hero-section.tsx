@@ -167,7 +167,7 @@ export function HeroSection() {
           {/* --- Text block --- */}
           <div className="flex flex-col gap-5">
             <h1 className="hero-text-1 animated-gradient-text font-serif text-3xl leading-tight tracking-tight sm:text-4xl lg:text-5xl text-balance">
-              {"Мінімум математики."}
+              {"Мінімум математики,"}
               <br />
               {"Максимум в'язання!"}
             </h1>
@@ -176,9 +176,9 @@ export function HeroSection() {
               <Image
                 src="/images/ua-heart.png"
                 alt="Українське серце"
-                width={24}
-                height={24}
-                className="inline-block -mt-0.5 mr-1.5"
+                width={18}
+                height={18}
+                className="inline-block -mt-0.5 mr-1"
               />
               {"Перший українcький додаток з 30 калькуляторами для в'язання, обліком пряжі та спільнотою — все в одному місці."}
             </p>
