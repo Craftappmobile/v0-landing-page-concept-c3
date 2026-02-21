@@ -69,7 +69,7 @@ export function Header() {
 
         <div className="hidden md:block">
           <Button asChild>
-            <Link href="#pricing">{"Спробувати PRO"}</Link>
+            <Link href="#pricing">{"Обрати тариф"}</Link>
           </Button>
         </div>
 
@@ -117,7 +117,7 @@ export function Header() {
             <div className="mt-2 px-3">
               <Button className="w-full" asChild>
                 <Link href="#pricing" onClick={() => setMobileMenuOpen(false)}>
-                  {"Спробувати PRO"}
+                  {"Обрати тариф"}
                 </Link>
               </Button>
             </div>

@@ -42,26 +42,51 @@ export function FeaturesSection() {
           <h2 className="mt-3 font-serif text-3xl tracking-tight text-foreground sm:text-4xl text-balance">
             {"Все для ідеального виробу в одному місці"}
           </h2>
+          <p className="mt-3 text-base leading-relaxed text-muted-foreground max-w-xl mx-auto text-balance">
+            {"Від точних розрахунків до обліку пряжі -- кожен інструмент створений для в'язальниць."}
+          </p>
         </div>
 
-        <div className="grid gap-6 sm:grid-cols-2">
-          {features.map((feature, i) => (
-            <div
-              key={i}
-              className="group relative flex flex-col gap-4 rounded-2xl border border-border bg-card p-6 transition-all hover:border-primary/30 hover:shadow-lg lg:p-8"
-            >
-              <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-primary/10 text-primary transition-colors group-hover:bg-primary group-hover:text-primary-foreground">
-                <feature.icon className="h-6 w-6" />
+        <div className="mx-auto flex max-w-3xl flex-col gap-5">
+          {/* Main featured card */}
+          {(() => {
+            const MainIcon = features[0].icon
+            return (
+              <div className="group flex flex-col items-center gap-4 rounded-2xl border border-border bg-card p-6 text-center transition-all hover:border-primary/30 hover:shadow-lg lg:p-8">
+                <div className="flex h-14 w-14 items-center justify-center rounded-xl bg-primary/10 text-primary transition-colors group-hover:bg-primary group-hover:text-primary-foreground">
+                  <MainIcon className="h-7 w-7" />
+                </div>
+                <div>
+                  <h3 className="text-xl font-bold text-foreground">{features[0].title}</h3>
+                  <p className="mt-0.5 text-sm font-medium text-primary">{features[0].subtitle}</p>
+                </div>
+                <p className="max-w-md text-sm leading-relaxed text-muted-foreground">
+                  {features[0].description}
+                </p>
               </div>
-              <div>
-                <h3 className="text-xl font-bold text-foreground">{feature.title}</h3>
-                <p className="mt-0.5 text-sm font-medium text-primary">{feature.subtitle}</p>
-              </div>
-              <p className="text-sm leading-relaxed text-muted-foreground">
-                {feature.description}
-              </p>
-            </div>
-          ))}
+            )
+          })()}
+
+          {/* Three smaller cards in a row */}
+          <div className="grid grid-cols-3 gap-4">
+            {features.slice(1).map((feature, i) => {
+              const Icon = feature.icon
+              return (
+                <div
+                  key={i}
+                  className="group flex flex-col items-center gap-3 rounded-2xl border border-border bg-card p-4 text-center transition-all hover:border-primary/30 hover:shadow-lg lg:p-5"
+                >
+                  <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-primary/10 text-primary transition-colors group-hover:bg-primary group-hover:text-primary-foreground">
+                    <Icon className="h-5 w-5" />
+                  </div>
+                  <div>
+                    <h3 className="text-sm font-bold text-foreground">{feature.title}</h3>
+                    <p className="mt-0.5 text-xs text-muted-foreground">{feature.subtitle}</p>
+                  </div>
+                </div>
+              )
+            })}
+          </div>
         </div>
 
 

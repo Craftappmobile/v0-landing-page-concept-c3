@@ -6,7 +6,7 @@ import { ArrowLeft } from "lucide-react"
 export const metadata: Metadata = {
   title: "Умови повернення коштів — Розрахуй і В'яжи",
   description:
-    "Умови повернення коштів за підписку на мобільний додаток Розрахуй і В'яжи відповідно до законодавства України.",
+    "Умови повернення коштів за підписку мобільного додатку Розрахуй і В'яжи.",
 }
 
 export default function RefundPage() {
@@ -46,10 +46,9 @@ export default function RefundPage() {
           {"Дата останнього оновлення: 20 лютого 2026 року"}
         </p>
 
-        {/* Important notice */}
-        <div className="mt-8 rounded-xl border-2 border-primary/30 bg-primary/5 p-5">
-          <p className="text-sm font-semibold leading-relaxed text-foreground">
-            {"Ця політика повернення коштів розроблена відповідно до Закону України «Про захист прав споживачів» № 3153-IX від 10.06.2023 р. та Закону України «Про цифровий контент та цифрові послуги» № 3321-IX від 10.08.2023 р."}
+        <div className="mt-6 rounded-xl border border-border bg-secondary/30 p-4">
+          <p className="text-sm leading-relaxed text-muted-foreground">
+            {"Ця політика повернення коштів розроблена відповідно до Закону України \u00ABПро захист прав споживачів\u00BB \u2116 3153-IX від 10.06.2023 р. та Закону України \u00ABПро цифровий контент та цифрові послуги\u00BB \u2116 3321-IX від 10.08.2023 р."}
           </p>
         </div>
 
@@ -60,41 +59,41 @@ export default function RefundPage() {
               {"1. Загальні положення"}
             </h2>
             <p className="mt-3 text-sm leading-relaxed text-muted-foreground">
-              {"Ці Умови повернення коштів регулюють порядок та умови повернення коштів за підписку на мобільний додаток «Розрахуй і В'яжи» (далі — «Додаток»). Придбання підписки через вебсайт або мобільний додаток є дистанційним договором у розумінні законодавства України."}
+              {"Ці Умови повернення коштів регулюють порядок та умови повернення коштів за підписку на мобільний додаток \u00ABРозрахуй і В'яжи\u00BB (далі \u2014 \u00ABДодаток\u00BB). Придбання підписки через вебсайт або мобільний додаток є дистанційним договором у розумінні законодавства України."}
             </p>
-            <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
+            <p className="mt-3 text-sm leading-relaxed text-muted-foreground">
               {"Оплачуючи підписку, ви підтверджуєте, що ознайомились з цими Умовами повернення коштів та приймаєте їх у повному обсязі."}
             </p>
           </section>
 
-          {/* 2. Право на відмову від договору */}
+          {/* 2. Право на відмову від договору протягом 14 днів */}
           <section>
             <h2 className="font-serif text-xl font-semibold text-foreground sm:text-2xl">
               {"2. Право на відмову від договору протягом 14 днів"}
             </h2>
             <p className="mt-3 text-sm leading-relaxed text-muted-foreground">
-              {"Відповідно до Закону України «Про захист прав споживачів» № 3153-IX, при укладенні дистанційного договору споживач має право відмовитися від договору протягом 14 (чотирнадцяти) календарних днів з моменту його укладення без пояснення причин та без сплати будь-яких додаткових витрат."}
+              {"Відповідно до Закону України \u00ABПро захист прав споживачів\u00BB \u2116 3153-IX, при укладенні дистанційного договору споживач має право відмовитися від договору протягом 14 (чотирнадцяти) календарних днів з моменту його укладення без пояснення причин та без сплати будь-яких додаткових витрат."}
             </p>
-            <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
+            <p className="mt-3 text-sm leading-relaxed text-muted-foreground">
               {"Для реалізації цього права вам достатньо надіслати нам повідомлення про відмову від договору у будь-якій формі (електронною поштою, поштовим відправленням тощо) до закінчення 14-денного строку."}
             </p>
-            <div className="mt-4 rounded-lg bg-muted/50 p-4">
-              <p className="text-sm font-medium text-foreground">{"Зверніть увагу:"}</p>
-              <ul className="mt-2 flex flex-col gap-1.5">
-                <li className="text-sm leading-relaxed text-muted-foreground">
-                  {"• 14-денний строк обчислюється з дня укладення договору (оплати підписки)."}
-                </li>
-                <li className="text-sm leading-relaxed text-muted-foreground">
-                  {"• Повернення коштів здійснюється тим самим способом, яким було здійснено оплату."}
-                </li>
-                <li className="text-sm leading-relaxed text-muted-foreground">
-                  {"• Кошти повертаються протягом 14 днів з дня отримання вашої заяви про відмову."}
-                </li>
+            <div className="mt-4 rounded-xl border border-border bg-secondary/30 p-4">
+              <p className="mb-2 text-sm font-semibold text-foreground">{"Зверніть увагу:"}</p>
+              <ul className="flex flex-col gap-1.5 pl-5">
+                {[
+                  "14-денний строк обчислюється з дня укладення договору (оплати підписки).",
+                  "Повернення коштів здійснюється тим самим способом, яким було здійснено оплату.",
+                  "Кошти повертаються протягом 14 днів з дня отримання вашої заяви про відмову.",
+                ].map((item, i) => (
+                  <li key={i} className="list-disc text-sm text-muted-foreground">
+                    {item}
+                  </li>
+                ))}
               </ul>
             </div>
           </section>
 
-          {/* 3. Виключення */}
+          {/* 3. Виключення з права на відмову */}
           <section>
             <h2 className="font-serif text-xl font-semibold text-foreground sm:text-2xl">
               {"3. Виключення з права на відмову"}
@@ -102,47 +101,49 @@ export default function RefundPage() {
             <p className="mt-3 text-sm leading-relaxed text-muted-foreground">
               {"Відповідно до законодавства України, право на відмову від дистанційного договору НЕ застосовується у випадку, якщо:"}
             </p>
-            <ul className="mt-3 flex flex-col gap-2">
-              <li className="text-sm leading-relaxed text-muted-foreground">
-                {"• Споживач надав попередню явну згоду на початок надання цифрового контенту або цифрової послуги до закінчення 14-денного строку для відмови від договору;"}
-              </li>
-              <li className="text-sm leading-relaxed text-muted-foreground">
-                {"• Споживач був належним чином поінформований про втрату права на відмову від договору у разі надання такої згоди;"}
-              </li>
-              <li className="text-sm leading-relaxed text-muted-foreground">
-                {"• Споживач отримав підтвердження укладення договору із зазначенням інформації про надану згоду та втрату права на відмову."}
-              </li>
+            <ul className="mt-3 flex flex-col gap-1.5 pl-5">
+              {[
+                "Споживач надав попередню явну згоду на початок надання цифрового контенту або цифрової послуги до закінчення 14-денного строку для відмови від договору;",
+                "Споживач був належним чином поінформований про втрату права на відмову від договору у разі надання такої згоди;",
+                "Споживач отримав підтвердження укладення договору із зазначенням інформації про надану згоду та втрату права на відмову.",
+              ].map((item, i) => (
+                <li key={i} className="list-disc text-sm text-muted-foreground">
+                  {item}
+                </li>
+              ))}
             </ul>
-            <p className="mt-3 text-sm leading-relaxed text-muted-foreground">
-              {"Якщо всі три умови виконані одночасно, повернення коштів на підставі 14-денного права відмови не здійснюється."}
-            </p>
+            <div className="mt-4 rounded-xl border-2 border-destructive/30 bg-destructive/5 p-4">
+              <p className="text-sm font-semibold leading-relaxed text-foreground">
+                {"Якщо всі три умови виконані одночасно, повернення коштів на підставі 14-денного права відмови не здійснюється."}
+              </p>
+            </div>
           </section>
 
-          {/* 4. Повернення при невідповідності якості */}
+          {/* 4. Повернення коштів при невідповідності якості */}
           <section>
             <h2 className="font-serif text-xl font-semibold text-foreground sm:text-2xl">
               {"4. Повернення коштів при невідповідності якості цифрового контенту"}
             </h2>
             <p className="mt-3 text-sm leading-relaxed text-muted-foreground">
-              {"Відповідно до Закону України «Про цифровий контент та цифрові послуги» № 3321-IX, якщо наданий цифровий контент або цифрова послуга не відповідає встановленим критеріям якості (функціональність, сумісність, доступність, безперервність), споживач має право вимагати:"}
+              {"Відповідно до Закону України \u00ABПро цифровий контент та цифрові послуги\u00BB \u2116 3321-IX, якщо наданий цифровий контент або цифрова послуга не відповідає встановленим критеріям якості (функціональність, сумісність, доступність, безперервність), споживач має право вимагати:"}
             </p>
-            <ul className="mt-3 flex flex-col gap-2">
-              <li className="text-sm leading-relaxed text-muted-foreground">
-                {"• Приведення цифрового контенту / цифрової послуги у відповідність з договором;"}
-              </li>
-              <li className="text-sm leading-relaxed text-muted-foreground">
-                {"• Пропорційного зменшення ціни;"}
-              </li>
-              <li className="text-sm leading-relaxed text-muted-foreground">
-                {"• Розірвання договору та повного повернення сплачених коштів."}
-              </li>
+            <ul className="mt-3 flex flex-col gap-1.5 pl-5">
+              {[
+                "Приведення цифрового контенту / цифрової послуги у відповідність з договором;",
+                "Пропорційного зменшення ціни;",
+                "Розірвання договору та повного повернення сплачених коштів.",
+              ].map((item, i) => (
+                <li key={i} className="list-disc text-sm text-muted-foreground">
+                  {item}
+                </li>
+              ))}
             </ul>
             <p className="mt-3 text-sm leading-relaxed text-muted-foreground">
               {"Право на розірвання договору та повернення коштів виникає, якщо: невідповідність є істотною; виконавець не привів цифровий контент/послугу у відповідність у розумний строк; невідповідність виникає повторно, незважаючи на спроби виконавця привести контент у відповідність."}
             </p>
           </section>
 
-          {/* 5. Процедура повернення */}
+          {/* 5. Процедура подання заяви */}
           <section>
             <h2 className="font-serif text-xl font-semibold text-foreground sm:text-2xl">
               {"5. Процедура подання заяви на повернення коштів"}
@@ -150,9 +151,9 @@ export default function RefundPage() {
             <p className="mt-3 text-sm leading-relaxed text-muted-foreground">
               {"Для повернення коштів вам необхідно:"}
             </p>
-            <ol className="mt-3 flex flex-col gap-2">
-              <li className="text-sm leading-relaxed text-muted-foreground">
-                {"1. Надіслати заяву на електронну адресу: "}
+            <ol className="mt-3 flex flex-col gap-3 pl-5">
+              <li className="list-decimal text-sm text-muted-foreground">
+                {"Надіслати заяву на електронну адресу: "}
                 <a
                   href="mailto:craftappmobile@gmail.com"
                   className="font-medium text-primary underline-offset-2 hover:underline"
@@ -160,16 +161,29 @@ export default function RefundPage() {
                   {"craftappmobile@gmail.com"}
                 </a>
               </li>
-              <li className="text-sm leading-relaxed text-muted-foreground">
-                {"2. У заяві вказати: ваше прізвище та ім'я; електронну адресу, яка використовувалась при оплаті; дату оплати підписки; причину повернення (для повернення за невідповідність якості); бажаний спосіб повернення коштів."}
+              <li className="list-decimal text-sm text-muted-foreground">
+                {"У заяві вказати:"}
+                <ul className="mt-2 flex flex-col gap-1.5 pl-5">
+                  {[
+                    "Ваше прізвище та ім'я;",
+                    "Електронну адресу, яка використовувалась при оплаті;",
+                    "Дату оплати підписки;",
+                    "Причину повернення (для повернення за невідповідність якості);",
+                    "Бажаний спосіб повернення коштів.",
+                  ].map((item, i) => (
+                    <li key={i} className="list-disc text-sm text-muted-foreground">
+                      {item}
+                    </li>
+                  ))}
+                </ul>
               </li>
-              <li className="text-sm leading-relaxed text-muted-foreground">
-                {"3. Додати підтвердження оплати (квитанцію, виписку з банку тощо) — за наявності."}
+              <li className="list-decimal text-sm text-muted-foreground">
+                {"Додати підтвердження оплати (квитанцію, виписку з банку тощо) \u2014 за наявності."}
               </li>
             </ol>
           </section>
 
-          {/* 6. Строки повернення */}
+          {/* 6. Строки повернення коштів */}
           <section>
             <h2 className="font-serif text-xl font-semibold text-foreground sm:text-2xl">
               {"6. Строки повернення коштів"}
@@ -177,20 +191,22 @@ export default function RefundPage() {
             <p className="mt-3 text-sm leading-relaxed text-muted-foreground">
               {"Повернення коштів здійснюється у такі строки:"}
             </p>
-            <ul className="mt-3 flex flex-col gap-2">
-              <li className="text-sm leading-relaxed text-muted-foreground">
-                {"• При відмові від договору протягом 14 днів — кошти повертаються не пізніше 14 календарних днів з дня отримання заяви про відмову."}
-              </li>
-              <li className="text-sm leading-relaxed text-muted-foreground">
-                {"• При невідповідності якості — кошти повертаються не пізніше 14 календарних днів з дня прийняття рішення про повернення."}
-              </li>
+            <ul className="mt-3 flex flex-col gap-1.5 pl-5">
+              {[
+                "При відмові від договору протягом 14 днів \u2014 кошти повертаються не пізніше 14 календарних днів з дня отримання заяви про відмову.",
+                "При невідповідності якості \u2014 кошти повертаються не пізніше 14 календарних днів з дня прийняття рішення про повернення.",
+              ].map((item, i) => (
+                <li key={i} className="list-disc text-sm text-muted-foreground">
+                  {item}
+                </li>
+              ))}
             </ul>
             <p className="mt-3 text-sm leading-relaxed text-muted-foreground">
               {"Повернення здійснюється тим самим способом оплати, яким було здійснено платіж, якщо інше не погоджено зі споживачем. Жодні додаткові збори за повернення коштів не стягуються."}
             </p>
           </section>
 
-          {/* 7. Підписки через App Store / Google Play */}
+          {/* 7. Підписки через App Store або Google Play */}
           <section>
             <h2 className="font-serif text-xl font-semibold text-foreground sm:text-2xl">
               {"7. Підписки, придбані через App Store або Google Play"}
@@ -198,22 +214,13 @@ export default function RefundPage() {
             <p className="mt-3 text-sm leading-relaxed text-muted-foreground">
               {"Якщо підписка була придбана через Apple App Store або Google Play Store, повернення коштів регулюється політикою відповідної платформи:"}
             </p>
-            <ul className="mt-3 flex flex-col gap-2">
-              <li className="text-sm leading-relaxed text-muted-foreground">
-                {"• "}
-                <span className="font-medium text-foreground">{"Apple App Store"}</span>
-                {" — подайте запит на повернення через "}
-                <a href="https://reportaproblem.apple.com" target="_blank" rel="noopener noreferrer" className="font-medium text-primary underline-offset-2 hover:underline">
-                  {"reportaproblem.apple.com"}
-                </a>
+            <ul className="mt-3 flex flex-col gap-1.5 pl-5">
+              <li className="list-disc text-sm text-muted-foreground">
+                {"Apple App Store \u2014 подайте запит на повернення через "}
+                <span className="font-medium text-foreground">{"reportaproblem.apple.com"}</span>
               </li>
-              <li className="text-sm leading-relaxed text-muted-foreground">
-                {"• "}
-                <span className="font-medium text-foreground">{"Google Play Store"}</span>
-                {" — подайте запит через "}
-                <a href="https://support.google.com/googleplay/answer/2479637" target="_blank" rel="noopener noreferrer" className="font-medium text-primary underline-offset-2 hover:underline">
-                  {"Центр підтримки Google Play"}
-                </a>
+              <li className="list-disc text-sm text-muted-foreground">
+                {"Google Play Store \u2014 подайте запит через Центр підтримки Google Play"}
               </li>
             </ul>
             <p className="mt-3 text-sm leading-relaxed text-muted-foreground">
@@ -229,16 +236,18 @@ export default function RefundPage() {
             <p className="mt-3 text-sm leading-relaxed text-muted-foreground">
               {"З питань повернення коштів зв'яжіться з нами:"}
             </p>
-            <p className="mt-2 text-sm text-muted-foreground">
-              {"Email: "}
-              <a
-                href="mailto:craftappmobile@gmail.com"
-                className="font-medium text-primary underline-offset-2 hover:underline"
-              >
-                {"craftappmobile@gmail.com"}
-              </a>
-            </p>
-            <p className="mt-2 text-sm text-muted-foreground">
+            <div className="mt-4 rounded-xl border border-border bg-secondary/30 p-4">
+              <p className="text-sm text-muted-foreground">
+                {"Email: "}
+                <a
+                  href="mailto:craftappmobile@gmail.com"
+                  className="font-medium text-primary underline-offset-2 hover:underline"
+                >
+                  {"craftappmobile@gmail.com"}
+                </a>
+              </p>
+            </div>
+            <p className="mt-3 text-sm leading-relaxed text-muted-foreground">
               {"Ми розглянемо ваш запит протягом 14 календарних днів з моменту його отримання."}
             </p>
           </section>
@@ -248,35 +257,21 @@ export default function RefundPage() {
             <h2 className="font-serif text-xl font-semibold text-foreground sm:text-2xl">
               {"9. Нормативна база"}
             </h2>
-            <ul className="mt-3 flex flex-col gap-2">
-              <li className="text-sm leading-relaxed text-muted-foreground">
-                {"• Закон України «Про захист прав споживачів» № 3153-IX від 10.06.2023 р."}
-              </li>
-              <li className="text-sm leading-relaxed text-muted-foreground">
-                {"• Закон України «Про цифровий контент та цифрові послуги» № 3321-IX від 10.08.2023 р."}
-              </li>
-              <li className="text-sm leading-relaxed text-muted-foreground">
-                {"• Закон України «Про електронну комерцію» № 675-VIII від 03.09.2015 р."}
-              </li>
-              <li className="text-sm leading-relaxed text-muted-foreground">
-                {"• Цивільний кодекс України."}
-              </li>
+            <ul className="mt-3 flex flex-col gap-1.5 pl-5">
+              {[
+                "Закон України \u00ABПро захист прав споживачів\u00BB \u2116 3153-IX від 10.06.2023 р.",
+                "Закон України \u00ABПро цифровий контент та цифрові послуги\u00BB \u2116 3321-IX від 10.08.2023 р.",
+                "Закон України \u00ABПро електронну комерцію\u00BB \u2116 675-VIII від 03.09.2015 р.",
+                "Цивільний кодекс України.",
+              ].map((item, i) => (
+                <li key={i} className="list-disc text-sm text-muted-foreground">
+                  {item}
+                </li>
+              ))}
             </ul>
           </section>
-        </div>
-
-        {/* Back link */}
-        <div className="mt-16 border-t border-border pt-8">
-          <Link
-            href="/"
-            className="inline-flex items-center gap-2 text-sm font-medium text-primary transition-colors hover:text-primary/80"
-          >
-            <ArrowLeft className="h-4 w-4" />
-            {"Повернутися на головну"}
-          </Link>
         </div>
       </main>
     </div>
   )
 }
-
