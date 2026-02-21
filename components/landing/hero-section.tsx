@@ -13,7 +13,6 @@ const HERO_SCREENS = [
   { src: "/images/hero-screen-4.jpg", alt: "Трекер проєктів з прогресом" },
   { src: "/images/hero-screen-5.jpg", alt: "Лічильник рядів з прогресом в'язання" },
   { src: "/images/hero-screen-6.jpg", alt: "Галерея схем та натхнення" },
-  { src: "/images/hero-screen-7.jpg", alt: "Галерея відео майстер-класів" },
   { src: "/images/hero-screen-8.jpg", alt: "Каталог пряжі зі статистикою" },
 ]
 
