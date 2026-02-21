@@ -140,13 +140,13 @@ export function PainPointsSection() {
           </p>
         </div>
 
-        <div className="grid gap-4 sm:grid-cols-2 lg:gap-6">
+        <div className="mx-auto flex max-w-2xl flex-col gap-4 lg:gap-5">
           {painPoints.map((point, i) => (
             <div
               key={i}
               className="group flex gap-4 rounded-xl bg-card p-5 shadow-sm transition-all hover:shadow-md"
             >
-              <div className="shrink-0">
+              <div className="shrink-0 pt-0.5">
                 <YarnBall color={point.color} highlight={point.highlight} index={i} />
               </div>
               <div>
