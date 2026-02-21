@@ -100,13 +100,13 @@ export function Footer() {
               <li aria-hidden="true">
                 <hr className="border-border" />
               </li>
-              <li className="text-sm text-muted-foreground">
+              <li className="text-xs text-muted-foreground">
                 {"ФОП Дідух Роман Дмитрович"}
               </li>
-              <li className="text-sm text-muted-foreground">
+              <li className="text-xs text-muted-foreground">
                 {"ЄДРПОУ: 3993408236"}
               </li>
-              <li className="text-sm text-muted-foreground">
+              <li className="text-xs text-muted-foreground">
                 {"IBAN: UA22 305299 00000 26008046015269"}
               </li>
             </ul>
