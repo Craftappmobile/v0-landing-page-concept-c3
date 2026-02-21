@@ -1,43 +1,49 @@
+"use client"
+
+import { useState } from "react"
 import Link from "next/link"
-import { Check, Crown } from "lucide-react"
+import { Check } from "lucide-react"
 import { Button } from "@/components/ui/button"
 
-const premiumFeatures = [
-  "30 професійних калькуляторів",
-  "Облік пряжі",
+const features = [
+  "Всі 30 калькуляторів",
+  "CRM обліку пряжі та бюджету",
+  "Галерея ідей з YouTube і Pinterest",
+  "Спільнота майстринь",
   "Генератор візерунків (beta)",
-  "Спільнота однодумців",
-  "Лічильник рядів",
-  "Трекер проєктів",
-  "Галерея ідей та натхнення",
 ]
 
 const plans = [
   {
-    name: "6 місяців",
+    id: "half",
+    tab: "6 місяців",
     price: "599.99",
     period: "6 міс",
     perMonth: "100 грн/місяць",
-    highlighted: false,
+    badge: null,
   },
   {
-    name: "1 рік",
+    id: "year",
+    tab: "Річна",
     price: "918",
     period: "рік",
     perMonth: "76.50 грн/місяць",
-    badge: "Найвигідніша",
-    highlighted: true,
+    badge: "Економія 24%",
   },
   {
-    name: "Назавжди",
+    id: "forever",
+    tab: "Назавжди",
     price: "4 585",
     period: "одноразово",
     perMonth: "Довічний доступ",
-    highlighted: false,
+    badge: null,
   },
 ]
 
 export function PricingSection() {
+  const [activeIdx, setActiveIdx] = useState(1)
+  const plan = plans[activeIdx]
+
   return (
     <section id="pricing" className="bg-secondary/50 py-16 lg:py-24">
       <div className="mx-auto max-w-6xl px-4 lg:px-8">
@@ -53,69 +59,62 @@ export function PricingSection() {
           </p>
         </div>
 
-        {/* Shared features block */}
-        <div className="mx-auto mb-10 max-w-md rounded-2xl border border-border bg-card p-6 lg:p-8">
-          <h3 className="mb-4 text-center text-lg font-bold text-foreground">
-            {"Що входить у Premium"}
-          </h3>
-          <ul className="grid gap-3 sm:grid-cols-2">
-            {premiumFeatures.map((feature, i) => (
-              <li key={i} className="flex items-start gap-2.5">
-                <Check className="mt-0.5 h-4 w-4 shrink-0 text-primary" />
+        {/* Single card */}
+        <div className="mx-auto max-w-md rounded-2xl border border-border bg-card p-6 shadow-sm sm:p-8">
+          {/* Period tabs */}
+          <div className="mx-auto mb-8 flex w-fit rounded-lg border border-border bg-secondary/60 p-1">
+            {plans.map((p, i) => (
+              <button
+                key={p.id}
+                onClick={() => setActiveIdx(i)}
+                className={`rounded-md px-4 py-2 text-sm font-medium transition-all ${
+                  i === activeIdx
+                    ? "bg-card text-foreground shadow-sm"
+                    : "text-muted-foreground hover:text-foreground"
+                }`}
+              >
+                {p.tab}
+              </button>
+            ))}
+          </div>
+
+          {/* Price */}
+          <div className="mb-6 text-center">
+            {plan.badge && (
+              <span className="mb-2 inline-block rounded-full bg-primary px-4 py-1 text-xs font-semibold text-primary-foreground">
+                {plan.badge}
+              </span>
+            )}
+            <div className="flex items-baseline justify-center gap-2">
+              <span className="text-4xl font-bold text-foreground sm:text-5xl">
+                {plan.price}
+              </span>
+              <span className="text-base text-muted-foreground">
+                {"грн / "}{plan.period}
+              </span>
+            </div>
+            <p className="mt-1 text-sm text-muted-foreground">
+              {plan.perMonth}
+            </p>
+          </div>
+
+          {/* Divider */}
+          <div className="mb-6 border-t border-border" />
+
+          {/* Features */}
+          <ul className="mb-8 flex flex-col gap-3">
+            {features.map((feature, i) => (
+              <li key={i} className="flex items-center gap-2.5">
+                <Check className="h-4 w-4 shrink-0 text-primary" />
                 <span className="text-sm text-foreground">{feature}</span>
               </li>
             ))}
           </ul>
-        </div>
 
-        {/* Price cards */}
-        <div className="mx-auto grid max-w-3xl gap-5 md:grid-cols-3">
-          {plans.map((plan, idx) => (
-            <div
-              key={idx}
-              className={`relative flex flex-col items-center rounded-2xl bg-card p-6 text-center ${
-                plan.highlighted
-                  ? "border-2 border-primary shadow-lg"
-                  : "border border-border"
-              }`}
-            >
-              {/* Badge */}
-              {plan.highlighted && (
-                <div className="absolute -top-3 left-1/2 -translate-x-1/2">
-                  <span className="inline-flex items-center gap-1.5 rounded-full bg-primary px-4 py-1 text-xs font-semibold text-primary-foreground whitespace-nowrap">
-                    <Crown className="h-3.5 w-3.5" />
-                    {plan.badge}
-                  </span>
-                </div>
-              )}
-
-              <h3 className="text-base font-bold text-foreground">{plan.name}</h3>
-
-              <div className="mt-3 flex flex-wrap items-baseline justify-center gap-x-1.5 gap-y-0">
-                <span className="whitespace-nowrap text-2xl font-bold text-foreground sm:text-3xl">
-                  {plan.price}
-                </span>
-                <span className="text-sm text-muted-foreground">
-                  {"грн"}
-                </span>
-              </div>
-
-              <p className={`mt-1 text-sm font-medium ${plan.highlighted ? "text-primary" : "text-muted-foreground"}`}>
-                {plan.perMonth}
-              </p>
-
-              <div className="mt-5 w-full">
-                <Button
-                  className="w-full"
-                  size="lg"
-                  variant={plan.highlighted ? "default" : "outline"}
-                  asChild
-                >
-                  <Link href="#subscribe">{"Придбати підписку"}</Link>
-                </Button>
-              </div>
-            </div>
-          ))}
+          {/* CTA */}
+          <Button className="w-full" size="lg" asChild>
+            <Link href="#subscribe">{"Придбати підписку"}</Link>
+          </Button>
         </div>
       </div>
     </section>
