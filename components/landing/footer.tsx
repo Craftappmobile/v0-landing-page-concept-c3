@@ -97,6 +97,15 @@ export function Footer() {
                   {"craftappmobile@gmail.com"}
                 </a>
               </li>
+              <li className="text-sm text-muted-foreground">
+                {"ФОП Дідух Роман Дмитрович"}
+              </li>
+              <li className="text-sm text-muted-foreground">
+                {"ЄДРПОУ: 3993408236"}
+              </li>
+              <li className="text-sm text-muted-foreground">
+                {"IBAN: UA22 305299 00000 26008046015269"}
+              </li>
             </ul>
           </div>
         </div>
