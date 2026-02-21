@@ -208,6 +208,17 @@ export function HeroSection() {
                 <Link href="#features">{"Дізнатися більше"}</Link>
               </Button>
             </div>
+
+            {/* Infographic icons */}
+            <div className="hero-text-3">
+              <Image
+                src="/images/hero-infographic.png"
+                alt="Калькулятори, в'язання, YouTube та Pinterest - все в одному додатку"
+                width={280}
+                height={70}
+                className="h-auto w-auto max-w-[280px]"
+              />
+            </div>
           </div>
 
           {/* --- Smartphone mockup --- */}
