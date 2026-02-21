@@ -36,12 +36,14 @@ export function FeaturesSection() {
     <section id="features" className="bg-background py-16 lg:py-24">
       <div className="mx-auto max-w-6xl px-4 lg:px-8">
         <div className="mb-16 text-center">
-          <p className="text-sm font-semibold uppercase tracking-widest text-primary">
-            {"Можливості"}
-          </p>
-          <h2 className="mt-3 font-serif text-3xl tracking-tight text-foreground sm:text-4xl text-balance">
-            {"Все для ідеального виробу в одному місці"}
+          <h2 className="font-serif text-3xl tracking-tight text-foreground sm:text-4xl text-balance">
+            {"Мінімум математики."}
+            <br />
+            {"Максимум в'язання."}
           </h2>
+          <p className="mt-3 text-base leading-relaxed text-muted-foreground max-w-xl mx-auto text-balance">
+            {"Перший додаток, де є все для в'язання — від розрахунків до обліку пряжі!"}
+          </p>
         </div>
 
         <div className="grid gap-6 sm:grid-cols-2">
