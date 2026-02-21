@@ -4,7 +4,7 @@ import { useState, useEffect, useCallback } from "react"
 import Image from "next/image"
 import Link from "next/link"
 import { Button } from "@/components/ui/button"
-import { ArrowRight } from "lucide-react"
+import { ArrowRight, Calculator, Scissors, PlayCircle } from "lucide-react"
 
 const HERO_SCREENS = [
   { src: "/images/hero-screen-1.jpg", alt: "Головний екран додатку з калькуляторами" },
@@ -209,15 +209,35 @@ export function HeroSection() {
               </Button>
             </div>
 
-            {/* Infographic icons */}
-            <div className="hero-text-3">
-              <Image
-                src="/images/hero-infographic.png"
-                alt="Калькулятори, в'язання, YouTube та Pinterest - все в одному додатку"
-                width={280}
-                height={70}
-                className="h-auto w-auto max-w-[280px]"
-              />
+            {/* Infographic */}
+            <div className="hero-text-3 flex flex-wrap items-center gap-4 sm:gap-6">
+              <div className="flex items-center gap-2">
+                <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-primary/10">
+                  <Calculator className="h-4.5 w-4.5 text-primary" />
+                </div>
+                <div className="flex flex-col">
+                  <span className="text-sm font-bold text-foreground leading-tight">{"30"}</span>
+                  <span className="text-xs text-muted-foreground leading-tight">{"калькуляторів"}</span>
+                </div>
+              </div>
+              <div className="flex items-center gap-2">
+                <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-accent/10">
+                  <Scissors className="h-4.5 w-4.5 text-accent" />
+                </div>
+                <div className="flex flex-col">
+                  <span className="text-sm font-bold text-foreground leading-tight">{"CRM"}</span>
+                  <span className="text-xs text-muted-foreground leading-tight">{"облік пряжі"}</span>
+                </div>
+              </div>
+              <div className="flex items-center gap-2">
+                <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-destructive/10">
+                  <PlayCircle className="h-4.5 w-4.5 text-destructive" />
+                </div>
+                <div className="flex flex-col">
+                  <span className="text-sm font-bold text-foreground leading-tight">{"Галерея"}</span>
+                  <span className="text-xs text-muted-foreground leading-tight">{"YouTube + Pinterest"}</span>
+                </div>
+              </div>
             </div>
           </div>
 
