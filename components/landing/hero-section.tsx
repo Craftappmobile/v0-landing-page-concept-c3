@@ -210,7 +210,7 @@ export function HeroSection() {
             </div>
 
             {/* Infographic */}
-            <div className="hero-text-3 flex flex-wrap items-center gap-4 sm:gap-6">
+            <div className="hero-text-3 mt-3 flex flex-wrap items-center gap-4 sm:gap-6">
               <div className="flex items-center gap-2">
                 <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-primary/10">
                   <Calculator className="h-4.5 w-4.5 text-primary" />
