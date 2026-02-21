@@ -2,7 +2,6 @@
 
 import { useState, useEffect, useCallback } from "react"
 import Image from "next/image"
-import Link from "next/link"
 import { Star, ChevronLeft, ChevronRight } from "lucide-react"
 
 const testimonials = [
@@ -10,7 +9,6 @@ const testimonials = [
     name: "oliamoshenska",
     role: "В'яже 5 років",
     avatar: "/images/avatar-olia.png",
-    profileUrl: "https://www.instagram.com/oliamoshenska/",
     text: "Це не просто додаток, це знахідка для в'язалочки. Всі проект, пряжа та розрахунки під рукою, в одному додатку. Я тестувала, цей додаток і хочу сказати, що тут є все, що потрібно. Зручні калькулятори, порахують все за нас, лічильник рядів, прогрес в'язання проекту і ще багато іншого можна знайти в цьому додатку. А ще можна зберігати купу картинок для натхнення. Дякую велике за такого незамінного помічника для в'язаллчки! Дуже рекомендую спробувати\u2764\uFE0F\u2764\uFE0F\u2764\uFE0F\u2764\uFE0F",
     stars: 5,
   },
@@ -18,7 +16,6 @@ const testimonials = [
     name: "Мар'яна Б.",
     role: "Майстриня в'язання",
     avatar: "/images/avatar-maryana.png",
-    profileUrl: "https://www.facebook.com/maryana.boiko.2025",
     text: "Облік пряжі — моя улюблена функція. Тепер я точно знаю, що лежить у кожній скриньці, і більше не купую зайве. Економлю і час, і гроші!",
     stars: 5,
   },
@@ -26,7 +23,6 @@ const testimonials = [
     name: "irynka_kaminska",
     role: "В'яже понад 20 років",
     avatar: "/images/avatar-irynka.png",
-    profileUrl: "https://www.instagram.com/irynka_kaminska/",
     text: "Дуже зручний і цікавий застосунок! \uD83D\uDD25 В'язати шкарпетки по одній стало набагато простіше. І не треба кожен раз згадувати скільки убавок і додавань було зроблено. Те ж саме і з рукавами - вийшли однаковими з першого разу \uD83D\uDE02 Дякую за такого чудового помічника \u2764\uFE0F",
     stars: 5,
   },
@@ -113,18 +109,7 @@ export function TestimonialsSection() {
                         className="rounded-full object-cover"
                       />
                       <div>
-                        {t.profileUrl ? (
-                          <Link
-                            href={t.profileUrl}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="text-sm font-semibold text-foreground underline-offset-2 hover:underline"
-                          >
-                            {t.name}
-                          </Link>
-                        ) : (
-                          <p className="text-sm font-semibold text-foreground">{t.name}</p>
-                        )}
+                        <p className="text-sm font-semibold text-foreground">{t.name}</p>
                         <p className="text-xs text-muted-foreground">{t.role}</p>
                       </div>
                     </div>
