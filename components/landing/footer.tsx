@@ -97,7 +97,9 @@ export function Footer() {
                   {"craftappmobile@gmail.com"}
                 </a>
               </li>
-              <li className="border-t border-border pt-2" />
+              <li aria-hidden="true">
+                <hr className="border-border" />
+              </li>
               <li className="text-sm text-muted-foreground">
                 {"ФОП Дідух Роман Дмитрович"}
               </li>
