@@ -1,7 +1,80 @@
+"use client"
+
+import { useState, useEffect, useCallback } from "react"
 import Image from "next/image"
 import Link from "next/link"
 import { Button } from "@/components/ui/button"
 import { ArrowRight } from "lucide-react"
+
+const HERO_SCREENS = [
+  { src: "/images/hero-screen-1.jpg", alt: "Головний екран додатку з калькуляторами" },
+  { src: "/images/hero-screen-2.jpg", alt: "Результати розрахунку складань пряжі" },
+  { src: "/images/hero-screen-3.jpg", alt: "Лічильник рядів з прогресом в'язання" },
+]
+
+function HeroPhoneMockup() {
+  const [active, setActive] = useState(0)
+
+  const next = useCallback(() => {
+    setActive((prev) => (prev + 1) % HERO_SCREENS.length)
+  }, [])
+
+  useEffect(() => {
+    const id = setInterval(next, 3500)
+    return () => clearInterval(id)
+  }, [next])
+
+  return (
+    <div className="relative mx-auto w-[260px] sm:w-[280px]">
+      {/* Glow */}
+      <div className="hero-glow absolute -inset-4 rounded-[3rem] bg-primary/5 blur-2xl" />
+
+      {/* Phone frame */}
+      <div className="relative rounded-[2.5rem] border-[6px] border-foreground/80 bg-foreground/80 p-1.5 shadow-2xl">
+        {/* Notch */}
+        <div className="absolute left-1/2 top-0 z-10 h-6 w-28 -translate-x-1/2 rounded-b-2xl bg-foreground/80" />
+
+        {/* Screen */}
+        <div className="relative overflow-hidden rounded-[2rem] bg-background">
+          <div className="aspect-[9/19.5] relative">
+            {HERO_SCREENS.map((screen, i) => (
+              <Image
+                key={screen.src}
+                src={screen.src}
+                alt={screen.alt}
+                fill
+                className={`object-cover object-top transition-opacity duration-700 ${
+                  i === active ? "opacity-100" : "opacity-0"
+                }`}
+                sizes="280px"
+                priority={i === 0}
+              />
+            ))}
+          </div>
+        </div>
+
+        {/* Home indicator */}
+        <div className="mx-auto mt-1.5 h-1 w-24 rounded-full bg-background/40" />
+      </div>
+
+      {/* Screen dots */}
+      <div className="mt-4 flex items-center justify-center gap-2">
+        {HERO_SCREENS.map((_, i) => (
+          <button
+            key={i}
+            onClick={() => setActive(i)}
+            className={`h-2 rounded-full transition-all duration-300 ${
+              i === active
+                ? "w-6 bg-primary"
+                : "w-2 bg-primary/30 hover:bg-primary/50"
+            }`}
+            aria-label={`Показати скриншот ${i + 1}`}
+          />
+        ))}
+      </div>
+    </div>
+  )
+}
 
 export function HeroSection() {
   return (
@@ -127,28 +200,8 @@ export function HeroSection() {
           </div>
 
           {/* --- Smartphone mockup --- */}
-          <div className="relative flex items-center justify-center lg:justify-end">
-            <div className="hero-phone-container relative w-full max-w-[280px] sm:max-w-[300px]">
-              <div className="hero-glow absolute -inset-4 rounded-[3rem] bg-primary/5 blur-2xl" />
-              {/* Phone frame */}
-              <div className="relative rounded-[2.5rem] border-[6px] border-foreground/90 bg-foreground/90 p-1.5 shadow-2xl">
-                {/* Notch / Dynamic Island */}
-                <div className="absolute top-0 left-1/2 z-10 h-6 w-28 -translate-x-1/2 rounded-b-2xl bg-foreground/90" />
-                {/* Screen */}
-                <div className="relative overflow-hidden rounded-[2rem] bg-background">
-                  <Image
-                    src="/images/app-screenshot.jpg"
-                    alt="Скриншот додатку Розрахуй і В'яжи"
-                    width={300}
-                    height={600}
-                    className="h-auto w-full"
-                    priority
-                  />
-                </div>
-                {/* Home indicator */}
-                <div className="mx-auto mt-1.5 h-1 w-24 rounded-full bg-background/40" />
-              </div>
-            </div>
+          <div className="hero-phone-container relative flex items-center justify-center lg:justify-end">
+            <HeroPhoneMockup />
           </div>
         </div>
       </div>
