@@ -8,8 +8,13 @@ import { ArrowRight } from "lucide-react"
 
 const HERO_SCREENS = [
   { src: "/images/hero-screen-1.jpg", alt: "Головний екран додатку з калькуляторами" },
-  { src: "/images/hero-screen-2.jpg", alt: "Результати розрахунку складань пряжі" },
-  { src: "/images/hero-screen-3.jpg", alt: "Лічильник рядів з прогресом в'язання" },
+  { src: "/images/hero-screen-2.jpg", alt: "Калькулятор розрахунку складань пряжі" },
+  { src: "/images/hero-screen-3.jpg", alt: "Результати розрахунку з рекомендаціями" },
+  { src: "/images/hero-screen-4.jpg", alt: "Трекер проєктів з прогресом" },
+  { src: "/images/hero-screen-5.jpg", alt: "Лічильник рядів з прогресом в'язання" },
+  { src: "/images/hero-screen-6.jpg", alt: "Галерея схем та натхнення" },
+  { src: "/images/hero-screen-7.jpg", alt: "Галерея відео майстер-класів" },
+  { src: "/images/hero-screen-8.jpg", alt: "Каталог пряжі зі статистикою" },
 ]
 
 function HeroPhoneMockup() {
