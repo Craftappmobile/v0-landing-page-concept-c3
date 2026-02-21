@@ -1,43 +1,39 @@
 import Link from "next/link"
-import { Check, Crown, Infinity } from "lucide-react"
+import { Check, Crown } from "lucide-react"
 import { Button } from "@/components/ui/button"
 
-const features = [
-  "Всі калькулятори",
+const premiumFeatures = [
+  "30 професійних калькуляторів",
   "Облік пряжі",
   "Генератор візерунків (beta)",
-  "Спільнота",
+  "Спільнота однодумців",
   "Лічильник рядів",
+  "Трекер проєктів",
+  "Галерея ідей та натхнення",
 ]
 
 const plans = [
   {
-    name: "Преміум 6-місячна підписка",
+    name: "6 місяців",
     price: "599.99",
     period: "6 міс",
     perMonth: "100 грн/місяць",
-    badge: null,
-    badgeStyle: "",
     highlighted: false,
   },
   {
-    name: "Преміум річна підписка",
+    name: "1 рік",
     price: "918",
     period: "рік",
     perMonth: "76.50 грн/місяць",
-    badge: "Найвигідніша пропозиція",
-    badgeStyle: "bg-primary text-primary-foreground",
+    badge: "Найвигідніша",
     highlighted: true,
   },
   {
-    name: "Безлімітна підписка",
+    name: "Назавжди",
     price: "4 585",
-    period: "назавжди",
-    perMonth: null,
-    badge: null,
-    badgeStyle: "",
+    period: "одноразово",
+    perMonth: "Довічний доступ",
     highlighted: false,
-    isUnlimited: true,
   },
 ]
 
@@ -57,70 +53,58 @@ export function PricingSection() {
           </p>
         </div>
 
-        <div className="mx-auto grid max-w-5xl gap-6 md:grid-cols-3">
+        {/* Shared features block */}
+        <div className="mx-auto mb-10 max-w-md rounded-2xl border border-border bg-card p-6 lg:p-8">
+          <h3 className="mb-4 text-center text-lg font-bold text-foreground">
+            {"Що входить у Premium"}
+          </h3>
+          <ul className="grid gap-3 sm:grid-cols-2">
+            {premiumFeatures.map((feature, i) => (
+              <li key={i} className="flex items-start gap-2.5">
+                <Check className="mt-0.5 h-4 w-4 shrink-0 text-primary" />
+                <span className="text-sm text-foreground">{feature}</span>
+              </li>
+            ))}
+          </ul>
+        </div>
+
+        {/* Price cards */}
+        <div className="mx-auto grid max-w-3xl gap-5 md:grid-cols-3">
           {plans.map((plan, idx) => (
             <div
               key={idx}
-              className={`relative flex flex-col rounded-2xl bg-card p-6 lg:p-8 ${
+              className={`relative flex flex-col items-center rounded-2xl bg-card p-6 text-center ${
                 plan.highlighted
                   ? "border-2 border-primary shadow-lg"
                   : "border border-border"
               }`}
             >
               {/* Badge */}
-              {plan.highlighted ? (
+              {plan.highlighted && (
                 <div className="absolute -top-3 left-1/2 -translate-x-1/2">
                   <span className="inline-flex items-center gap-1.5 rounded-full bg-primary px-4 py-1 text-xs font-semibold text-primary-foreground whitespace-nowrap">
                     <Crown className="h-3.5 w-3.5" />
                     {plan.badge}
                   </span>
                 </div>
-              ) : null}
-
-              <h3 className={`text-lg font-bold text-foreground ${plan.highlighted ? "text-center" : ""}`}>{plan.name}</h3>
-
-              {!plan.highlighted && plan.badge && (
-                <span
-                  className={`mt-2 inline-flex w-fit items-center gap-1 rounded-full px-3 py-1 text-xs font-semibold ${plan.badgeStyle}`}
-                >
-                  {plan.isUnlimited && <Infinity className="h-3.5 w-3.5" />}
-                  {plan.badge}
-                </span>
               )}
 
-              <div className={`mt-5 flex flex-wrap items-baseline gap-x-1.5 gap-y-0 ${plan.highlighted ? "justify-center" : ""}`}>
+              <h3 className="text-base font-bold text-foreground">{plan.name}</h3>
+
+              <div className="mt-3 flex flex-wrap items-baseline justify-center gap-x-1.5 gap-y-0">
                 <span className="whitespace-nowrap text-2xl font-bold text-foreground sm:text-3xl">
                   {plan.price}
                 </span>
-                <span className="text-sm text-muted-foreground sm:text-base">
+                <span className="text-sm text-muted-foreground">
                   {"грн"}
-                </span>
-                <span className="text-sm text-muted-foreground sm:text-base">
-                  {"/ " + plan.period}
                 </span>
               </div>
 
-              {plan.perMonth && (
-                <p className="mt-1 text-sm font-medium text-primary text-center">
-                  {plan.perMonth}
-                </p>
-              )}
-              {plan.isUnlimited && (
-                <p className="mt-1 text-sm font-medium text-accent text-center">
-                  {"Довічний доступ"}
-                </p>
-              )}
+              <p className={`mt-1 text-sm font-medium ${plan.highlighted ? "text-primary" : "text-muted-foreground"}`}>
+                {plan.perMonth}
+              </p>
 
-              <ul className="mt-6 flex flex-col gap-3 border-t border-border pt-6">
-                {features.map((feature, i) => (
-                  <li key={i} className="flex items-start gap-3">
-                    <Check className="mt-0.5 h-4 w-4 shrink-0 text-primary" />
-                    <span className="text-sm text-foreground">{feature}</span>
-                  </li>
-                ))}
-              </ul>
-
-              <div className="mt-auto pt-8">
+              <div className="mt-5 w-full">
                 <Button
                   className="w-full"
                   size="lg"
