@@ -507,6 +507,15 @@ export default function TermsPage() {
               {"14. Контакти"}
             </h2>
             <p className="mt-3 text-sm leading-relaxed text-muted-foreground">
+              {"Послуги надаються: ФОП Дідух Роман Дмитрович"}
+            </p>
+            <p className="mt-2 text-sm text-muted-foreground">
+              {"ЄДРПОУ: 3993408236"}
+            </p>
+            <p className="mt-2 text-sm text-muted-foreground">
+              {"Юридична адреса: Україна, 29021, Хмельницька обл., Хмельницький р-н, місто Хмельницький, вул. Тичини, будинок 2/2"}
+            </p>
+            <p className="mt-4 text-sm leading-relaxed text-muted-foreground">
               {"Якщо у вас є питання щодо цих Умов використання, зв'яжіться з нами:"}
             </p>
             <p className="mt-2 text-sm text-muted-foreground">
@@ -526,9 +535,6 @@ export default function TermsPage() {
               >
                 {"+380 95 272 81 68"}
               </a>
-            </p>
-            <p className="mt-2 text-sm text-muted-foreground">
-              {"Юридична адреса: Україна, 29021, Хмельницька обл., Хмельницький р-н, місто Хмельницький, вул. Тичини, будинок 2/2"}
             </p>
             <p className="mt-3 text-sm text-muted-foreground">
               {"Ми розглянемо ваш запит протягом 30 днів."}
