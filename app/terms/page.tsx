@@ -519,6 +519,18 @@ export default function TermsPage() {
               </a>
             </p>
             <p className="mt-2 text-sm text-muted-foreground">
+              {"Телефон: "}
+              <a
+                href="tel:+380952728168"
+                className="font-medium text-primary underline-offset-2 hover:underline"
+              >
+                {"+380 95 272 81 68"}
+              </a>
+            </p>
+            <p className="mt-2 text-sm text-muted-foreground">
+              {"Юридична адреса: Україна, 29021, Хмельницька обл., Хмельницький р-н, місто Хмельницький, вул. Тичини, будинок 2/2"}
+            </p>
+            <p className="mt-3 text-sm text-muted-foreground">
               {"Ми розглянемо ваш запит протягом 30 днів."}
             </p>
           </section>
