@@ -43,7 +43,7 @@ export default function TermsPage() {
           {"Умови використання"}
         </h1>
         <p className="mt-2 text-sm text-muted-foreground">
-          {"Дата останнього оновлення: 14 жовтня 2025 року"}
+          {"Дата останнього оновлення: 3 березня 2026 року"}
         </p>
 
         {/* Important notice */}
@@ -139,28 +139,51 @@ export default function TermsPage() {
             </h2>
 
             <h3 className="mt-4 text-base font-semibold text-foreground">
-              {"4.1. Платні послуги"}
+              {"4.1. Склад платної послуги"}
             </h3>
             <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
-              {"Додаток пропонує платну підписку для доступу до всіх функцій:"}
+              {"Преміум-підписка надає доступ до наступних функцій мобільного додатку «Розрахуй і В'яжи»:"}
+            </p>
+            <ul className="mt-2 flex flex-col gap-1.5 pl-5">
+              {[
+                "Всі 30 калькуляторів для розрахунків у в'язанні (горловина, реглан, кокетка, витрата пряжі тощо)",
+                "CRM обліку пряжі та бюджету проєктів",
+                "Галерея ідей з YouTube і Pinterest",
+                "Спільнота майстринь",
+                "Генератор візерунків (beta)",
+              ].map((item, i) => (
+                <li key={i} className="list-disc text-sm text-muted-foreground">
+                  {item}
+                </li>
+              ))}
+            </ul>
+
+            <p className="mt-3 text-sm leading-relaxed text-muted-foreground">
+              {"Тарифні плани та умови доступу:"}
             </p>
             <ul className="mt-2 flex flex-col gap-1.5 pl-5">
               <li className="list-disc text-sm text-muted-foreground">
-                {"Підписка на 6 місяців: 599.99 грн"}
+                {"Преміум на 6 місяців — 599.99 грн (доступ активується на 180 днів з моменту оплати)"}
               </li>
               <li className="list-disc text-sm text-muted-foreground">
-                {"Річна підписка: 918 грн/рік"}
+                {"Преміум на рік — 918 грн (доступ активується на 365 днів з моменту оплати)"}
               </li>
               <li className="list-disc text-sm text-muted-foreground">
-                {"Довічний доступ: 4 585 грн (одноразово)"}
+                {"Довічний доступ — 4 585 грн (одноразовий платіж, безстроковий доступ без обмежень)"}
               </li>
             </ul>
 
             <h3 className="mt-4 text-base font-semibold text-foreground">
-              {"4.2. Автоматичне продовження"}
+              {"4.2. Порядок оплати та активації послуги"}
             </h3>
             <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
-              {"Підписка автоматично продовжується, якщо ви не скасуєте її до закінчення поточного періоду. Кошти списуються автоматично через Google Play."}
+              {"Оплата здійснюється на сайті через платіжний сервіс Hutko (hutko.org). Підтримуються платіжні картки Visa та Mastercard, а також Apple Pay та Google Pay."}
+            </p>
+            <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
+              {"Після успішного проведення платежу доступ до преміум-функцій активується автоматично в додатку протягом 5–10 хвилин. Підтвердження оплати та дані для входу надсилаються на електронну адресу, вказану при оплаті."}
+            </p>
+            <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
+              {"Підписка НЕ продовжується автоматично. Після закінчення оплаченого терміну для продовження доступу необхідно здійснити нову оплату. Жодних прихованих списань не відбувається."}
             </p>
 
             <h3 className="mt-4 text-base font-semibold text-foreground">
