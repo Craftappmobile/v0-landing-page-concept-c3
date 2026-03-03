@@ -100,7 +100,8 @@ function CheckoutForm() {
 
       <div className="mt-6 rounded-lg bg-secondary/50 p-4 text-xs text-muted-foreground space-y-1">
         <p className="flex items-center gap-1.5"><ShieldCheck className="h-3.5 w-3.5 text-primary" />Безпечна оплата через платіжний сервіс <strong>Hutko</strong></p>
-        <p>Підписка не продовжується автоматично. Повернення коштів — протягом 14 днів.</p>
+        <p>Підписка не продовжується автоматично.</p>
+        <p>Повернення коштів — протягом 14 днів.</p>
         <p>Після оплати ви будете перенаправлені на сторінку Hutko для введення даних картки.</p>
       </div>
     </Shell>
