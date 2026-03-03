@@ -146,10 +146,13 @@ export default function TermsPage() {
             </p>
             <ul className="mt-2 flex flex-col gap-1.5 pl-5">
               <li className="list-disc text-sm text-muted-foreground">
-                {"Місячна підписка: 245 грн/місяць"}
+                {"Підписка на 6 місяців: 599.99 грн"}
               </li>
               <li className="list-disc text-sm text-muted-foreground">
-                {"Річна підписка: 2900 грн/рік"}
+                {"Річна підписка: 918 грн/рік"}
+              </li>
+              <li className="list-disc text-sm text-muted-foreground">
+                {"Довічний доступ: 4 585 грн (одноразово)"}
               </li>
             </ul>
 
