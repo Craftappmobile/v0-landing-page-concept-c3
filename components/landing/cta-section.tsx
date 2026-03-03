@@ -24,7 +24,7 @@ export function CtaSection() {
             className="gap-2 text-base"
             asChild
           >
-            <Link href="#pricing">
+            <Link href="/checkout?plan=year">
               {"Хочу ідеальні вироби з першого разу"}
               <ArrowRight className="h-4 w-4" />
             </Link>
