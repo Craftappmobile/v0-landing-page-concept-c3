@@ -125,7 +125,7 @@ export function PricingSection() {
 
           {/* CTA */}
           <Button className="w-full" size="lg" asChild>
-            <Link href="#subscribe">{"Придбати підписку"}</Link>
+            <Link href={`/checkout?plan=${plan.id}`}>{"Придбати підписку"}</Link>
           </Button>
           <p className="mt-3 text-center text-xs text-muted-foreground">
             {"Оплата на сайті. Premium активується автоматично в додатку."}

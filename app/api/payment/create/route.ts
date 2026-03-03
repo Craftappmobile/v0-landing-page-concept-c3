@@ -1,0 +1,107 @@
+import { NextRequest, NextResponse } from "next/server";
+import crypto from "crypto";
+
+const MERCHANT_ID = process.env.HUTKO_MERCHANT_ID || "";
+const MERCHANT_PASSWORD = process.env.HUTKO_MERCHANT_PASSWORD || "";
+const HUTKO_API_URL = "https://pay.hutko.org/api/checkout/url/";
+
+/** Plans configuration (amount in kopecks) */
+const PLANS: Record<string, { amount: number; description: string }> = {
+  half: { amount: 59999, description: "Підписка «Розрахуй і В'яжи» — 6 місяців" },
+  year: { amount: 91800, description: "Підписка «Розрахуй і В'яжи» — 12 місяців" },
+  forever: { amount: 458500, description: "Підписка «Розрахуй і В'яжи» — Довічна" },
+};
+
+/**
+ * Generate Hutko signature (SHA1):
+ * password + all params sorted alphabetically, joined with |
+ */
+function generateSignature(
+  password: string,
+  params: Record<string, string | number>
+): string {
+  const filtered: Record<string, string | number> = {};
+  for (const [key, value] of Object.entries(params)) {
+    if (value !== "" && value !== null && value !== undefined) {
+      filtered[key] = value;
+    }
+  }
+  const sortedKeys = Object.keys(filtered).sort();
+  const values = sortedKeys.map((k) => String(filtered[k]));
+  const signString = [password, ...values].join("|");
+  return crypto.createHash("sha1").update(signString, "utf8").digest("hex");
+}
+
+export async function POST(request: NextRequest) {
+  try {
+    const body = await request.json();
+    const { plan, email, name } = body as {
+      plan: string;
+      email: string;
+      name: string;
+    };
+
+    if (!plan || !email || !name) {
+      return NextResponse.json(
+        { error: "Заповніть всі поля" },
+        { status: 400 }
+      );
+    }
+
+    const planConfig = PLANS[plan];
+    if (!planConfig) {
+      return NextResponse.json(
+        { error: "Невідомий тарифний план" },
+        { status: 400 }
+      );
+    }
+
+    if (!MERCHANT_ID || !MERCHANT_PASSWORD) {
+      return NextResponse.json(
+        { error: "Платіжна система тимчасово недоступна. Спробуйте пізніше." },
+        { status: 503 }
+      );
+    }
+
+    const origin = request.headers.get("origin") || request.nextUrl.origin;
+    const orderId = `order_${Date.now()}_${Math.random().toString(36).slice(2, 8)}`;
+
+    const params: Record<string, string | number> = {
+      order_id: orderId,
+      merchant_id: Number(MERCHANT_ID),
+      order_desc: planConfig.description,
+      amount: planConfig.amount,
+      currency: "UAH",
+      version: "1.0.1",
+      response_url: `${origin}/checkout?status=done`,
+      server_callback_url: `${origin}/api/payment/callback`,
+      sender_email: email,
+      lang: "uk",
+      merchant_data: JSON.stringify({ plan, name, email }),
+    };
+
+    params.signature = generateSignature(MERCHANT_PASSWORD, params);
+
+    const res = await fetch(HUTKO_API_URL, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ request: params }),
+    });
+
+    const data = await res.json();
+
+    if (data?.response?.response_status === "success" && data.response.checkout_url) {
+      return NextResponse.json({ checkout_url: data.response.checkout_url });
+    }
+
+    const errorMsg =
+      data?.response?.error_message || "Помилка створення платежу. Спробуйте пізніше.";
+    return NextResponse.json({ error: errorMsg }, { status: 502 });
+  } catch {
+    return NextResponse.json(
+      { error: "Внутрішня помилка сервера" },
+      { status: 500 }
+    );
+  }
+}
+
