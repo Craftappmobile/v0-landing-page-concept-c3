@@ -293,7 +293,8 @@ export default function PrivacyPage() {
                     "Meta / Facebook SDK — збирає рекламний ідентифікатор (Advertising ID), події в додатку, дані про пристрій для аналітики та рекламних цілей.",
                     "Sentry — отримує дані про помилки, збої, інформацію про пристрій та Installation ID для моніторингу стабільності.",
                     "Supabase — зберігає дані користувача, проєкти, контент спільноти у хмарі.",
-                    "Google Play Services — обробка покупок в додатку (In-App Purchases), авторизація через Google Sign-In.",
+                    "Google Play Services — авторизація через Google Sign-In.",
+                    "Hutko (hutko.org) — платіжний сервіс для обробки покупок підписки на вебсайті. Отримує платіжні дані та email для підтвердження транзакції.",
                     "Expo Push Notifications — надсилання push-повідомлень через Push-токен пристрою.",
                   ].map((item, i) => (
                     <li key={i} className="list-disc text-sm text-muted-foreground leading-relaxed">
