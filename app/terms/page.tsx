@@ -174,43 +174,72 @@ export default function TermsPage() {
             </ul>
 
             <h3 className="mt-4 text-base font-semibold text-foreground">
-              {"4.2. Порядок оплати та активації послуги"}
+              {"4.2. Як оплатити підписку на сайті"}
             </h3>
             <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
-              {"Оплата здійснюється на сайті через платіжний сервіс Hutko (hutko.org). Підтримуються платіжні картки Visa та Mastercard, а також Apple Pay та Google Pay."}
+              {"Усі платежі здійснюються виключно через офіційний вебсайт. Мобільний додаток не бере участі в обробці платежів і не приймає оплату."}
             </p>
             <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
-              {"Після успішного проведення платежу доступ до преміум-функцій активується автоматично в додатку протягом 5–10 хвилин. Підтвердження оплати та дані для входу надсилаються на електронну адресу, вказану при оплаті."}
+              {"Покроковий порядок оплати:"}
             </p>
-            <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
-              {"Підписка НЕ продовжується автоматично. Після закінчення оплаченого терміну для продовження доступу необхідно здійснити нову оплату. Жодних прихованих списань не відбувається."}
-            </p>
-
-            <h3 className="mt-4 text-base font-semibold text-foreground">
-              {"4.3. Повернення коштів"}
-            </h3>
-            <p className="mt-2 text-sm font-semibold leading-relaxed text-foreground">
-              {"МИ НЕ ПОВЕРТАЄМО КОШТИ за:"}
-            </p>
-            <ul className="mt-2 flex flex-col gap-1.5 pl-5">
+            <ol className="mt-2 flex flex-col gap-2 pl-5">
               {[
-                "Вже використані періоди підписки",
-                "Часткове використання підписки",
-                "Незадоволення функціоналом",
-                "Технічні проблеми з вашого боку",
-                "Будь-які інші причини",
+                "Перейдіть до розділу «Підписка» на головній сторінці сайту (розрахуй-вяжи.com/#pricing).",
+                "Оберіть тарифний план (6 місяців, Річна або Назавжди).",
+                "Натисніть кнопку «Придбати підписку».",
+                "На сторінці оплати платіжного сервісу Hutko (hutko.org) введіть email та платіжні дані картки.",
+                "Підтримуються: Visa, Mastercard, Apple Pay, Google Pay.",
+                "Після успішної оплати підтвердження надходить на вказаний email, а преміум-доступ активується в додатку автоматично протягом 5–10 хвилин.",
               ].map((item, i) => (
-                <li key={i} className="list-disc text-sm text-muted-foreground">
+                <li key={i} className="list-decimal text-sm text-muted-foreground">
                   {item}
                 </li>
               ))}
-            </ul>
+            </ol>
+            <p className="mt-3 text-sm leading-relaxed text-muted-foreground">
+              {"Підписка НЕ продовжується автоматично. Після закінчення оплаченого терміну жодних списань не відбувається — для продовження доступу необхідно самостійно здійснити нову оплату на сайті."}
+            </p>
 
             <h3 className="mt-4 text-base font-semibold text-foreground">
-              {"4.4. Зміна цін"}
+              {"4.3. Скасування підписки"}
             </h3>
             <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
-              {"Ми залишаємо за собою право змінювати ціни в будь-який час БЕЗ попереднього повідомлення. Зміни цін застосовуються до нових підписок та продовжень."}
+              {"Оскільки підписка не продовжується автоматично, окремої процедури скасування не потрібно — по завершенні оплаченого терміну доступ до Преміум-функцій припиняється автоматично без будь-яких дій з вашого боку."}
+            </p>
+            <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
+              {"Якщо ви бажаєте достроково припинити підписку або маєте питання щодо управління своїм акаунтом, зверніться до служби підтримки:"}
+            </p>
+            <div className="mt-3 rounded-xl border border-border bg-secondary/30 p-4">
+              <p className="text-sm text-muted-foreground">
+                {"Email: "}
+                <a
+                  href="mailto:craftappmobile@gmail.com"
+                  className="font-medium text-primary underline-offset-2 hover:underline"
+                >
+                  {"craftappmobile@gmail.com"}
+                </a>
+              </p>
+              <p className="mt-1 text-sm text-muted-foreground">
+                {"Термін розгляду звернення: до 14 календарних днів."}
+              </p>
+            </div>
+
+            <h3 className="mt-4 text-base font-semibold text-foreground">
+              {"4.4. Повернення коштів"}
+            </h3>
+            <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
+              {"Умови та порядок повернення коштів описані в окремому документі — "}
+              <a href="/refund" className="font-medium text-primary underline-offset-2 hover:underline">
+                {"Політика повернення коштів"}
+              </a>
+              {". Для подання заяви на повернення надішліть звернення на craftappmobile@gmail.com із зазначенням email, дати оплати та причини звернення. Повернення здійснюється тим самим способом, яким було проведено оплату, через платіжний сервіс Hutko."}
+            </p>
+
+            <h3 className="mt-4 text-base font-semibold text-foreground">
+              {"4.5. Зміна цін"}
+            </h3>
+            <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
+              {"Ми залишаємо за собою право змінювати ціни з попереднім повідомленням на сайті. Зміни цін не впливають на вже оплачені та активні підписки."}
             </p>
           </section>
 

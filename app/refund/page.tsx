@@ -43,7 +43,7 @@ export default function RefundPage() {
           {"Умови повернення коштів"}
         </h1>
         <p className="mt-2 text-sm text-muted-foreground">
-          {"Дата останнього оновлення: 20 лютого 2026 року"}
+          {"Дата останнього оновлення: 3 березня 2026 року"}
         </p>
 
         <div className="mt-6 rounded-xl border border-border bg-secondary/30 p-4">
@@ -206,26 +206,33 @@ export default function RefundPage() {
             </p>
           </section>
 
-          {/* 7. Підписки через App Store або Google Play */}
+          {/* 7. Підписки через сайт (Hutko) */}
           <section>
             <h2 className="font-serif text-xl font-semibold text-foreground sm:text-2xl">
-              {"7. Підписки, придбані через App Store або Google Play"}
+              {"7. Підписки, придбані через офіційний сайт"}
             </h2>
             <p className="mt-3 text-sm leading-relaxed text-muted-foreground">
-              {"Якщо підписка була придбана через Apple App Store або Google Play Store, повернення коштів регулюється політикою відповідної платформи:"}
+              {"Усі підписки на «Розрахуй і В'яжи» оформлюються виключно через офіційний вебсайт. Мобільний додаток не бере участі в обробці платежів. Оплата проводиться через платіжний сервіс Hutko (hutko.org) з підтримкою карток Visa, Mastercard, Apple Pay та Google Pay."}
             </p>
-            <ul className="mt-3 flex flex-col gap-1.5 pl-5">
-              <li className="list-disc text-sm text-muted-foreground">
-                {"Apple App Store \u2014 подайте запит на повернення через "}
-                <span className="font-medium text-foreground">{"reportaproblem.apple.com"}</span>
-              </li>
-              <li className="list-disc text-sm text-muted-foreground">
-                {"Google Play Store \u2014 подайте запит через Центр підтримки Google Play"}
-              </li>
-            </ul>
             <p className="mt-3 text-sm leading-relaxed text-muted-foreground">
-              {"Для скасування підписки, придбаної через магазин додатків, скасуйте її в налаштуваннях вашого пристрою. Ненадання доступу до Додатку після оплати є підставою для повернення коштів незалежно від платформи."}
+              {"Оскільки підписка не продовжується автоматично, для її «скасування» достатньо просто не оновлювати оплату після завершення терміну — жодних зайвих дій не потрібно."}
             </p>
+            <p className="mt-3 text-sm leading-relaxed text-muted-foreground">
+              {"Для повернення коштів за підписку, придбану через сайт, подайте заяву на email "}
+              <a
+                href="mailto:craftappmobile@gmail.com"
+                className="font-medium text-primary underline-offset-2 hover:underline"
+              >
+                {"craftappmobile@gmail.com"}
+              </a>
+              {" відповідно до процедури, описаної у розділі 5 цього документу. Повернення здійснюється через Hutko на ту саму картку, з якої було проведено оплату."}
+            </p>
+            <div className="mt-4 rounded-xl border border-border bg-secondary/30 p-4">
+              <p className="text-sm font-semibold text-foreground">{"Важливо:"}</p>
+              <p className="mt-1 text-sm text-muted-foreground">
+                {"App Store та Google Play не використовуються для продажу підписок на «Розрахуй і В'яжи». Якщо ви побачили стягнення від Apple або Google — зверніться до відповідної платформи самостійно."}
+              </p>
+            </div>
           </section>
 
           {/* 8. Контактна інформація */}
