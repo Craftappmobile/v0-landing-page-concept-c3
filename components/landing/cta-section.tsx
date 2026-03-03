@@ -1,4 +1,3 @@
-import Link from "next/link"
 import { Button } from "@/components/ui/button"
 import { ArrowRight } from "lucide-react"
 
@@ -24,10 +23,10 @@ export function CtaSection() {
             className="gap-2 text-base"
             asChild
           >
-            <Link href="#pricing">
+            <a href="#pricing">
               {"Хочу ідеальні вироби з першого разу"}
               <ArrowRight className="h-4 w-4" />
-            </Link>
+            </a>
           </Button>
         </div>
         <p className="mt-4 text-sm text-primary-foreground/60">

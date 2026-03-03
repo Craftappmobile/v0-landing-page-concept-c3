@@ -2,7 +2,6 @@
 
 import { useState, useEffect, useCallback } from "react"
 import Image from "next/image"
-import Link from "next/link"
 import { Button } from "@/components/ui/button"
 import { ArrowRight, Calculator, Scissors, PlayCircle } from "lucide-react"
 
@@ -203,13 +202,13 @@ export function HeroSection() {
 
             <div className="hero-text-3 flex flex-col gap-3 sm:flex-row">
               <Button size="lg" className="gap-2 text-base" asChild>
-                <Link href="#pricing">
+                <a href="#pricing">
                   {"Отримати Premium-доступ"}
                   <ArrowRight className="h-4 w-4" />
-                </Link>
+                </a>
               </Button>
               <Button size="lg" variant="outline" className="text-base" asChild>
-                <Link href="#features">{"Дізнатися більше"}</Link>
+                <a href="#features">{"Дізнатися більше"}</a>
               </Button>
             </div>
 
