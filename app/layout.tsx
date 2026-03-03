@@ -32,6 +32,10 @@ export const metadata: Metadata = {
   title: 'Розрахуй і В\'яжи — Ваш помічник для в\'язання',
   description:
     'Мобільний додаток для в\'язальниць: 30 калькуляторів, трекер проєктів, облік пряжі та спільнота майстринь. Спробуйте Premium!',
+  icons: {
+    icon: '/images/logo.jpg',
+    apple: '/images/logo.jpg',
+  },
 }
 
 /**
