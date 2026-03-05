@@ -215,7 +215,26 @@ export default function RefundPage() {
               {"Усі підписки на «Розрахуй і В'яжи» оформлюються виключно через офіційний вебсайт. Мобільний додаток не бере участі в обробці платежів. Оплата проводиться через платіжний сервіс Hutko (hutko.org) з підтримкою карток Visa, Mastercard, Apple Pay та Google Pay."}
             </p>
             <p className="mt-3 text-sm leading-relaxed text-muted-foreground">
-              {"Підписка продовжується автоматично після закінчення оплаченого терміну. Щоб скасувати автоматичне продовження, зверніться до служби підтримки на craftappmobile@gmail.com до дати наступного списання."}
+              {"Підписка продовжується автоматично після закінчення оплаченого терміну."}
+            </p>
+            <h3 className="mt-5 text-base font-semibold text-foreground">{"Скасування автопродовження"}</h3>
+            <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
+              {"Щоб скасувати автопродовження, виконайте такі кроки в додатку:"}
+            </p>
+            <ol className="mt-3 flex flex-col gap-1.5 pl-5">
+              {[
+                "Відкрийте Профіль",
+                "Перейдіть до розділу Мої підписки",
+                "Відкрийте Статус підписки",
+                "Натисніть Скасувати автопродовження",
+              ].map((item, i) => (
+                <li key={i} className="list-decimal text-sm text-muted-foreground">
+                  {item}
+                </li>
+              ))}
+            </ol>
+            <p className="mt-3 text-sm leading-relaxed text-muted-foreground">
+              {"Скасування набуває чинності після завершення поточного оплаченого терміну. Кошти за вже оплачений період не повертаються, якщо не виконуються умови розділу 2 або 4 цього документу."}
             </p>
             <p className="mt-3 text-sm leading-relaxed text-muted-foreground">
               {"Для повернення коштів за підписку, придбану через сайт, подайте заяву на email "}
