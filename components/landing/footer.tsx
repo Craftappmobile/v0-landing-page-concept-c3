@@ -82,6 +82,14 @@ export function Footer() {
                   {"Умови повернення коштів"}
                 </Link>
               </li>
+              <li>
+                <Link
+                  href="/cancel"
+                  className="text-sm text-muted-foreground transition-colors hover:text-foreground"
+                >
+                  {"Скасування підписки"}
+                </Link>
+              </li>
             </ul>
           </div>
 
