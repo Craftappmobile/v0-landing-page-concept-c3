@@ -1,9 +1,13 @@
 import { NextRequest, NextResponse } from "next/server";
 import crypto from "crypto";
+import { createAdminClient } from "@/lib/supabase";
 
 const MERCHANT_ID = process.env.HUTKO_MERCHANT_ID || "";
 const MERCHANT_PASSWORD = process.env.HUTKO_MERCHANT_PASSWORD || "";
 const HUTKO_API_URL = "https://pay.hutko.org/api/checkout/url/";
+
+/** Recurring plans — will send subscription=Y and required_rectoken=Y */
+const RECURRING_PLANS = new Set(["quarter", "half", "year"]);
 
 /** Plans configuration (amount in kopecks) */
 const PLANS: Record<string, { amount: number; description: string }> = {
@@ -67,6 +71,8 @@ export async function POST(request: NextRequest) {
     const origin = request.headers.get("origin") || request.nextUrl.origin;
     const orderId = `order_${Date.now()}_${Math.random().toString(36).slice(2, 8)}`;
 
+    const isRecurring = RECURRING_PLANS.has(plan);
+
     const params: Record<string, string | number> = {
       order_id: orderId,
       merchant_id: Number(MERCHANT_ID),
@@ -81,7 +87,28 @@ export async function POST(request: NextRequest) {
       merchant_data: JSON.stringify({ plan, name, email }),
     };
 
+    // For recurring plans, request rectoken from Hutko
+    if (isRecurring) {
+      params.subscription = "Y";
+      params.required_rectoken = "Y";
+    }
+
     params.signature = generateSignature(MERCHANT_PASSWORD, params);
+
+    // Save pending subscription to DB before redirecting to Hutko
+    const supabase = createAdminClient();
+    await supabase.from("subscriptions").insert({
+      order_id: orderId,
+      email,
+      customer_name: name,
+      plan,
+      amount: planConfig.amount,
+      currency: "UAH",
+      status: "pending",
+      payment_provider: "hutko",
+      platform: "web",
+      auto_renewal: isRecurring,
+    });
 
     const res = await fetch(HUTKO_API_URL, {
       method: "POST",
@@ -94,6 +121,12 @@ export async function POST(request: NextRequest) {
     if (data?.response?.response_status === "success" && data.response.checkout_url) {
       return NextResponse.json({ checkout_url: data.response.checkout_url });
     }
+
+    // If Hutko rejected — mark subscription as failed
+    await supabase
+      .from("subscriptions")
+      .update({ status: "failed" })
+      .eq("order_id", orderId);
 
     const errorMsg =
       data?.response?.error_message || "Помилка створення платежу. Спробуйте пізніше.";
