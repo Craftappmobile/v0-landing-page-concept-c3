@@ -11,24 +11,32 @@ export default function CancelPage() {
   const [submitted, setSubmitted] = useState(false)
   const [loading, setLoading] = useState(false)
 
+  const [errorMsg, setErrorMsg] = useState("")
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     setLoading(true)
+    setErrorMsg("")
 
-    // Send cancellation request via mailto fallback + form submission
     try {
-      const subject = encodeURIComponent("Заявка на скасування підписки")
-      const body = encodeURIComponent(
-        `Заявка на скасування підписки\n\nEmail підписки: ${email}\n\nПрошу скасувати автопродовження підписки, оформленої на вказаний email.`
-      )
-      window.location.href = `mailto:craftappmobile@gmail.com?subject=${subject}&body=${body}`
-      // Short delay to let mailto open
-      await new Promise((r) => setTimeout(r, 1000))
+      const res = await fetch("/api/cancel", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email }),
+      })
+      const data = await res.json()
+
+      if (!res.ok) {
+        setErrorMsg(data.error || "Помилка скасування")
+        setLoading(false)
+        return
+      }
+
+      setSubmitted(true)
     } catch {
-      // Ignore mailto errors
+      setErrorMsg("Помилка з'єднання. Спробуйте пізніше.")
     }
     setLoading(false)
-    setSubmitted(true)
   }
 
   return (
@@ -96,6 +104,12 @@ export default function CancelPage() {
                 className="mt-2 w-full rounded-lg border border-border bg-background px-4 py-3 text-sm text-foreground placeholder:text-muted-foreground focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/20"
               />
             </div>
+
+            {errorMsg && (
+              <div className="rounded-xl border border-red-500/30 bg-red-500/5 p-4 text-center text-sm text-red-600">
+                {errorMsg}
+              </div>
+            )}
 
             <div className="rounded-xl border border-border bg-secondary/30 p-4">
               <p className="text-xs leading-relaxed text-muted-foreground">
