@@ -80,7 +80,7 @@ export async function POST(request: NextRequest) {
       amount: planConfig.amount,
       currency: "UAH",
       version: "1.0.1",
-      response_url: `${origin}/checkout?status=done`,
+      response_url: `${origin}/api/payment/redirect`,
       server_callback_url: `${origin}/api/payment/callback`,
       sender_email: email,
       lang: "uk",
@@ -96,18 +96,26 @@ export async function POST(request: NextRequest) {
 
     // Save pending subscription to DB before redirecting to Hutko
     const supabase = createAdminClient();
-    await supabase.from("subscriptions").insert({
+    const now = new Date().toISOString();
+    const { error: dbError } = await supabase.from("subscriptions").insert({
       order_id: orderId,
       email,
       customer_name: name,
       plan,
+      plan_type: plan,
       amount: planConfig.amount,
       currency: "UAH",
       status: "pending",
       payment_provider: "hutko",
       platform: "web",
       auto_renewal: isRecurring,
+      started_at: now,
+      expires_at: now, // will be updated by callback on successful payment
     });
+
+    if (dbError) {
+      console.error("DB insert error:", dbError);
+    }
 
     const res = await fetch(HUTKO_API_URL, {
       method: "POST",
