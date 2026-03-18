@@ -115,7 +115,7 @@ export async function POST(request: NextRequest) {
 
       console.log("[Hutko Callback] Subscription activated:", order_id);
 
-      // Send welcome email (non-blocking)
+      // Send welcome email
       let customerName = "";
       let customerEmail = "";
       try {
@@ -125,9 +125,11 @@ export async function POST(request: NextRequest) {
       } catch { /* ignore */ }
 
       if (customerEmail) {
-        sendWelcomeEmail(customerEmail, customerName, plan).catch((err) =>
-          console.error("[Hutko Callback] Email send failed:", err)
-        );
+        console.log("[Hutko Callback] Sending welcome email to:", customerEmail);
+        const emailResult = await sendWelcomeEmail(customerEmail, customerName, plan);
+        console.log("[Hutko Callback] Email result:", JSON.stringify(emailResult));
+      } else {
+        console.log("[Hutko Callback] No customer email found in merchant_data");
       }
     } else {
       // Payment failed or declined

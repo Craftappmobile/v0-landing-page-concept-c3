@@ -56,11 +56,11 @@ export async function POST(request: NextRequest) {
 
     console.log(`[Cancel] Cancelled ${subs.length} subscription(s) for ${email}`);
 
-    // Send cancellation confirmation email (non-blocking)
+    // Send cancellation confirmation email
     const firstSub = subs[0];
-    sendCancellationEmail(email, firstSub?.customer_name || "", firstSub?.plan || "").catch(
-      (err) => console.error("[Cancel] Email send failed:", err)
-    );
+    console.log("[Cancel] Sending cancellation email to:", email);
+    const emailResult = await sendCancellationEmail(email, firstSub?.customer_name || "", firstSub?.plan || "");
+    console.log("[Cancel] Email result:", JSON.stringify(emailResult));
 
     return NextResponse.json({
       message: "Підписку скасовано",
