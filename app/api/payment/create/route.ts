@@ -6,7 +6,7 @@ const MERCHANT_ID = process.env.HUTKO_MERCHANT_ID || "";
 const MERCHANT_PASSWORD = process.env.HUTKO_MERCHANT_PASSWORD || "";
 const HUTKO_API_URL = "https://pay.hutko.org/api/checkout/url/";
 
-/** Recurring plans — will send subscription=Y and required_rectoken=Y */
+/** Recurring plans — will send required_rectoken=Y to get token for server-side billing */
 const RECURRING_PLANS = new Set(["quarter", "half", "year"]);
 
 /** Plans configuration (amount in kopecks) */
@@ -87,9 +87,8 @@ export async function POST(request: NextRequest) {
       merchant_data: JSON.stringify({ plan, name, email }),
     };
 
-    // For recurring plans, request rectoken from Hutko
+    // For recurring plans, only request rectoken (we handle billing ourselves via cron)
     if (isRecurring) {
-      params.subscription = "Y";
       params.required_rectoken = "Y";
     }
 
