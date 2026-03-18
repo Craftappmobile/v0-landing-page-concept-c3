@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createAdminClient } from "@/lib/supabase";
+import { sendCancellationEmail } from "@/lib/email";
 
 /**
  * Cancel subscription by email.
@@ -20,7 +21,7 @@ export async function POST(request: NextRequest) {
     // Find active subscriptions for this email
     const { data: subs, error } = await supabase
       .from("subscriptions")
-      .select("id, order_id, plan, status")
+      .select("id, order_id, plan, status, customer_name")
       .eq("email", email)
       .eq("status", "active");
 
@@ -54,6 +55,12 @@ export async function POST(request: NextRequest) {
     }
 
     console.log(`[Cancel] Cancelled ${subs.length} subscription(s) for ${email}`);
+
+    // Send cancellation confirmation email (non-blocking)
+    const firstSub = subs[0];
+    sendCancellationEmail(email, firstSub?.customer_name || "", firstSub?.plan || "").catch(
+      (err) => console.error("[Cancel] Email send failed:", err)
+    );
 
     return NextResponse.json({
       message: "Підписку скасовано",

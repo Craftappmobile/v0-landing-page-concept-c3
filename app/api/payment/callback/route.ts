@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import crypto from "crypto";
 import { createAdminClient } from "@/lib/supabase";
+import { sendWelcomeEmail } from "@/lib/email";
 
 const MERCHANT_PASSWORD = process.env.HUTKO_MERCHANT_PASSWORD || "";
 
@@ -113,6 +114,21 @@ export async function POST(request: NextRequest) {
         .eq("order_id", order_id);
 
       console.log("[Hutko Callback] Subscription activated:", order_id);
+
+      // Send welcome email (non-blocking)
+      let customerName = "";
+      let customerEmail = "";
+      try {
+        const parsed = JSON.parse(merchant_data || "{}");
+        customerName = parsed.name || "";
+        customerEmail = parsed.email || "";
+      } catch { /* ignore */ }
+
+      if (customerEmail) {
+        sendWelcomeEmail(customerEmail, customerName, plan).catch((err) =>
+          console.error("[Hutko Callback] Email send failed:", err)
+        );
+      }
     } else {
       // Payment failed or declined
       await supabase
