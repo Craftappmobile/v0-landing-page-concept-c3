@@ -7,6 +7,7 @@ import { ArrowLeft, Loader2, ShieldCheck } from "lucide-react"
 import { Button } from "@/components/ui/button"
 
 const PLANS: Record<string, { label: string; price: string; amount: string }> = {
+  quarter: { label: "3 місяці",   price: "454.96 грн", amount: "454.96" },
   half:    { label: "6 місяців",  price: "599.99 грн", amount: "599.99" },
   year:    { label: "12 місяців", price: "918 грн",    amount: "918" },
   forever: { label: "Довічна",    price: "4 585 грн",  amount: "4 585" },

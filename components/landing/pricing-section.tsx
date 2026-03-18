@@ -22,6 +22,14 @@ const features = [
  */
 const plans = [
   {
+    id: "quarter",
+    tab: "3 місяці",
+    price: "454.96",
+    period: "3 міс",
+    perMonth: "151.65 грн/місяць",
+    badge: null,
+  },
+  {
     id: "half",
     tab: "6 місяців",
     price: "599.99",

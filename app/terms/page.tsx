@@ -163,6 +163,9 @@ export default function TermsPage() {
             </p>
             <ul className="mt-2 flex flex-col gap-1.5 pl-5">
               <li className="list-disc text-sm text-muted-foreground">
+                {"Преміум на 3 місяці — 454.96 грн (доступ активується на 90 днів з моменту оплати)"}
+              </li>
+              <li className="list-disc text-sm text-muted-foreground">
                 {"Преміум на 6 місяців — 599.99 грн (доступ активується на 180 днів з моменту оплати)"}
               </li>
               <li className="list-disc text-sm text-muted-foreground">

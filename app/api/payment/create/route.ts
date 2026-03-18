@@ -7,6 +7,7 @@ const HUTKO_API_URL = "https://pay.hutko.org/api/checkout/url/";
 
 /** Plans configuration (amount in kopecks) */
 const PLANS: Record<string, { amount: number; description: string }> = {
+  quarter: { amount: 45496, description: "Підписка «Розрахуй і В'яжи» — 3 місяці" },
   half: { amount: 59999, description: "Підписка «Розрахуй і В'яжи» — 6 місяців" },
   year: { amount: 91800, description: "Підписка «Розрахуй і В'яжи» — 12 місяців" },
   forever: { amount: 458500, description: "Підписка «Розрахуй і В'яжи» — Довічна" },
