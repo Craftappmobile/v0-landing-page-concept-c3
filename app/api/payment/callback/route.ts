@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import crypto from "crypto";
 import { createAdminClient } from "@/lib/supabase";
 import { sendWelcomeEmail } from "@/lib/email";
+import { generateSecurePassword } from "@/lib/password";
 
 const MERCHANT_PASSWORD = process.env.HUTKO_MERCHANT_PASSWORD || "";
 
@@ -115,7 +116,7 @@ export async function POST(request: NextRequest) {
 
       console.log("[Hutko Callback] Subscription activated:", order_id);
 
-      // Send welcome email
+      // Get customer info from merchant_data or subscription record
       let customerName = "";
       let customerEmail = "";
       try {
@@ -124,12 +125,39 @@ export async function POST(request: NextRequest) {
         customerEmail = parsed.email || "";
       } catch { /* ignore */ }
 
+      // Fallback: get email from subscription record
+      if (!customerEmail) {
+        const { data: sub } = await supabase
+          .from("subscriptions")
+          .select("email, customer_name")
+          .eq("order_id", order_id)
+          .single();
+        if (sub) {
+          customerEmail = sub.email || "";
+          customerName = customerName || sub.customer_name || "";
+        }
+      }
+
       if (customerEmail) {
+        // Create user in Supabase Auth (or get existing)
+        const { userId, generatedPassword } = await getOrCreateUser(
+          supabase, customerEmail, customerName,
+        );
+
+        // Link subscription to user
+        await supabase
+          .from("subscriptions")
+          .update({ user_id: userId })
+          .eq("order_id", order_id);
+
+        // Send welcome email with credentials
         console.log("[Hutko Callback] Sending welcome email to:", customerEmail);
-        const emailResult = await sendWelcomeEmail(customerEmail, customerName, plan);
+        const emailResult = await sendWelcomeEmail(
+          customerEmail, customerName, plan, generatedPassword,
+        );
         console.log("[Hutko Callback] Email result:", JSON.stringify(emailResult));
       } else {
-        console.log("[Hutko Callback] No customer email found in merchant_data");
+        console.log("[Hutko Callback] No customer email found");
       }
     } else {
       // Payment failed or declined
@@ -151,3 +179,49 @@ export async function POST(request: NextRequest) {
   }
 }
 
+
+/**
+ * Find existing user by email or create a new one in Supabase Auth.
+ * Returns userId and generatedPassword (null if user already existed).
+ */
+async function getOrCreateUser(
+  supabase: ReturnType<typeof createAdminClient>,
+  email: string,
+  fullName: string,
+): Promise<{ userId: string; generatedPassword: string | null }> {
+  // Check if user already exists
+  const { data: existingUsers } = await supabase.auth.admin.listUsers();
+  const existing = existingUsers?.users?.find(
+    (u) => u.email?.toLowerCase() === email.toLowerCase(),
+  );
+  if (existing) {
+    console.log("[Auth] User already exists:", email);
+    return { userId: existing.id, generatedPassword: null };
+  }
+
+  // Create new user with generated password
+  const generatedPassword = generateSecurePassword();
+  const { data: newUser, error } = await supabase.auth.admin.createUser({
+    email,
+    password: generatedPassword,
+    email_confirm: true,
+    user_metadata: { full_name: fullName },
+  });
+
+  if (error || !newUser.user) {
+    throw new Error("Failed to create user: " + error?.message);
+  }
+
+  console.log("[Auth] New user created:", email, newUser.user.id);
+
+  // Create profile record
+  await supabase.from("profiles").upsert({
+    id: newUser.user.id,
+    email,
+    full_name: fullName,
+    name: fullName,
+    subscription_type: "free",
+  });
+
+  return { userId: newUser.user.id, generatedPassword };
+}
