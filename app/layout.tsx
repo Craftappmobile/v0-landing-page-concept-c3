@@ -1,6 +1,8 @@
 import type { Metadata, Viewport } from 'next'
 import { DM_Sans, DM_Serif_Display } from 'next/font/google'
 import Script from 'next/script'
+import { Analytics } from '@vercel/analytics/react'
+import { SpeedInsights } from '@vercel/speed-insights/next'
 
 import './globals.css'
 
@@ -92,6 +94,8 @@ export default function RootLayout({
           `}
         </Script>
         {children}
+        <Analytics />
+        <SpeedInsights />
       </body>
     </html>
   )
