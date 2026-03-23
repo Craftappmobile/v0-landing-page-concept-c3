@@ -6,7 +6,7 @@ function getResendClient(): Resend {
   return new Resend(apiKey);
 }
 
-const FROM_EMAIL = "Розрахуй і В'яжи <onboarding@resend.dev>";
+const FROM_EMAIL = "Розрахуй і В'яжи <noreply@vjazhi.com.ua>";
 
 const PLAN_NAMES: Record<string, string> = {
   quarter: "Підписка на 3 місяці",
