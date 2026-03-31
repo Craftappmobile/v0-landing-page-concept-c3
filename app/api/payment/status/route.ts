@@ -1,14 +1,6 @@
 import { NextRequest, NextResponse } from "next/server"
 import { createAdminClient } from "@/lib/supabase"
-
-type PaymentStatus = "pending" | "active" | "failed" | "not_found"
-
-function normalizeSubscriptionStatus(status: string | null): PaymentStatus {
-  if (status === "active") return "active"
-  if (status === "failed" || status === "cancelled") return "failed"
-  if (!status) return "not_found"
-  return "pending"
-}
+import { normalizeSubscriptionStatus } from "@/lib/payment-flow"
 
 export async function GET(request: NextRequest) {
   const orderId = request.nextUrl.searchParams.get("order_id")?.trim()

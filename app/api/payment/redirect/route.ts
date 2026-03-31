@@ -1,22 +1,5 @@
 import { NextRequest, NextResponse } from "next/server"
-
-function extractOrderIdFromValue(value: unknown): string | null {
-  if (typeof value === "string") {
-    const trimmed = value.trim()
-    return trimmed || null
-  }
-
-  if (value && typeof value === "object") {
-    const record = value as Record<string, unknown>
-    return (
-      extractOrderIdFromValue(record.order_id) ??
-      extractOrderIdFromValue(record.request) ??
-      extractOrderIdFromValue(record.response)
-    )
-  }
-
-  return null
-}
+import { buildCheckoutRedirectUrl, extractOrderIdFromValue } from "@/lib/payment-flow"
 
 async function extractOrderId(request: NextRequest) {
   const searchParamOrderId = request.nextUrl.searchParams.get("order_id")
@@ -37,8 +20,7 @@ async function extractOrderId(request: NextRequest) {
       contentType.includes("multipart/form-data")
     ) {
       const formData = await request.formData()
-      const orderId = formData.get("order_id")
-      return typeof orderId === "string" ? orderId.trim() || null : null
+      return extractOrderIdFromValue(formData.get("order_id"))
     }
   } catch (error) {
     console.warn("[Payment Redirect] Failed to extract order_id:", error)
@@ -49,12 +31,7 @@ async function extractOrderId(request: NextRequest) {
 
 async function redirectToCheckout(request: NextRequest) {
   const orderId = await extractOrderId(request)
-  const checkoutUrl = new URL("/checkout", request.nextUrl.origin)
-
-  checkoutUrl.searchParams.set("status", "processing")
-  if (orderId) {
-    checkoutUrl.searchParams.set("order_id", orderId)
-  }
+  const checkoutUrl = buildCheckoutRedirectUrl(request.nextUrl.origin, orderId)
 
   return NextResponse.redirect(checkoutUrl, {
     status: 303,
@@ -73,4 +50,3 @@ export async function POST(request: NextRequest) {
 export async function GET(request: NextRequest) {
   return redirectToCheckout(request)
 }
-

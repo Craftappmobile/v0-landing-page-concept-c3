@@ -5,11 +5,17 @@ import { useSearchParams } from "next/navigation"
 import Link from "next/link"
 import { AlertCircle, ArrowLeft, CheckCircle2, Loader2, ShieldCheck } from "lucide-react"
 import { isPlanId, PLAN_CONFIG } from "@/lib/plans"
+import {
+  getInitialPaymentView,
+  normalizeCheckoutStatus,
+  resolvePaymentStatusView,
+  type PaymentState,
+  type PaymentStatus,
+} from "@/lib/payment-flow"
 import { Button } from "@/components/ui/button"
 
-type PaymentState = "pending" | "success" | "failure"
 type PaymentStatusResponse = {
-  status?: "pending" | "active" | "failed" | "not_found"
+  status?: PaymentStatus
 }
 
 export default function CheckoutPage() {
@@ -24,8 +30,7 @@ function CheckoutForm() {
   const searchParams = useSearchParams()
   const requestedPlanId = searchParams.get("plan") || "year"
   const planId = isPlanId(requestedPlanId) ? requestedPlanId : "year"
-  const rawStatus = searchParams.get("status")
-  const status = rawStatus === "done" ? "processing" : rawStatus
+  const status = normalizeCheckoutStatus(searchParams.get("status"))
   const orderId = searchParams.get("order_id")?.trim() || null
   const isProcessingState = status === "processing"
   const plan = PLAN_CONFIG[planId]
@@ -47,8 +52,9 @@ function CheckoutForm() {
     }
 
     if (!orderId) {
-      setPaymentState("pending")
-      setPaymentMessage("Ми обробляємо платіж. Якщо кошти вже списані, підтвердження надійде на вашу електронну пошту.")
+      const initialView = getInitialPaymentView(orderId)
+      setPaymentState(initialView.state)
+      setPaymentMessage(initialView.message)
       return
     }
 
@@ -71,29 +77,24 @@ function CheckoutForm() {
 
         if (cancelled) return
 
-        if (data.status === "active") {
-          setPaymentState("success")
-          setPaymentMessage("Оплату підтверджено. Підписка активується автоматично, а деталі ми надішлемо на email.")
+        const nextView = resolvePaymentStatusView({
+          status: data.status ?? "not_found",
+          attempt,
+          maxAttempts,
+        })
+
+        setPaymentState(nextView.state)
+        setPaymentMessage(nextView.message)
+
+        if (nextView.state !== "pending") {
           return
         }
-
-        if (data.status === "failed") {
-          setPaymentState("failure")
-          setPaymentMessage("Оплату не вдалося підтвердити. Якщо кошти були списані, напишіть нам — ми перевіримо платіж вручну.")
-          return
-        }
-
-        setPaymentState("pending")
-        setPaymentMessage(
-          attempt >= maxAttempts - 1
-            ? "Платіж ще обробляється. Якщо підтвердження затримується, перевірте email трохи пізніше."
-            : "Ми очікуємо підтвердження платежу. Зазвичай це займає кілька секунд.",
-        )
       } catch {
         if (cancelled) return
 
-        setPaymentState("pending")
-        setPaymentMessage("Ми очікуємо підтвердження платежу. Якщо лист не надійде протягом кількох хвилин, напишіть нам.")
+        const errorView = resolvePaymentStatusView({ status: "error", attempt, maxAttempts })
+        setPaymentState(errorView.state)
+        setPaymentMessage(errorView.message)
       }
 
       if (!cancelled && attempt < maxAttempts - 1) {
@@ -103,8 +104,9 @@ function CheckoutForm() {
       }
     }
 
-    setPaymentState("pending")
-    setPaymentMessage("Ми очікуємо підтвердження платежу. Зазвичай це займає кілька секунд.")
+    const initialView = getInitialPaymentView(orderId)
+    setPaymentState(initialView.state)
+    setPaymentMessage(initialView.message)
     void pollStatus(0)
 
     return () => {
@@ -239,4 +241,3 @@ function Shell({ children }: { children: React.ReactNode }) {
     </div>
   )
 }
-

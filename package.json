@@ -7,7 +7,8 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "check:plans": "node --no-warnings --experimental-strip-types scripts/check-plans.mts && tsc --noEmit"
+    "check:plans": "node --no-warnings --experimental-strip-types scripts/check-plans.mts && tsc --noEmit",
+    "test:payment": "node --no-warnings --experimental-strip-types --test scripts/payment-flow.test.mts"
   },
   "dependencies": {
     "@hookform/resolvers": "^3.9.1",
