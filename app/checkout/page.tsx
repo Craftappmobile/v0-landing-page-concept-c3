@@ -3,9 +3,14 @@
 import { Suspense, useState, useEffect } from "react"
 import { useSearchParams } from "next/navigation"
 import Link from "next/link"
-import { ArrowLeft, Loader2, ShieldCheck } from "lucide-react"
+import { AlertCircle, ArrowLeft, CheckCircle2, Loader2, ShieldCheck } from "lucide-react"
 import { isPlanId, PLAN_CONFIG } from "@/lib/plans"
 import { Button } from "@/components/ui/button"
+
+type PaymentState = "pending" | "success" | "failure"
+type PaymentStatusResponse = {
+  status?: "pending" | "active" | "failed" | "not_found"
+}
 
 export default function CheckoutPage() {
   return (
@@ -19,27 +24,99 @@ function CheckoutForm() {
   const searchParams = useSearchParams()
   const requestedPlanId = searchParams.get("plan") || "year"
   const planId = isPlanId(requestedPlanId) ? requestedPlanId : "year"
-  const status = searchParams.get("status")
+  const rawStatus = searchParams.get("status")
+  const status = rawStatus === "done" ? "processing" : rawStatus
+  const orderId = searchParams.get("order_id")?.trim() || null
+  const isProcessingState = status === "processing"
   const plan = PLAN_CONFIG[planId]
 
   const [name, setName] = useState("")
   const [email, setEmail] = useState("")
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
+  const [paymentState, setPaymentState] = useState<PaymentState>("pending")
+  const [paymentMessage, setPaymentMessage] = useState<string | null>(null)
 
   useEffect(() => { setError(null) }, [name, email])
 
-  if (status === "done") {
+  useEffect(() => {
+    if (!isProcessingState) {
+      setPaymentState("pending")
+      setPaymentMessage(null)
+      return
+    }
+
+    if (!orderId) {
+      setPaymentState("pending")
+      setPaymentMessage("Ми обробляємо платіж. Якщо кошти вже списані, підтвердження надійде на вашу електронну пошту.")
+      return
+    }
+
+    let cancelled = false
+    let timeoutId: ReturnType<typeof setTimeout> | undefined
+    const maxAttempts = 12
+    const intervalMs = 2500
+
+    const pollStatus = async (attempt: number) => {
+      try {
+        const res = await fetch(`/api/payment/status?order_id=${encodeURIComponent(orderId)}`, {
+          cache: "no-store",
+        })
+
+        if (!res.ok) {
+          throw new Error("Failed to load payment status")
+        }
+
+        const data = await res.json() as PaymentStatusResponse
+
+        if (cancelled) return
+
+        if (data.status === "active") {
+          setPaymentState("success")
+          setPaymentMessage("Оплату підтверджено. Підписка активується автоматично, а деталі ми надішлемо на email.")
+          return
+        }
+
+        if (data.status === "failed") {
+          setPaymentState("failure")
+          setPaymentMessage("Оплату не вдалося підтвердити. Якщо кошти були списані, напишіть нам — ми перевіримо платіж вручну.")
+          return
+        }
+
+        setPaymentState("pending")
+        setPaymentMessage(
+          attempt >= maxAttempts - 1
+            ? "Платіж ще обробляється. Якщо підтвердження затримується, перевірте email трохи пізніше."
+            : "Ми очікуємо підтвердження платежу. Зазвичай це займає кілька секунд.",
+        )
+      } catch {
+        if (cancelled) return
+
+        setPaymentState("pending")
+        setPaymentMessage("Ми очікуємо підтвердження платежу. Якщо лист не надійде протягом кількох хвилин, напишіть нам.")
+      }
+
+      if (!cancelled && attempt < maxAttempts - 1) {
+        timeoutId = setTimeout(() => {
+          void pollStatus(attempt + 1)
+        }, intervalMs)
+      }
+    }
+
+    setPaymentState("pending")
+    setPaymentMessage("Ми очікуємо підтвердження платежу. Зазвичай це займає кілька секунд.")
+    void pollStatus(0)
+
+    return () => {
+      cancelled = true
+      if (timeoutId) clearTimeout(timeoutId)
+    }
+  }, [isProcessingState, orderId])
+
+  if (isProcessingState) {
     return (
       <Shell>
-        <div className="text-center py-8">
-          <ShieldCheck className="mx-auto h-16 w-16 text-primary mb-4" />
-          <h1 className="text-2xl font-bold mb-2">Дякуємо!</h1>
-          <p className="text-muted-foreground mb-6">
-            Ваш платіж обробляється. Результат буде надіслано на вашу електронну пошту.
-          </p>
-          <Button asChild><Link href="/">На головну</Link></Button>
-        </div>
+        <PaymentStatusCard state={paymentState} message={paymentMessage} orderId={orderId} />
       </Shell>
     )
   }
@@ -104,6 +181,54 @@ function CheckoutForm() {
         <p>Після оплати ви будете перенаправлені на сторінку Hutko для введення даних картки.</p>
       </div>
     </Shell>
+  )
+}
+
+function PaymentStatusCard({
+  state,
+  message,
+  orderId,
+}: {
+  state: PaymentState
+  message: string | null
+  orderId: string | null
+}) {
+  const isSuccess = state === "success"
+  const isFailure = state === "failure"
+
+  return (
+    <div className="text-center py-8">
+      {isSuccess ? (
+        <CheckCircle2 className="mx-auto mb-4 h-16 w-16 text-green-600" />
+      ) : isFailure ? (
+        <AlertCircle className="mx-auto mb-4 h-16 w-16 text-red-600" />
+      ) : (
+        <Loader2 className="mx-auto mb-4 h-16 w-16 animate-spin text-primary" />
+      )}
+
+      <h1 className="text-2xl font-bold mb-2">
+        {isSuccess ? "Оплату підтверджено" : isFailure ? "Не вдалося підтвердити оплату" : "Платіж обробляється"}
+      </h1>
+
+      <p className="text-muted-foreground mb-3">
+        {message || "Ми перевіряємо статус вашого платежу."}
+      </p>
+
+      {orderId && (
+        <p className="mb-6 text-xs text-muted-foreground">
+          Номер замовлення: <span className="font-mono">{orderId}</span>
+        </p>
+      )}
+
+      <div className="space-y-3">
+        <Button asChild><Link href="/">На головну</Link></Button>
+        {isFailure && (
+          <p className="text-sm text-muted-foreground">
+            Спробуйте оплату ще раз з головної сторінки або зверніться в підтримку.
+          </p>
+        )}
+      </div>
+    </div>
   )
 }
 
