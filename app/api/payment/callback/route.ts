@@ -7,6 +7,14 @@ import { isPlanId, PLAN_CONFIG } from "@/lib/plans";
 
 const MERCHANT_PASSWORD = process.env.HUTKO_MERCHANT_PASSWORD || "";
 
+type MerchantData = {
+  plan?: string;
+  name?: string;
+  email?: string;
+  renewal?: boolean;
+  parent_order?: string;
+};
+
 /**
  * Verify Hutko callback signature (SHA1).
  * password + sorted param values joined with |
@@ -33,6 +41,23 @@ function verifySignature(
   const signString = [password, ...values].join("|");
   const expected = crypto.createHash("sha1").update(signString, "utf8").digest("hex");
   return expected === receivedSignature;
+}
+
+function parseMerchantData(rawValue: string | undefined): MerchantData {
+  try {
+    const parsed = JSON.parse(rawValue || "{}") as MerchantData;
+    return parsed && typeof parsed === "object" ? parsed : {};
+  } catch {
+    return {};
+  }
+}
+
+function addDaysToLatestDate(baseIso: string | null | undefined, days: number, now: Date): string {
+  const baseDate = baseIso ? new Date(baseIso) : new Date(now);
+  const validBaseDate = Number.isNaN(baseDate.getTime()) ? new Date(now) : baseDate;
+  const effectiveBaseDate = validBaseDate.getTime() > now.getTime() ? validBaseDate : new Date(now);
+  effectiveBaseDate.setDate(effectiveBaseDate.getDate() + days);
+  return effectiveBaseDate.toISOString();
 }
 
 export async function POST(request: NextRequest) {
@@ -73,128 +98,170 @@ export async function POST(request: NextRequest) {
     }
 
     const supabase = createAdminClient();
+    const parsedMerchantData = parseMerchantData(merchant_data);
+    const plan = typeof parsedMerchantData.plan === "string" ? parsedMerchantData.plan : "";
+    const customerNameFromMerchant = typeof parsedMerchantData.name === "string"
+      ? parsedMerchantData.name
+      : "";
+    const customerEmailFromMerchant = typeof parsedMerchantData.email === "string"
+      ? parsedMerchantData.email
+      : "";
+    const isRenewal = parsedMerchantData.renewal === true;
+    const parentOrder = typeof parsedMerchantData.parent_order === "string"
+      ? parsedMerchantData.parent_order
+      : "";
 
     if (order_status === "approved") {
-      // Parse merchant_data for plan info
-      let plan = "";
-      try {
-        const parsed = JSON.parse(merchant_data || "{}");
-        plan = parsed.plan || "";
-      } catch {
-        // merchant_data might not be JSON
-      }
-
       const durationDays = isPlanId(plan) ? PLAN_CONFIG[plan].days : 90;
       const now = new Date();
-      const expiresAt = new Date(now.getTime() + durationDays * 24 * 60 * 60 * 1000);
+      const nowIso = now.toISOString();
 
-      // Update subscription to active
-      const updateData: Record<string, string | boolean | null> = {
-        status: "active",
-        hutko_payment_id: payment_id || null,
-        started_at: now.toISOString(),
-        expires_at: expiresAt.toISOString(),
-        updated_at: now.toISOString(),
-      };
-
-      // Save rectoken for future recurring charges
-      if (rectoken) {
-        updateData.rectoken = rectoken;
-      }
-
-      await supabase
-        .from("subscriptions")
-        .update(updateData)
-        .eq("order_id", order_id);
-
-      console.log("[Hutko Callback] Subscription activated:", order_id);
-
-      // Get customer info from merchant_data or subscription record
-      let customerName = "";
-      let customerEmail = "";
-      try {
-        const parsed = JSON.parse(merchant_data || "{}");
-        customerName = parsed.name || "";
-        customerEmail = parsed.email || "";
-      } catch { /* ignore */ }
-
-      // Fallback: get email from subscription record
-      if (!customerEmail) {
-        const { data: sub } = await supabase
-          .from("subscriptions")
-          .select("email, customer_name")
-          .eq("order_id", order_id)
-          .single();
-        if (sub) {
-          customerEmail = sub.email || "";
-          customerName = customerName || sub.customer_name || "";
+      if (isRenewal) {
+        if (!parentOrder) {
+          console.error("[Hutko Callback] Renewal callback is missing parent_order:", order_id);
+          return NextResponse.json({ error: "Missing parent order for renewal" }, { status: 400 });
         }
-      }
 
-      // Use after() to handle user creation and email AFTER responding to Hutko
-      // This prevents Vercel function timeout from blocking the callback response
-      const emailData = { customerEmail, customerName, plan, orderId: order_id };
-      after(async () => {
-        try {
-          const bgSupabase = createAdminClient();
-          if (emailData.customerEmail) {
-            // Create user in Supabase Auth (or get existing)
-            const { userId, generatedPassword } = await getOrCreateUser(
-              bgSupabase, emailData.customerEmail, emailData.customerName,
-            );
+        const { data: existingSub, error: existingSubError } = await supabase
+          .from("subscriptions")
+          .select("order_id, expires_at")
+          .eq("order_id", parentOrder)
+          .maybeSingle();
 
-            // Link subscription to user
-            await bgSupabase
-              .from("subscriptions")
-              .update({ user_id: userId })
-              .eq("order_id", emailData.orderId);
+        if (existingSubError || !existingSub) {
+          console.error("[Hutko Callback] Renewal parent subscription not found:", parentOrder, existingSubError);
+          return NextResponse.json({ error: "Parent subscription not found" }, { status: 500 });
+        }
 
-            // Send welcome email with credentials
-            console.log("[Hutko after()] Sending welcome email to:", emailData.customerEmail);
-            try {
-              const emailResult = await sendWelcomeEmail(
-                emailData.customerEmail, emailData.customerName, emailData.plan, generatedPassword,
+        const updateData: Record<string, string | null> = {
+          status: "active",
+          hutko_payment_id: payment_id || null,
+          expires_at: addDaysToLatestDate(existingSub.expires_at, durationDays, now),
+          updated_at: nowIso,
+        };
+
+        if (rectoken) {
+          updateData.rectoken = rectoken;
+        }
+
+        await supabase
+          .from("subscriptions")
+          .update(updateData)
+          .eq("order_id", parentOrder);
+
+        console.log("[Hutko Callback] Subscription renewed:", parentOrder, "via", order_id);
+      } else {
+        // Update initial subscription to active
+        const updateData: Record<string, string | boolean | null> = {
+          status: "active",
+          hutko_payment_id: payment_id || null,
+          started_at: nowIso,
+          expires_at: addDaysToLatestDate(null, durationDays, now),
+          updated_at: nowIso,
+        };
+
+        if (rectoken) {
+          updateData.rectoken = rectoken;
+        }
+
+        await supabase
+          .from("subscriptions")
+          .update(updateData)
+          .eq("order_id", order_id);
+
+        console.log("[Hutko Callback] Subscription activated:", order_id);
+
+        // Get customer info from merchant_data or subscription record
+        let customerName = customerNameFromMerchant;
+        let customerEmail = customerEmailFromMerchant;
+
+        // Fallback: get email from subscription record
+        if (!customerEmail) {
+          const { data: sub } = await supabase
+            .from("subscriptions")
+            .select("email, customer_name")
+            .eq("order_id", order_id)
+            .single();
+          if (sub) {
+            customerEmail = sub.email || "";
+            customerName = customerName || sub.customer_name || "";
+          }
+        }
+
+        // Use after() to handle user creation and email AFTER responding to Hutko
+        // This prevents Vercel function timeout from blocking the callback response
+        const emailData = { customerEmail, customerName, plan, orderId: order_id };
+        after(async () => {
+          try {
+            const bgSupabase = createAdminClient();
+            if (emailData.customerEmail) {
+              // Create user in Supabase Auth (or get existing)
+              const { userId, generatedPassword } = await getOrCreateUser(
+                bgSupabase, emailData.customerEmail, emailData.customerName,
               );
-              console.log("[Hutko after()] Email result:", JSON.stringify(emailResult));
+
+              // Link subscription to user
               await bgSupabase
                 .from("subscriptions")
-                .update({
-                  email_status: emailResult.success ? "sent" : "failed",
-                  email_error: emailResult.error || null,
-                })
+                .update({ user_id: userId })
                 .eq("order_id", emailData.orderId);
-            } catch (emailErr) {
-              console.error("[Hutko after()] Email exception:", emailErr);
+
+              // Send welcome email with credentials
+              console.log("[Hutko after()] Sending welcome email to:", emailData.customerEmail);
+              try {
+                const emailResult = await sendWelcomeEmail(
+                  emailData.customerEmail, emailData.customerName, emailData.plan, generatedPassword,
+                );
+                console.log("[Hutko after()] Email result:", JSON.stringify(emailResult));
+                await bgSupabase
+                  .from("subscriptions")
+                  .update({
+                    email_status: emailResult.success ? "sent" : "failed",
+                    email_error: emailResult.error || null,
+                  })
+                  .eq("order_id", emailData.orderId);
+              } catch (emailErr) {
+                console.error("[Hutko after()] Email exception:", emailErr);
+                await bgSupabase
+                  .from("subscriptions")
+                  .update({
+                    email_status: "exception",
+                    email_error: String(emailErr),
+                  })
+                  .eq("order_id", emailData.orderId);
+              }
+            } else {
+              console.log("[Hutko after()] No customer email found");
               await bgSupabase
                 .from("subscriptions")
-                .update({
-                  email_status: "exception",
-                  email_error: String(emailErr),
-                })
+                .update({ email_status: "no_email_found" })
                 .eq("order_id", emailData.orderId);
             }
-          } else {
-            console.log("[Hutko after()] No customer email found");
-            await bgSupabase
-              .from("subscriptions")
-              .update({ email_status: "no_email_found" })
-              .eq("order_id", emailData.orderId);
+          } catch (bgError) {
+            console.error("[Hutko after()] Background error:", bgError);
           }
-        } catch (bgError) {
-          console.error("[Hutko after()] Background error:", bgError);
-        }
-      });
+        });
+      }
     } else {
-      // Payment failed or declined
-      await supabase
-        .from("subscriptions")
-        .update({
-          status: "failed",
-          updated_at: new Date().toISOString(),
-        })
-        .eq("order_id", order_id);
+      if (isRenewal && parentOrder) {
+        await supabase
+          .from("subscriptions")
+          .update({ updated_at: new Date().toISOString() })
+          .eq("order_id", parentOrder);
 
-      console.log("[Hutko Callback] Payment failed:", order_id, order_status);
+        console.log("[Hutko Callback] Renewal payment failed:", parentOrder, order_status, "via", order_id);
+      } else {
+        // Initial payment failed or declined
+        await supabase
+          .from("subscriptions")
+          .update({
+            status: "failed",
+            updated_at: new Date().toISOString(),
+          })
+          .eq("order_id", order_id);
+
+        console.log("[Hutko Callback] Payment failed:", order_id, order_status);
+      }
     }
 
     return NextResponse.json({ status: "ok" });

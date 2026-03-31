@@ -3,9 +3,8 @@ import { createAdminClient } from "@/lib/supabase";
 import { sendCancellationEmail } from "@/lib/email";
 
 /**
- * Cancel subscription by email.
- * Sets status to 'cancelled' and records cancelled_at timestamp.
- * The recurring cron job will skip cancelled subscriptions.
+ * Disable subscription auto-renewal by email.
+ * Keeps the current paid period active and only prevents future recurring charges.
  */
 export async function POST(request: NextRequest) {
   try {
@@ -18,12 +17,13 @@ export async function POST(request: NextRequest) {
 
     const supabase = createAdminClient();
 
-    // Find active subscriptions for this email
+    // Find active subscriptions with auto-renewal enabled for this email
     const { data: subs, error } = await supabase
       .from("subscriptions")
-      .select("id, order_id, plan, status, customer_name")
+      .select("id, order_id, plan, customer_name")
       .eq("email", email)
-      .eq("status", "active");
+      .eq("status", "active")
+      .eq("auto_renewal", true);
 
     if (error) {
       console.error("[Cancel] DB error:", error);
@@ -32,29 +32,29 @@ export async function POST(request: NextRequest) {
 
     if (!subs || subs.length === 0) {
       return NextResponse.json({
-        error: "Активних підписок з цим email не знайдено",
+        error: "Активних підписок з увімкненим автопродовженням для цього email не знайдено",
       }, { status: 404 });
     }
 
-    // Cancel all active subscriptions for this email
+    // Disable auto-renewal for matching active subscriptions
     const now = new Date().toISOString();
     const { error: updateError } = await supabase
       .from("subscriptions")
       .update({
-        status: "cancelled",
         auto_renewal: false,
         cancelled_at: now,
         updated_at: now,
       })
       .eq("email", email)
-      .eq("status", "active");
+      .eq("status", "active")
+      .eq("auto_renewal", true);
 
     if (updateError) {
       console.error("[Cancel] Update error:", updateError);
       return NextResponse.json({ error: "Помилка скасування" }, { status: 500 });
     }
 
-    console.log(`[Cancel] Cancelled ${subs.length} subscription(s) for ${email}`);
+    console.log(`[Cancel] Disabled auto-renewal for ${subs.length} subscription(s) for ${email}`);
 
     // Send cancellation confirmation email
     const firstSub = subs[0];
@@ -63,8 +63,8 @@ export async function POST(request: NextRequest) {
     console.log("[Cancel] Email result:", JSON.stringify(emailResult));
 
     return NextResponse.json({
-      message: "Підписку скасовано",
-      cancelled: subs.length,
+      message: "Автопродовження вимкнено",
+      updated: subs.length,
     });
   } catch {
     return NextResponse.json({ error: "Внутрішня помилка сервера" }, { status: 500 });

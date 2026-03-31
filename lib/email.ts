@@ -93,12 +93,12 @@ export async function sendCancellationEmail(
     const { error } = await resend.emails.send({
       from: FROM_EMAIL,
       to: [to],
-      subject: "Підписку скасовано",
+      subject: "Автопродовження вимкнено",
       html: `
         <div style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; max-width: 560px; margin: 0 auto; padding: 32px 16px;">
           <h1 style="font-size: 24px; color: #1a1a1a;">Привіт, ${customerName || ""}!</h1>
           <p style="font-size: 16px; color: #333; line-height: 1.6;">
-            Вашу підписку <strong>«${planName}»</strong> скасовано. Автоматичне продовження вимкнено.
+            Автопродовження для підписки <strong>«${planName}»</strong> вимкнено.
           </p>
           <p style="font-size: 14px; color: #666; line-height: 1.6;">
             Ви можете продовжити користуватися додатком до кінця оплаченого періоду.

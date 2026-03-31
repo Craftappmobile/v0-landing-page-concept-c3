@@ -207,7 +207,7 @@ export default function TermsPage() {
               <Link href="/cancel" className="text-primary underline hover:no-underline">
                 {"Скасування підписки"}
               </Link>
-              {". Заявка обробляється протягом 1 робочого дня."}
+              {". Автопродовження вимикається одразу після підтвердження запиту."}
             </p>
             <p className="mt-3 text-sm leading-relaxed text-muted-foreground">
               {"Скасування набуває чинності після завершення поточного оплаченого терміну. Якщо у вас виникли питання щодо скасування, зверніться до служби підтримки:"}

@@ -11,11 +11,22 @@ import {
 } from "../lib/payment-flow.ts"
 
 test("normalizeSubscriptionStatus maps subscription states for payment polling", () => {
-  assert.equal(normalizeSubscriptionStatus("active"), "active")
-  assert.equal(normalizeSubscriptionStatus("failed"), "failed")
-  assert.equal(normalizeSubscriptionStatus("cancelled"), "failed")
-  assert.equal(normalizeSubscriptionStatus(null), "not_found")
-  assert.equal(normalizeSubscriptionStatus("pending"), "pending")
+  assert.equal(normalizeSubscriptionStatus({ status: "active" }), "active")
+  assert.equal(normalizeSubscriptionStatus({ status: "failed" }), "failed")
+  assert.equal(normalizeSubscriptionStatus({ status: null }), "not_found")
+  assert.equal(normalizeSubscriptionStatus({ status: "pending" }), "pending")
+})
+
+test("normalizeSubscriptionStatus keeps access active for cancelled subscriptions until expiry", () => {
+  assert.equal(
+    normalizeSubscriptionStatus({ status: "cancelled", expiresAt: "2999-01-01T00:00:00.000Z" }),
+    "active",
+  )
+
+  assert.equal(
+    normalizeSubscriptionStatus({ status: "cancelled", expiresAt: "2020-01-01T00:00:00.000Z" }),
+    "failed",
+  )
 })
 
 test("extractOrderIdFromValue handles raw and nested Hutko payloads", () => {

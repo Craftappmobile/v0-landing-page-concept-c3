@@ -121,26 +121,14 @@ export async function GET(request: NextRequest) {
       });
 
       const data = await res.json();
-      const status = data?.response?.order_status || data?.response?.response_status || "unknown";
+      const orderStatus = data?.response?.order_status || null;
+      const responseStatus = data?.response?.response_status || "unknown";
 
-      if (status === "approved") {
-        // Extend subscription
-        const newExpiry = new Date(sub.expires_at);
-        newExpiry.setDate(newExpiry.getDate() + planConfig.days);
-
-        await supabase
-          .from("subscriptions")
-          .update({
-            order_id: newOrderId,
-            expires_at: newExpiry.toISOString(),
-            hutko_payment_id: data?.response?.payment_id || null,
-            updated_at: new Date().toISOString(),
-          })
-          .eq("id", sub.id);
-
-        results.push({ order_id: newOrderId, status: "renewed" });
+      if (orderStatus === "approved" || responseStatus === "success") {
+        // Hutko callback is the single source of truth for DB updates.
+        results.push({ order_id: newOrderId, status: "approved_waiting_callback" });
       } else {
-        results.push({ order_id: newOrderId, status: `failed_${status}` });
+        results.push({ order_id: newOrderId, status: `failed_${orderStatus || responseStatus}` });
       }
     } catch (err) {
       console.error("[Recurring] Charge error for", sub.order_id, err);

@@ -13,7 +13,7 @@ export async function GET(request: NextRequest) {
     const supabase = createAdminClient()
     const { data, error } = await supabase
       .from("subscriptions")
-      .select("status")
+      .select("status, expires_at")
       .eq("order_id", orderId)
       .maybeSingle()
 
@@ -23,7 +23,12 @@ export async function GET(request: NextRequest) {
     }
 
     return NextResponse.json(
-      { status: normalizeSubscriptionStatus(data?.status ?? null) },
+      {
+        status: normalizeSubscriptionStatus({
+          status: data?.status ?? null,
+          expiresAt: data?.expires_at ?? null,
+        }),
+      },
       { headers: { "Cache-Control": "no-store" } },
     )
   } catch (error) {

@@ -6,6 +6,11 @@ export type PaymentViewModel = {
   message: string
 }
 
+type SubscriptionStatusInput = {
+  status: string | null
+  expiresAt?: string | null
+}
+
 const PROCESSING_MESSAGE = "Ми очікуємо підтвердження платежу. Зазвичай це займає кілька секунд."
 const DELAYED_PROCESSING_MESSAGE = "Платіж ще обробляється. Якщо підтвердження затримується, перевірте email трохи пізніше."
 const MISSING_ORDER_ID_MESSAGE = "Ми обробляємо платіж. Якщо кошти вже списані, підтвердження надійде на вашу електронну пошту."
@@ -13,9 +18,18 @@ const PAYMENT_SUCCESS_MESSAGE = "Оплату підтверджено. Підп
 const PAYMENT_FAILURE_MESSAGE = "Оплату не вдалося підтвердити. Якщо кошти були списані, напишіть нам — ми перевіримо платіж вручну."
 const PAYMENT_ERROR_MESSAGE = "Ми очікуємо підтвердження платежу. Якщо лист не надійде протягом кількох хвилин, напишіть нам."
 
-export function normalizeSubscriptionStatus(status: string | null): PaymentStatus {
+export function normalizeSubscriptionStatus({ status, expiresAt }: SubscriptionStatusInput): PaymentStatus {
   if (status === "active") return "active"
-  if (status === "failed" || status === "cancelled") return "failed"
+
+  if (status === "cancelled") {
+    const expiryTime = expiresAt ? Date.parse(expiresAt) : Number.NaN
+    if (!Number.isNaN(expiryTime) && expiryTime > Date.now()) {
+      return "active"
+    }
+    return "failed"
+  }
+
+  if (status === "failed") return "failed"
   if (!status) return "not_found"
   return "pending"
 }
