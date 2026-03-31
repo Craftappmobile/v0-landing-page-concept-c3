@@ -6,6 +6,23 @@ import { isPlanId, PLAN_CONFIG } from "@/lib/plans";
 const MERCHANT_ID = process.env.HUTKO_MERCHANT_ID || "";
 const MERCHANT_PASSWORD = process.env.HUTKO_MERCHANT_PASSWORD || "";
 const HUTKO_RECURRING_URL = "https://pay.hutko.org/api/recurring";
+const DEPRECATED_SITE_URL = "https://rozrahuy-i-vyazhi.vercel.app";
+
+function getRecurringCallbackBaseUrl(): string {
+  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL?.trim();
+
+  if (!siteUrl) {
+    throw new Error("NEXT_PUBLIC_SITE_URL must be set for recurring payments");
+  }
+
+  const normalizedSiteUrl = siteUrl.replace(/\/$/, "");
+
+  if (normalizedSiteUrl === DEPRECATED_SITE_URL) {
+    throw new Error("NEXT_PUBLIC_SITE_URL points to deprecated domain");
+  }
+
+  return normalizedSiteUrl;
+}
 
 function generateSignature(password: string, params: Record<string, string | number>): string {
   const filtered: Record<string, string | number> = {};
@@ -30,6 +47,15 @@ export async function GET(request: NextRequest) {
   const cronSecret = process.env.CRON_SECRET;
   if (cronSecret && authHeader !== `Bearer ${cronSecret}`) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  }
+
+  let callbackBaseUrl = "";
+
+  try {
+    callbackBaseUrl = getRecurringCallbackBaseUrl();
+  } catch (error) {
+    console.error("[Recurring] Invalid NEXT_PUBLIC_SITE_URL:", error);
+    return NextResponse.json({ error: "Recurring payments are misconfigured" }, { status: 500 });
   }
 
   const supabase = createAdminClient();
@@ -81,7 +107,7 @@ export async function GET(request: NextRequest) {
       currency: "UAH",
       version: "1.0.1",
       rectoken: sub.rectoken,
-      server_callback_url: `${process.env.NEXT_PUBLIC_SITE_URL || "https://rozrahuy-i-vyazhi.vercel.app"}/api/payment/callback`,
+      server_callback_url: `${callbackBaseUrl}/api/payment/callback`,
       merchant_data: JSON.stringify({ plan: planId, name: sub.customer_name, email: sub.email, renewal: true, parent_order: sub.order_id }),
     };
 
