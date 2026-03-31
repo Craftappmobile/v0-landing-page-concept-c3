@@ -3,6 +3,7 @@
 import { useState } from "react"
 import Link from "next/link"
 import { Check } from "lucide-react"
+import { PLAN_LIST } from "@/lib/plans"
 import { Button } from "@/components/ui/button"
 
 /**
@@ -17,43 +18,7 @@ const features = [
   "Генератор візерунків (beta)",
 ]
 
-/**
- * Конфігурація тарифних планів підписки.
- */
-const plans = [
-  {
-    id: "quarter",
-    tab: "3 місяці",
-    price: "454.96",
-    period: "3 міс",
-    perMonth: "151.65 грн/місяць",
-    badge: null,
-  },
-  {
-    id: "half",
-    tab: "6 місяців",
-    price: "599.99",
-    period: "6 міс",
-    perMonth: "100 грн/місяць",
-    badge: null,
-  },
-  {
-    id: "year",
-    tab: "Річна",
-    price: "918",
-    period: "рік",
-    perMonth: "76.50 грн/місяць",
-    badge: "Економія 24%",
-  },
-  {
-    id: "forever",
-    tab: "Назавжди",
-    price: "4 585",
-    period: "одноразово",
-    perMonth: "Довічний доступ",
-    badge: null,
-  },
-]
+const plans = PLAN_LIST
 
 /**
  * Секція з картками тарифних планів.
@@ -93,7 +58,7 @@ export function PricingSection() {
                     : "text-muted-foreground hover:text-foreground"
                 }`}
               >
-                {p.tab}
+                {p.pricingTabLabel}
               </button>
             ))}
           </div>
@@ -107,14 +72,14 @@ export function PricingSection() {
             )}
             <div className="flex items-baseline justify-center gap-2">
               <span className="text-4xl font-bold text-foreground sm:text-5xl">
-                {plan.price}
+                {plan.priceValue}
               </span>
               <span className="text-base text-muted-foreground">
-                {"грн / "}{plan.period}
+                {"грн / "}{plan.pricingPeriodLabel}
               </span>
             </div>
             <p className="mt-1 text-sm text-muted-foreground">
-              {plan.perMonth}
+              {plan.perMonthLabel}
             </p>
           </div>
 

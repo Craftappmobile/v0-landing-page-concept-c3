@@ -1,17 +1,11 @@
 import { NextRequest, NextResponse } from "next/server";
 import crypto from "crypto";
 import { createAdminClient } from "@/lib/supabase";
+import { isPlanId, PLAN_CONFIG } from "@/lib/plans";
 
 const MERCHANT_ID = process.env.HUTKO_MERCHANT_ID || "";
 const MERCHANT_PASSWORD = process.env.HUTKO_MERCHANT_PASSWORD || "";
 const HUTKO_RECURRING_URL = "https://pay.hutko.org/api/recurring";
-
-/** Plan amounts in kopecks and duration in days */
-const PLAN_CONFIG: Record<string, { amount: number; days: number; description: string }> = {
-  quarter: { amount: 45496, days: 90, description: "Підписка «Розрахуй і В'яжи» — 3 місяці (автопродовження)" },
-  half: { amount: 59999, days: 180, description: "Підписка «Розрахуй і В'яжи» — 6 місяців (автопродовження)" },
-  year: { amount: 91800, days: 365, description: "Підписка «Розрахуй і В'яжи» — 12 місяців (автопродовження)" },
-};
 
 function generateSignature(password: string, params: Record<string, string | number>): string {
   const filtered: Record<string, string | number> = {};
@@ -64,9 +58,16 @@ export async function GET(request: NextRequest) {
   const results: Array<{ order_id: string; status: string }> = [];
 
   for (const sub of expiring) {
-    const planConfig = PLAN_CONFIG[sub.plan];
-    if (!planConfig) {
+    const planId = typeof sub.plan === "string" ? sub.plan : "";
+
+    if (!isPlanId(planId)) {
       results.push({ order_id: sub.order_id, status: "skipped_unknown_plan" });
+      continue;
+    }
+
+    const planConfig = PLAN_CONFIG[planId];
+    if (!planConfig.isRecurring) {
+      results.push({ order_id: sub.order_id, status: "skipped_non_recurring_plan" });
       continue;
     }
 
@@ -75,13 +76,13 @@ export async function GET(request: NextRequest) {
     const params: Record<string, string | number> = {
       order_id: newOrderId,
       merchant_id: Number(MERCHANT_ID),
-      order_desc: planConfig.description,
+      order_desc: planConfig.recurringDescription || planConfig.paymentDescription,
       amount: planConfig.amount,
       currency: "UAH",
       version: "1.0.1",
       rectoken: sub.rectoken,
       server_callback_url: `${process.env.NEXT_PUBLIC_SITE_URL || "https://rozrahuy-i-vyazhi.vercel.app"}/api/payment/callback`,
-      merchant_data: JSON.stringify({ plan: sub.plan, name: sub.customer_name, email: sub.email, renewal: true, parent_order: sub.order_id }),
+      merchant_data: JSON.stringify({ plan: planId, name: sub.customer_name, email: sub.email, renewal: true, parent_order: sub.order_id }),
     };
 
     params.signature = generateSignature(MERCHANT_PASSWORD, params);

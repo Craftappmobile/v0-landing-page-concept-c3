@@ -2,6 +2,7 @@ import type { Metadata } from "next"
 import Link from "next/link"
 import Image from "next/image"
 import { ArrowLeft } from "lucide-react"
+import { PLAN_LIST } from "@/lib/plans"
 
 export const metadata: Metadata = {
   title: "Умови використання — Розрахуй і В'яжи",
@@ -162,18 +163,13 @@ export default function TermsPage() {
               {"Тарифні плани та умови доступу:"}
             </p>
             <ul className="mt-2 flex flex-col gap-1.5 pl-5">
-              <li className="list-disc text-sm text-muted-foreground">
-                {"Преміум на 3 місяці — 454.96 грн (доступ активується на 90 днів з моменту оплати)"}
-              </li>
-              <li className="list-disc text-sm text-muted-foreground">
-                {"Преміум на 6 місяців — 599.99 грн (доступ активується на 180 днів з моменту оплати)"}
-              </li>
-              <li className="list-disc text-sm text-muted-foreground">
-                {"Преміум на рік — 918 грн (доступ активується на 365 днів з моменту оплати)"}
-              </li>
-              <li className="list-disc text-sm text-muted-foreground">
-                {"Довічний доступ — 4 585 грн (одноразовий платіж, безстроковий доступ без обмежень)"}
-              </li>
+              {PLAN_LIST.map((plan) => (
+                <li key={plan.id} className="list-disc text-sm text-muted-foreground">
+                  {plan.isRecurring
+                    ? `${plan.termsLabel} — ${plan.priceWithCurrency} (доступ активується на ${plan.days} днів з моменту оплати)`
+                    : `${plan.termsLabel} — ${plan.priceWithCurrency} (одноразовий платіж, безстроковий доступ без обмежень)`}
+                </li>
+              ))}
             </ul>
 
             <h3 className="mt-4 text-base font-semibold text-foreground">

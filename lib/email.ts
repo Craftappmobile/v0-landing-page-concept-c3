@@ -1,4 +1,5 @@
 import { Resend } from "resend";
+import { isPlanId, PLAN_CONFIG } from "@/lib/plans";
 
 function getResendClient(): Resend {
   const apiKey = process.env.RESEND_API_KEY?.trim();
@@ -8,20 +9,6 @@ function getResendClient(): Resend {
 
 const FROM_EMAIL = "Розрахуй і В'яжи <noreply@vjazhi.com.ua>";
 
-const PLAN_NAMES: Record<string, string> = {
-  quarter: "Підписка на 3 місяці",
-  half: "Підписка на 6 місяців",
-  year: "Річна підписка",
-  forever: "Безлімітна підписка (назавжди)",
-};
-
-const PLAN_PRICES: Record<string, string> = {
-  quarter: "454,96 грн",
-  half: "549,00 грн",
-  year: "918,00 грн",
-  forever: "1 548,00 грн",
-};
-
 export async function sendWelcomeEmail(
   to: string,
   customerName: string,
@@ -30,7 +17,7 @@ export async function sendWelcomeEmail(
 ): Promise<{ success: boolean; error?: string }> {
   try {
     const resend = getResendClient();
-    const planName = PLAN_NAMES[planType] || planType;
+    const planName = isPlanId(planType) ? PLAN_CONFIG[planType].name : planType;
 
     const credentialsBlock = password
       ? `
@@ -101,7 +88,7 @@ export async function sendCancellationEmail(
 ): Promise<{ success: boolean; error?: string }> {
   try {
     const resend = getResendClient();
-    const planName = PLAN_NAMES[planType] || planType;
+    const planName = isPlanId(planType) ? PLAN_CONFIG[planType].name : planType;
 
     const { error } = await resend.emails.send({
       from: FROM_EMAIL,

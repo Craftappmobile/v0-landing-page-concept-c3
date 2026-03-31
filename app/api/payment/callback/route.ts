@@ -1,18 +1,11 @@
-import { NextRequest, NextResponse } from "next/server";
+import { NextRequest, NextResponse, after } from "next/server";
 import crypto from "crypto";
 import { createAdminClient } from "@/lib/supabase";
 import { sendWelcomeEmail } from "@/lib/email";
 import { generateSecurePassword } from "@/lib/password";
+import { isPlanId, PLAN_CONFIG } from "@/lib/plans";
 
 const MERCHANT_PASSWORD = process.env.HUTKO_MERCHANT_PASSWORD || "";
-
-/** Duration in days for each plan */
-const PLAN_DURATION: Record<string, number> = {
-  quarter: 90,
-  half: 180,
-  year: 365,
-  forever: 36500, // ~100 years
-};
 
 /**
  * Verify Hutko callback signature (SHA1).
@@ -91,7 +84,7 @@ export async function POST(request: NextRequest) {
         // merchant_data might not be JSON
       }
 
-      const durationDays = PLAN_DURATION[plan] || 90;
+      const durationDays = isPlanId(plan) ? PLAN_CONFIG[plan].days : 90;
       const now = new Date();
       const expiresAt = new Date(now.getTime() + durationDays * 24 * 60 * 60 * 1000);
 
@@ -138,27 +131,59 @@ export async function POST(request: NextRequest) {
         }
       }
 
-      if (customerEmail) {
-        // Create user in Supabase Auth (or get existing)
-        const { userId, generatedPassword } = await getOrCreateUser(
-          supabase, customerEmail, customerName,
-        );
+      // Use after() to handle user creation and email AFTER responding to Hutko
+      // This prevents Vercel function timeout from blocking the callback response
+      const emailData = { customerEmail, customerName, plan, orderId: order_id };
+      after(async () => {
+        try {
+          const bgSupabase = createAdminClient();
+          if (emailData.customerEmail) {
+            // Create user in Supabase Auth (or get existing)
+            const { userId, generatedPassword } = await getOrCreateUser(
+              bgSupabase, emailData.customerEmail, emailData.customerName,
+            );
 
-        // Link subscription to user
-        await supabase
-          .from("subscriptions")
-          .update({ user_id: userId })
-          .eq("order_id", order_id);
+            // Link subscription to user
+            await bgSupabase
+              .from("subscriptions")
+              .update({ user_id: userId })
+              .eq("order_id", emailData.orderId);
 
-        // Send welcome email with credentials
-        console.log("[Hutko Callback] Sending welcome email to:", customerEmail);
-        const emailResult = await sendWelcomeEmail(
-          customerEmail, customerName, plan, generatedPassword,
-        );
-        console.log("[Hutko Callback] Email result:", JSON.stringify(emailResult));
-      } else {
-        console.log("[Hutko Callback] No customer email found");
-      }
+            // Send welcome email with credentials
+            console.log("[Hutko after()] Sending welcome email to:", emailData.customerEmail);
+            try {
+              const emailResult = await sendWelcomeEmail(
+                emailData.customerEmail, emailData.customerName, emailData.plan, generatedPassword,
+              );
+              console.log("[Hutko after()] Email result:", JSON.stringify(emailResult));
+              await bgSupabase
+                .from("subscriptions")
+                .update({
+                  email_status: emailResult.success ? "sent" : "failed",
+                  email_error: emailResult.error || null,
+                })
+                .eq("order_id", emailData.orderId);
+            } catch (emailErr) {
+              console.error("[Hutko after()] Email exception:", emailErr);
+              await bgSupabase
+                .from("subscriptions")
+                .update({
+                  email_status: "exception",
+                  email_error: String(emailErr),
+                })
+                .eq("order_id", emailData.orderId);
+            }
+          } else {
+            console.log("[Hutko after()] No customer email found");
+            await bgSupabase
+              .from("subscriptions")
+              .update({ email_status: "no_email_found" })
+              .eq("order_id", emailData.orderId);
+          }
+        } catch (bgError) {
+          console.error("[Hutko after()] Background error:", bgError);
+        }
+      });
     } else {
       // Payment failed or declined
       await supabase

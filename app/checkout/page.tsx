@@ -4,14 +4,8 @@ import { Suspense, useState, useEffect } from "react"
 import { useSearchParams } from "next/navigation"
 import Link from "next/link"
 import { ArrowLeft, Loader2, ShieldCheck } from "lucide-react"
+import { isPlanId, PLAN_CONFIG } from "@/lib/plans"
 import { Button } from "@/components/ui/button"
-
-const PLANS: Record<string, { label: string; price: string; amount: string }> = {
-  quarter: { label: "3 місяці",   price: "454.96 грн", amount: "454.96" },
-  half:    { label: "6 місяців",  price: "599.99 грн", amount: "599.99" },
-  year:    { label: "12 місяців", price: "918 грн",    amount: "918" },
-  forever: { label: "Довічна",    price: "4 585 грн",  amount: "4 585" },
-}
 
 export default function CheckoutPage() {
   return (
@@ -23,9 +17,10 @@ export default function CheckoutPage() {
 
 function CheckoutForm() {
   const searchParams = useSearchParams()
-  const planId = searchParams.get("plan") || "year"
+  const requestedPlanId = searchParams.get("plan") || "year"
+  const planId = isPlanId(requestedPlanId) ? requestedPlanId : "year"
   const status = searchParams.get("status")
-  const plan = PLANS[planId] || PLANS.year
+  const plan = PLAN_CONFIG[planId]
 
   const [name, setName] = useState("")
   const [email, setEmail] = useState("")
@@ -74,7 +69,7 @@ function CheckoutForm() {
 
       <h1 className="text-2xl font-bold mb-1">Оформлення підписки</h1>
       <p className="text-muted-foreground mb-6">
-        Тариф: <strong>{plan.label}</strong> — <strong>{plan.price}</strong>
+        Тариф: <strong>{plan.checkoutLabel}</strong> — <strong>{plan.priceWithCurrency}</strong>
       </p>
 
       <form onSubmit={handleSubmit} className="space-y-4">
@@ -95,7 +90,7 @@ function CheckoutForm() {
         {error && <p className="text-sm text-red-600 bg-red-50 rounded-lg px-4 py-2">{error}</p>}
 
         <Button type="submit" size="lg" className="w-full" disabled={loading}>
-          {loading ? <><Loader2 className="mr-2 h-4 w-4 animate-spin" />Обробка...</> : `Оплатити ${plan.amount} грн`}
+          {loading ? <><Loader2 className="mr-2 h-4 w-4 animate-spin" />Обробка...</> : `Оплатити ${plan.priceWithCurrency}`}
         </Button>
       </form>
 
