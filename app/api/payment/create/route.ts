@@ -105,7 +105,11 @@ export async function POST(request: NextRequest) {
     });
 
     if (dbError) {
-      console.error("DB insert error:", dbError);
+      console.error("[Payment Create] DB insert error:", dbError);
+      return NextResponse.json(
+        { error: "Не вдалося підготувати платіж. Спробуйте пізніше." },
+        { status: 500 }
+      );
     }
 
     const res = await fetch(HUTKO_API_URL, {
