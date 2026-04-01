@@ -1,221 +1,165 @@
-# Розрахуй і В'яжи — Лендінгова сторінка
+# Розрахуй і В'яжи — landing + Hutko web payments
 
-Лендінгова сторінка мобільного застосунку **«Розрахуй і В'яжи»** з інтегрованою платіжною системою для продажу підписок безпосередньо з веб-сайту.
+Лендінг мобільного застосунку **«Розрахуй і В'яжи»** з веб-оплатою підписок через **Hutko**, інтеграцією з **Supabase** та email-сповіщеннями через **Resend**.
 
-## Стек технологій
+> Актуальний flow у цьому репозиторії працює через **Next.js API routes**: checkout-стан одразу створюється в `subscriptions`, а webhook обробляється серверним route handler усередині цього проєкту.
+
+## Стек
 
 | Шар | Технологія |
-|-----|-----------|
-| Фреймворк | Next.js 16 (App Router) |
+|-----|------------|
+| Framework | Next.js 16 (App Router) |
 | Мова | TypeScript |
-| Стилі | Tailwind CSS + shadcn/ui |
-| Шрифти | DM Sans, DM Serif Display (Google Fonts) |
+| UI | Tailwind CSS + shadcn/ui |
 | База даних | Supabase (PostgreSQL) |
-| Авторизація | Supabase Auth |
-| Платежі | WayForPay (українська платіжна система) |
+| Auth | Supabase Auth |
+| Платежі | Hutko |
 | Email | Resend |
-| Деплоймент | Vercel |
-| Пакетний менеджер | pnpm |
+| Deploy | Vercel |
+| Package manager | pnpm |
 
----
+## Ключові файли
 
-## Структура проєкту
+| Шлях | Призначення |
+|------|-------------|
+| `app/checkout/page.tsx` | checkout UI та polling статусу |
+| `app/api/payment/create/route.ts` | створення `pending`-підписки і Hutko checkout URL |
+| `app/api/payment/redirect/route.ts` | redirect назад у `/checkout?status=processing` |
+| `app/api/payment/callback/route.ts` | callback, активація підписки, `after()`-задачі |
+| `app/api/payment/status/route.ts` | статус для polling після оплати |
+| `app/api/payment/recurring/route.ts` | автосписання через Vercel Cron |
+| `app/api/cancel/route.ts` | вимкнення автопродовження |
+| `lib/plans.ts` | канонічний список планів і сум у minor units |
+| `lib/payment-flow.ts` | нормалізація payment-статусів |
+| `lib/email.ts` | welcome / cancellation emails |
+| `supabase/migrations/20260331_add_missing_web_payment_fields_to_subscriptions.sql` | sync-міграція web-payment полів |
 
-```
-/
-├── app/
-│   ├── layout.tsx          # Root layout, шрифти, метадані
-│   ├── page.tsx            # Головна сторінка (лендінг)
-│   ├── globals.css         # Кольорова схема та CSS змінні
-│   ├── privacy/page.tsx    # Політика конфіденційності
-│   └── terms/page.tsx      # Умови використання
-│
-├── components/
-│   ├── landing/            # Секції лендінгової сторінки
-│   │   ├── header.tsx
-│   │   ├── hero-section.tsx
-│   │   ├── pain-points-section.tsx
-│   │   ├── features-section.tsx
-│   │   ├── community-section.tsx
-│   │   ├── testimonials-section.tsx
-│   │   ├── pricing-section.tsx
-│   │   ├── faq-section.tsx
-│   │   ├── cta-section.tsx
-│   │   └── footer.tsx
-│   └── ui/                 # shadcn/ui компоненти
-│
-├── lib/
-│   └── utils.ts            # Утиліти (cn, clsx)
-│
-├── hooks/
-│   ├── use-mobile.tsx
-│   └── use-toast.ts
-│
-└── public/
-    └── images/             # Зображення (логотип тощо)
-```
+## Плани та суми
 
----
+У коді суми зберігаються в **minor units** (`INTEGER`), щоб уникнути проблем із округленням.
 
-## Підписки та ціни
+| Plan ID | Назва | UI ціна | `amount` | Днів | Автопродовження |
+|---------|-------|---------|----------|------|------------------|
+| `quarter` | Підписка на 3 місяці | 454.96 грн | `45496` | 90 | так |
+| `half` | Підписка на 6 місяців | 599.99 грн | `59999` | 180 | так |
+| `year` | Річна підписка | 918 грн | `91800` | 365 | так |
+| `forever` | Безлімітна підписка | 4 585 грн | `458500` | 36500 | ні |
 
-| Тариф | Ціна | Період |
-|-------|------|--------|
-| Преміум 6-місячна | 599.99 грн | 6 місяців (~100 грн/міс) |
-| Преміум річна | 918 грн | 1 рік (~76.50 грн/міс) |
-| Безлімітна | 4 585 грн | Назавжди (одноразово) |
+Джерело істини: `lib/plans.ts`.
 
----
+## Поточний платіжний flow
 
-## Платіжний флоу
+1. Користувач відкриває `/checkout?plan=<planId>` і вводить `name` + `email`.
+2. `POST /api/payment/create`:
+   - валідує вхідні дані;
+   - створює `order_id`;
+   - вставляє `pending`-запис у `public.subscriptions`;
+   - **зупиняє flow**, якщо insert у БД не вдався;
+   - викликає Hutko і повертає `checkout_url`.
+3. Hutko:
+   - редіректить користувача на `/api/payment/redirect`;
+   - надсилає server callback на `/api/payment/callback`.
+4. `POST /api/payment/callback`:
+   - перевіряє SHA1 signature;
+   - активує первинну оплату або оновлює батьківський запис для renewal;
+   - зберігає `rectoken`, `hutko_payment_id`, `updated_at`;
+   - через `after()` створює/знаходить користувача, лінкує `user_id`, шле email, оновлює `email_status` / `email_error`.
+5. `GET /api/payment/status` використовується checkout-сторінкою для polling після redirect.
+6. `GET /api/payment/recurring` запускається Vercel Cron і ініціює автосписання для активних recurring-підписок.
+7. `POST /api/cancel` вимикає `auto_renewal`, але зберігає доступ до кінця оплаченого періоду.
 
-```
-Користувач натискає "Придбати підписку"
-        ↓
-Модальне вікно: введення email та імені
-        ↓
-Next.js API /api/payment/create
-  → Збереження даних у pending_payment_data
-  → Генерація HMAC-MD5 підпису WayForPay
-        ↓
-WayForPay widget (JavaScript) — оплата карткою
-        ↓
-WayForPay надсилає Webhook → Supabase Edge Function
-  → Перевірка HMAC-MD5 підпису
-  → Створення акаунту в Supabase Auth
-  → Запис підписки в таблицю subscriptions
-  → Запис у payment_logs
-        ↓
-Resend надсилає email з:
-  - логіном (email)
-  - згенерованим паролем
-  - посиланням на App Store
-  - посиланням на Google Play
-```
-
----
-
-## База даних (Supabase)
-
-### Таблиці
-
-| Таблиця | Призначення |
-|---------|------------|
-| `profiles` | Профілі користувачів (ім'я, email) |
-| `subscriptions` | Активні підписки (план, дата, статус) |
-| `payment_logs` | Журнал усіх платіжних подій |
-| `pending_payment_data` | Тимчасове зберігання даних до підтвердження платежу |
-
-### Структура `pending_payment_data` (додані колонки)
-```sql
-ALTER TABLE public.pending_payment_data
-  ADD COLUMN email      TEXT,
-  ADD COLUMN plan_code  TEXT,
-  ADD COLUMN amount     NUMERIC;
-```
-
----
-
-## Локальна розробка
-
-### 1. Встановити залежності
-```bash
-pnpm install
-```
-
-### 2. Налаштувати змінні середовища
-
-Скопіювати `.env.local.example` у `.env.local` і заповнити значення:
-```bash
-cp .env.local.example .env.local
-```
-
-### 3. Запустити сервер розробки
-```bash
-pnpm dev
-```
-
-Відкрити [http://localhost:3000](http://localhost:3000)
-
----
-
-## Змінні середовища
-
-> ⚠️ Ніколи не комітьте реальні значення в Git. Файл `.env.local` є в `.gitignore`.
+## Env-змінні
 
 | Змінна | Доступ | Призначення |
-|--------|--------|------------|
-| `NEXT_PUBLIC_SUPABASE_URL` | Публічна | URL проєкту Supabase |
-| `NEXT_PUBLIC_SUPABASE_ANON_KEY` | Публічна | Anon-ключ для клієнтського коду |
-| `SUPABASE_SERVICE_ROLE_KEY` | Тільки сервер | Адмін-ключ (створення користувачів) |
-| `WAYFORPAY_MERCHANT` | Тільки сервер | Ідентифікатор мерчанта WayForPay |
-| `WAYFORPAY_SECRET` | Тільки сервер | Секретний ключ для HMAC-MD5 |
-| `RESEND_API_KEY` | Тільки сервер | API ключ для відправки email |
-| `NEXT_PUBLIC_APP_STORE_URL` | Публічна | Посилання на App Store |
-| `NEXT_PUBLIC_GOOGLE_PLAY_URL` | Публічна | Посилання на Google Play |
+|--------|--------|-------------|
+| `NEXT_PUBLIC_SUPABASE_URL` | public | URL Supabase project |
+| `NEXT_PUBLIC_SUPABASE_ANON_KEY` | public | anon key для client-side Supabase |
+| `SUPABASE_SERVICE_ROLE_KEY` | server-only | службові операції без RLS |
+| `HUTKO_MERCHANT_ID` | server-only | merchant id Hutko |
+| `HUTKO_MERCHANT_PASSWORD` | server-only | секрет для SHA1 підпису |
+| `RESEND_API_KEY` | server-only | відправка листів |
+| `NEXT_PUBLIC_SITE_URL` | public/server | base URL для recurring callback |
+| `CRON_SECRET` | server-only | захист `/api/payment/recurring` |
 
----
+Шаблон: `.env.local.example`.
 
-## Деплоймент (Vercel)
+Примітка: посилання на App Store / Google Play зараз **не конфігуруються через env**, а зашиті в `lib/email.ts`.
 
-Проєкт автоматично деплоїться на Vercel при пуші в гілку `main`.
+## База даних
 
-### Ручний деплоймент
-```bash
-vercel --prod
-```
+Для web-payment flow головна таблиця — `public.subscriptions`.
 
-### Перевірка змінних середовища
-```bash
-vercel env ls
-```
+- sync-міграція: `supabase/migrations/20260331_add_missing_web_payment_fields_to_subscriptions.sql`
+- canonical repo-level reference: `docs/subscriptions-schema-reference.md`
 
----
+Важливий нюанс: у repo є sync-міграція для web-payment полів, але **повний базовий `CREATE TABLE subscriptions` не представлений у репозиторії як єдине SQL-джерело**. Саме тому schema reference винесено в окремий документ.
 
-## Supabase Edge Functions
+## Локальний запуск
 
-Webhook-функція розгорнута окремо в Supabase:
+1. Встановити залежності: `pnpm install`
+2. Створити `.env.local` на основі `.env.local.example`
+3. Запустити dev server: `pnpm dev`
 
-```
-supabase/functions/
-└── wayforpay-webhook/
-    └── index.ts    # Deno-функція обробки webhook
-```
+## Перевірочні команди
 
-### Деплоймент функції
-```bash
-supabase functions deploy wayforpay-webhook
-```
+- `pnpm test:payment`
+- `pnpm check:plans`
+- `pnpm build`
 
----
+## Vercel Cron
 
-## Безпека
+`vercel.json` налаштовує щоденний cron:
 
-- `SUPABASE_SERVICE_ROLE_KEY` та `WAYFORPAY_SECRET` **ніколи** не передаються в браузер
-- Всі платіжні webhook-и перевіряються через HMAC-MD5 підпис
-- Row Level Security (RLS) увімкнений на всіх таблицях Supabase
-- Змінні з префіксом `NEXT_PUBLIC_` доступні в браузері — не зберігайте там секрети
+- path: `/api/payment/recurring`
+- schedule: `0 6 * * *`
 
----
+Операційні вимоги:
 
-## WayForPay (Тестовий режим)
+- `NEXT_PUBLIC_SITE_URL` має вказувати на актуальний production-домен;
+- deprecated domain `https://rozrahuy-i-vyazhi.vercel.app` спеціально блокується кодом;
+- якщо задано `CRON_SECRET`, запит без `Authorization: Bearer <CRON_SECRET>` отримає `401`.
 
-| Параметр | Значення |
-|----------|---------|
-| Merchant | `rozrahuy_i_vyazhi_vercel_app` |
-| Режим | Тестовий |
-| Тестова картка (успіх) | `4111 1111 1111 1111` |
-| Тестова картка (відмова) | `4111 1111 1111 1112` |
+## Troubleshooting
 
-> Для переведення в production режим: змінити налаштування в особистому кабінеті WayForPay.
+### `POST /api/payment/create` повертає помилку
 
----
+Перевірте:
 
-## Корисні посилання
+- `HUTKO_MERCHANT_ID` / `HUTKO_MERCHANT_PASSWORD`;
+- `SUPABASE_SERVICE_ROLE_KEY`;
+- чи вставляється `pending`-запис у `subscriptions`.
 
-- [Vercel Dashboard](https://vercel.com/craftappmobiles-projects/v0-landing-page-concept)
+### Checkout завис у `processing`
+
+Перевірте:
+
+- логи `/api/payment/callback`;
+- валідність Hutko signature;
+- чи оновився `subscriptions.status`;
+- чи присутній `order_id` у redirect URL.
+
+### Оплата підтверджена, але email не прийшов
+
+Перевірте в `subscriptions`:
+
+- `email_status`
+- `email_error`
+- `user_id`
+
+Ці поля оновлюються в `after()` усередині `app/api/payment/callback/route.ts`.
+
+### Recurring не працює
+
+Перевірте:
+
+- `NEXT_PUBLIC_SITE_URL`;
+- `CRON_SECRET`;
+- `rectoken` у `subscriptions`;
+- `status = active`, `auto_renewal = true`, `expires_at <= tomorrow`.
+
+## Пов'язані документи
+
+- `docs/hutko-integration-guide.md`
+- `docs/subscriptions-schema-reference.md`
 - [Supabase Dashboard](https://supabase.com/dashboard/project/xaeztaeqyjubmpgjxcgh)
-- [WayForPay Документація](https://wiki.wayforpay.com)
-- [Resend Документація](https://resend.com/docs)
-- [shadcn/ui Компоненти](https://ui.shadcn.com)
-
+- [Resend Docs](https://resend.com/docs)
