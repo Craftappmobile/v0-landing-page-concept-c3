@@ -61,7 +61,7 @@ const PLAN_DETAILS = {
     priceValue: "4 590",
     priceWithCurrency: "4 590 грн",
     perMonthLabel: "382.50 грн/місяць",
-    badge: "Економія 24%",
+    badge: null,
     amount: 459000,
     days: 365,
     isRecurring: true,
