@@ -152,7 +152,10 @@ export async function POST(request: NextRequest) {
     const data = await res.json();
 
     if (data?.response?.response_status === "success" && data.response.checkout_url) {
-      return NextResponse.json({ checkout_url: data.response.checkout_url });
+      return NextResponse.json({
+        order_id: orderId,
+        checkout_url: data.response.checkout_url,
+      });
     }
 
     // If Hutko rejected — mark subscription as failed
