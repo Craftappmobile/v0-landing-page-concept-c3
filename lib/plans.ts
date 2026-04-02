@@ -5,6 +5,7 @@ export type PlanId = (typeof PLAN_IDS)[number]
 export type PlanConfig = {
   id: PlanId
   name: string
+  hutkoButtonId: string
   checkoutLabel: string
   pricingTabLabel: string
   pricingPeriodLabel: string
@@ -23,6 +24,7 @@ export type PlanConfig = {
 const PLAN_DETAILS = {
   quarter: {
     name: "Підписка на 3 місяці",
+    hutkoButtonId: "502c8f543460cd98575ee4d04fe839983389b911",
     checkoutLabel: "3 місяці",
     pricingTabLabel: "3 місяці",
     pricingPeriodLabel: "3 міс",
@@ -39,6 +41,7 @@ const PLAN_DETAILS = {
   },
   half: {
     name: "Підписка на 6 місяців",
+    hutkoButtonId: "a13641e52c47f06c7bac5488d0fef443dee458ca",
     checkoutLabel: "6 місяців",
     pricingTabLabel: "6 місяців",
     pricingPeriodLabel: "6 міс",
@@ -55,6 +58,7 @@ const PLAN_DETAILS = {
   },
   year: {
     name: "Річна підписка",
+    hutkoButtonId: "a71624c5619178cb92ac074abf30736545c16095",
     checkoutLabel: "12 місяців",
     pricingTabLabel: "Річна",
     pricingPeriodLabel: "рік",
@@ -71,6 +75,7 @@ const PLAN_DETAILS = {
   },
   forever: {
     name: "Безлімітна підписка (назавжди)",
+    hutkoButtonId: "4b4eed88c7256f7781b201bf1419c7b7a1a03cb9",
     checkoutLabel: "Довічна",
     pricingTabLabel: "Назавжди",
     pricingPeriodLabel: "одноразово",

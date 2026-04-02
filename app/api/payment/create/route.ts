@@ -7,6 +7,8 @@ const MERCHANT_ID = process.env.HUTKO_MERCHANT_ID || "";
 const MERCHANT_PASSWORD = process.env.HUTKO_MERCHANT_PASSWORD || "";
 const HUTKO_API_URL = "https://pay.hutko.org/api/checkout/url/";
 
+type PaymentFlow = "button" | "redirect";
+
 /**
  * Generate Hutko signature (SHA1):
  * password + all params sorted alphabetically, joined with |
@@ -30,13 +32,18 @@ function generateSignature(
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
-    const { plan, email, name } = body as {
+    const { plan, email, name, flow } = body as {
       plan: string;
       email: string;
       name: string;
+      flow?: PaymentFlow;
     };
 
-    if (!plan || !email || !name) {
+    const paymentFlow: PaymentFlow = flow === "redirect" ? "redirect" : "button";
+    const trimmedEmail = email?.trim();
+    const trimmedName = name?.trim();
+
+    if (!plan || !trimmedEmail || !trimmedName) {
       return NextResponse.json(
         { error: "Заповніть всі поля" },
         { status: 400 }
@@ -63,6 +70,11 @@ export async function POST(request: NextRequest) {
     const orderId = `order_${Date.now()}_${Math.random().toString(36).slice(2, 8)}`;
 
     const isRecurring = planConfig.isRecurring;
+    const merchantData = JSON.stringify({
+      plan,
+      name: trimmedName,
+      email: trimmedEmail,
+    });
 
     const params: Record<string, string | number> = {
       order_id: orderId,
@@ -73,9 +85,9 @@ export async function POST(request: NextRequest) {
       version: "1.0.1",
       response_url: `${origin}/api/payment/redirect`,
       server_callback_url: `${origin}/api/payment/callback`,
-      sender_email: email,
+      sender_email: trimmedEmail,
       lang: "uk",
-      merchant_data: JSON.stringify({ plan, name, email }),
+      merchant_data: merchantData,
     };
 
     // For recurring plans, only request rectoken (we handle billing ourselves via cron)
@@ -90,8 +102,8 @@ export async function POST(request: NextRequest) {
     const now = new Date().toISOString();
     const { error: dbError } = await supabase.from("subscriptions").insert({
       order_id: orderId,
-      email,
-      customer_name: name,
+      email: trimmedEmail,
+      customer_name: trimmedName,
       plan,
       plan_type: plan,
       amount: planConfig.amount,
@@ -110,6 +122,25 @@ export async function POST(request: NextRequest) {
         { error: "Не вдалося підготувати платіж. Спробуйте пізніше." },
         { status: 500 }
       );
+    }
+
+    if (paymentFlow === "button") {
+      return NextResponse.json({
+        order_id: orderId,
+        hutko: {
+          button_id: planConfig.hutkoButtonId,
+          params: {
+            order_id: orderId,
+            merchant_data: merchantData,
+            sender_email: trimmedEmail,
+            email: trimmedEmail,
+            response_url: `${origin}/api/payment/redirect`,
+            server_callback_url: `${origin}/api/payment/callback`,
+            lang: "uk",
+            ...(isRecurring ? { required_rectoken: "Y" } : {}),
+          },
+        },
+      });
     }
 
     const res = await fetch(HUTKO_API_URL, {
