@@ -11,6 +11,7 @@ type MerchantData = {
   plan?: string;
   name?: string;
   email?: string;
+  checkout_correlation_id?: string;
   renewal?: boolean;
   parent_order?: string;
 };
@@ -60,6 +61,47 @@ function addDaysToLatestDate(baseIso: string | null | undefined, days: number, n
   return effectiveBaseDate.toISOString();
 }
 
+function parseOptionalAmount(value: string | undefined): number | null {
+  if (!value) return null;
+  const parsed = Number(value);
+  return Number.isFinite(parsed) ? parsed : null;
+}
+
+async function findInitialSubscription(
+  supabase: ReturnType<typeof createAdminClient>,
+  args: { orderId: string; correlationId: string },
+) {
+  const byOrderId = await supabase
+    .from("subscriptions")
+    .select("id, order_id, email, customer_name")
+    .eq("order_id", args.orderId)
+    .maybeSingle();
+
+  if (byOrderId.error) {
+    throw byOrderId.error;
+  }
+
+  if (byOrderId.data) {
+    return byOrderId.data;
+  }
+
+  if (!args.correlationId) {
+    return null;
+  }
+
+  const byCorrelation = await supabase
+    .from("subscriptions")
+    .select("id, order_id, email, customer_name")
+    .eq("checkout_correlation_id", args.correlationId)
+    .maybeSingle();
+
+  if (byCorrelation.error) {
+    throw byCorrelation.error;
+  }
+
+  return byCorrelation.data;
+}
+
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
@@ -106,10 +148,28 @@ export async function POST(request: NextRequest) {
     const customerEmailFromMerchant = typeof parsedMerchantData.email === "string"
       ? parsedMerchantData.email
       : "";
+    const checkoutCorrelationId = typeof parsedMerchantData.checkout_correlation_id === "string"
+      ? parsedMerchantData.checkout_correlation_id
+      : "";
     const isRenewal = parsedMerchantData.renewal === true;
     const parentOrder = typeof parsedMerchantData.parent_order === "string"
       ? parsedMerchantData.parent_order
       : "";
+    const senderEmailFromCallback = typeof restParams.sender_email === "string"
+      ? restParams.sender_email
+      : "";
+    const paidAmount = parseOptionalAmount(
+      typeof restParams.actual_amount === "string"
+        ? restParams.actual_amount
+        : typeof restParams.amount === "string"
+          ? restParams.amount
+          : undefined,
+    );
+    const paidCurrency = typeof restParams.actual_currency === "string"
+      ? restParams.actual_currency
+      : typeof restParams.currency === "string"
+        ? restParams.currency
+        : null;
 
     if (order_status === "approved") {
       const durationDays = isPlanId(plan) ? PLAN_CONFIG[plan].days : 90;
@@ -133,12 +193,17 @@ export async function POST(request: NextRequest) {
           return NextResponse.json({ error: "Parent subscription not found" }, { status: 500 });
         }
 
-        const updateData: Record<string, string | null> = {
+        const updateData: Record<string, string | number | null> = {
           status: "active",
           hutko_payment_id: payment_id || null,
           expires_at: addDaysToLatestDate(existingSub.expires_at, durationDays, now),
           updated_at: nowIso,
+          paid_currency: paidCurrency,
         };
+
+        if (paidAmount !== null) {
+          updateData.paid_amount = paidAmount;
+        }
 
         if (rectoken) {
           updateData.rectoken = rectoken;
@@ -151,14 +216,33 @@ export async function POST(request: NextRequest) {
 
         console.log("[Hutko Callback] Subscription renewed:", parentOrder, "via", order_id);
       } else {
+        const targetSubscription = await findInitialSubscription(supabase, {
+          orderId: order_id,
+          correlationId: checkoutCorrelationId,
+        });
+
+        if (!targetSubscription) {
+          console.error("[Hutko Callback] Initial subscription not found:", order_id, checkoutCorrelationId);
+          return NextResponse.json({ error: "Subscription not found" }, { status: 500 });
+        }
+
         // Update initial subscription to active
-        const updateData: Record<string, string | boolean | null> = {
+        const updateData: Record<string, string | boolean | null | number> = {
           status: "active",
           hutko_payment_id: payment_id || null,
           started_at: nowIso,
           expires_at: addDaysToLatestDate(null, durationDays, now),
           updated_at: nowIso,
+          paid_currency: paidCurrency,
         };
+
+        if (paidAmount !== null) {
+          updateData.paid_amount = paidAmount;
+        }
+
+        if (targetSubscription.order_id !== order_id) {
+          updateData.order_id = order_id;
+        }
 
         if (rectoken) {
           updateData.rectoken = rectoken;
@@ -167,30 +251,29 @@ export async function POST(request: NextRequest) {
         await supabase
           .from("subscriptions")
           .update(updateData)
-          .eq("order_id", order_id);
+          .eq("id", targetSubscription.id);
 
-        console.log("[Hutko Callback] Subscription activated:", order_id);
+        console.log("[Hutko Callback] Subscription activated:", order_id, targetSubscription.id);
 
         // Get customer info from merchant_data or subscription record
-        let customerName = customerNameFromMerchant;
-        let customerEmail = customerEmailFromMerchant;
+        let customerName = customerNameFromMerchant || targetSubscription.customer_name || "";
+        let customerEmail = customerEmailFromMerchant || senderEmailFromCallback;
 
         // Fallback: get email from subscription record
         if (!customerEmail) {
-          const { data: sub } = await supabase
-            .from("subscriptions")
-            .select("email, customer_name")
-            .eq("order_id", order_id)
-            .single();
-          if (sub) {
-            customerEmail = sub.email || "";
-            customerName = customerName || sub.customer_name || "";
-          }
+          customerEmail = targetSubscription.email || "";
+          customerName = customerName || targetSubscription.customer_name || "";
         }
 
         // Use after() to handle user creation and email AFTER responding to Hutko
         // This prevents Vercel function timeout from blocking the callback response
-        const emailData = { customerEmail, customerName, plan, orderId: order_id };
+        const emailData = {
+          customerEmail,
+          customerName,
+          plan,
+          orderId: order_id,
+          subscriptionId: targetSubscription.id,
+        };
         after(async () => {
           try {
             const bgSupabase = createAdminClient();
@@ -204,7 +287,7 @@ export async function POST(request: NextRequest) {
               await bgSupabase
                 .from("subscriptions")
                 .update({ user_id: userId })
-                .eq("order_id", emailData.orderId);
+                .eq("id", emailData.subscriptionId);
 
               // Send welcome email with credentials
               console.log("[Hutko after()] Sending welcome email to:", emailData.customerEmail);
@@ -219,7 +302,7 @@ export async function POST(request: NextRequest) {
                     email_status: emailResult.success ? "sent" : "failed",
                     email_error: emailResult.error || null,
                   })
-                  .eq("order_id", emailData.orderId);
+                  .eq("id", emailData.subscriptionId);
               } catch (emailErr) {
                 console.error("[Hutko after()] Email exception:", emailErr);
                 await bgSupabase
@@ -228,14 +311,14 @@ export async function POST(request: NextRequest) {
                     email_status: "exception",
                     email_error: String(emailErr),
                   })
-                  .eq("order_id", emailData.orderId);
+                  .eq("id", emailData.subscriptionId);
               }
             } else {
               console.log("[Hutko after()] No customer email found");
               await bgSupabase
                 .from("subscriptions")
                 .update({ email_status: "no_email_found" })
-                .eq("order_id", emailData.orderId);
+                .eq("id", emailData.subscriptionId);
             }
           } catch (bgError) {
             console.error("[Hutko after()] Background error:", bgError);
@@ -251,14 +334,30 @@ export async function POST(request: NextRequest) {
 
         console.log("[Hutko Callback] Renewal payment failed:", parentOrder, order_status, "via", order_id);
       } else {
+        const targetSubscription = await findInitialSubscription(supabase, {
+          orderId: order_id,
+          correlationId: checkoutCorrelationId,
+        });
+
+        if (!targetSubscription) {
+          console.error("[Hutko Callback] Failed payment subscription not found:", order_id, checkoutCorrelationId);
+          return NextResponse.json({ error: "Subscription not found" }, { status: 500 });
+        }
+
         // Initial payment failed or declined
+        const updateData: Record<string, string> = {
+          status: "failed",
+          updated_at: new Date().toISOString(),
+        };
+
+        if (targetSubscription.order_id !== order_id) {
+          updateData.order_id = order_id;
+        }
+
         await supabase
           .from("subscriptions")
-          .update({
-            status: "failed",
-            updated_at: new Date().toISOString(),
-          })
-          .eq("order_id", order_id);
+          .update(updateData)
+          .eq("id", targetSubscription.id);
 
         console.log("[Hutko Callback] Payment failed:", order_id, order_status);
       }

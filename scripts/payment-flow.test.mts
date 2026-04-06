@@ -3,12 +3,15 @@ import test from "node:test"
 
 import {
   buildCheckoutRedirectUrl,
+  extractCheckoutCorrelationIdFromValue,
   extractOrderIdFromValue,
   getInitialPaymentView,
   normalizeCheckoutStatus,
   normalizeSubscriptionStatus,
+  resolveCheckoutFlow,
   resolvePaymentStatusView,
 } from "../lib/payment-flow.ts"
+import { buildHutkoButtonWidgetConfig, generateHutkoSignature } from "../lib/hutko.ts"
 
 test("normalizeSubscriptionStatus maps subscription states for payment polling", () => {
   assert.equal(normalizeSubscriptionStatus({ status: "active" }), "active")
@@ -39,11 +42,29 @@ test("extractOrderIdFromValue handles raw and nested Hutko payloads", () => {
   assert.equal(extractOrderIdFromValue(null), null)
 })
 
-test("buildCheckoutRedirectUrl always redirects into processing state", () => {
-  const withOrderId = buildCheckoutRedirectUrl("https://vjazhi.com.ua", "order_abc")
-  assert.equal(withOrderId.toString(), "https://vjazhi.com.ua/checkout?status=processing&order_id=order_abc")
+test("extractCheckoutCorrelationIdFromValue finds correlation ids in merchant_data payloads", () => {
+  assert.equal(
+    extractCheckoutCorrelationIdFromValue({ merchant_data: '{"checkout_correlation_id":"chk_123"}' }),
+    "chk_123",
+  )
+  assert.equal(
+    extractCheckoutCorrelationIdFromValue({ response: { correlation_id: "chk_456" } }),
+    "chk_456",
+  )
+  assert.equal(extractCheckoutCorrelationIdFromValue("plain-string"), null)
+})
 
-  const withoutOrderId = buildCheckoutRedirectUrl("https://vjazhi.com.ua", null)
+test("buildCheckoutRedirectUrl always redirects into processing state", () => {
+  const withOrderId = buildCheckoutRedirectUrl("https://vjazhi.com.ua", {
+    orderId: "order_abc",
+    correlationId: "chk_123",
+  })
+  assert.equal(
+    withOrderId.toString(),
+    "https://vjazhi.com.ua/checkout?status=processing&order_id=order_abc&correlation_id=chk_123",
+  )
+
+  const withoutOrderId = buildCheckoutRedirectUrl("https://vjazhi.com.ua", { orderId: null, correlationId: null })
   assert.equal(withoutOrderId.toString(), "https://vjazhi.com.ua/checkout?status=processing")
 })
 
@@ -51,6 +72,34 @@ test("checkout status normalization keeps backward compatibility for done", () =
   assert.equal(normalizeCheckoutStatus("done"), "processing")
   assert.equal(normalizeCheckoutStatus("processing"), "processing")
   assert.equal(normalizeCheckoutStatus(null), null)
+})
+
+test("resolveCheckoutFlow uses Hutko button-link checkout for every plan", () => {
+  assert.equal(resolveCheckoutFlow("quarter"), "button")
+  assert.equal(resolveCheckoutFlow("half"), "button")
+  assert.equal(resolveCheckoutFlow("year"), "button")
+  assert.equal(resolveCheckoutFlow("forever"), "button")
+})
+
+test("buildHutkoButtonWidgetConfig supports payment-link params without forcing generic checkout fields", () => {
+  const config = buildHutkoButtonWidgetConfig({
+    buttonId: "button_token",
+    serverCallbackUrl: "https://example.com/api/payment/callback",
+    senderEmail: "knit@example.com",
+    merchantData: '{"checkout_correlation_id":"chk_123"}',
+    requiredRectoken: "Y",
+  })
+
+  assert.deepEqual(config.params, {
+    button: "button_token",
+    server_callback_url: "https://example.com/api/payment/callback",
+    sender_email: "knit@example.com",
+    merchant_data: '{"checkout_correlation_id":"chk_123"}',
+    required_rectoken: "Y",
+  })
+
+  assert.equal("order_id" in config.params, false)
+  assert.equal("order_desc" in config.params, false)
 })
 
 test("initial payment view depends on whether order_id is available", () => {
@@ -92,4 +141,15 @@ test("resolvePaymentStatusView keeps pending UX for retries, timeout, and fetch 
     state: "pending",
     message: "Ми очікуємо підтвердження платежу. Якщо лист не надійде протягом кількох хвилин, напишіть нам.",
   })
+})
+
+test("generateHutkoSignature sorts non-empty params before hashing", () => {
+  const signature = generateHutkoSignature("secret", {
+    zeta: "last",
+    alpha: "first",
+    count: 42,
+    empty: "",
+  })
+
+  assert.equal(signature, "47059808cd2b0da36d0f209b69e3e3dba0a921be")
 })

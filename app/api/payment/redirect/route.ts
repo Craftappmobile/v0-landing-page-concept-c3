@@ -1,10 +1,24 @@
 import { NextRequest, NextResponse } from "next/server"
-import { buildCheckoutRedirectUrl, extractOrderIdFromValue } from "@/lib/payment-flow"
+import {
+  buildCheckoutRedirectUrl,
+  extractCheckoutCorrelationIdFromValue,
+  extractOrderIdFromValue,
+} from "@/lib/payment-flow"
 
-async function extractOrderId(request: NextRequest) {
+async function extractIdentifiers(request: NextRequest) {
   const searchParamOrderId = request.nextUrl.searchParams.get("order_id")
-  if (searchParamOrderId) {
-    return searchParamOrderId.trim()
+  const searchParamCorrelationId = request.nextUrl.searchParams.get("correlation_id")
+  const searchParamMerchantData = request.nextUrl.searchParams.get("merchant_data")
+
+  let orderId = searchParamOrderId?.trim() || null
+  let correlationId = searchParamCorrelationId?.trim() || null
+
+  if (!correlationId && searchParamMerchantData) {
+    correlationId = extractCheckoutCorrelationIdFromValue(searchParamMerchantData)
+  }
+
+  if (orderId || correlationId) {
+    return { orderId, correlationId }
   }
 
   const contentType = request.headers.get("content-type") || ""
@@ -12,7 +26,9 @@ async function extractOrderId(request: NextRequest) {
   try {
     if (contentType.includes("application/json")) {
       const body = await request.json()
-      return extractOrderIdFromValue(body)
+      orderId = extractOrderIdFromValue(body)
+      correlationId = extractCheckoutCorrelationIdFromValue(body)
+      return { orderId, correlationId }
     }
 
     if (
@@ -20,18 +36,22 @@ async function extractOrderId(request: NextRequest) {
       contentType.includes("multipart/form-data")
     ) {
       const formData = await request.formData()
-      return extractOrderIdFromValue(formData.get("order_id"))
+      orderId = extractOrderIdFromValue(formData.get("order_id"))
+      correlationId =
+        extractCheckoutCorrelationIdFromValue(formData.get("correlation_id")) ??
+        extractCheckoutCorrelationIdFromValue(formData.get("merchant_data"))
+      return { orderId, correlationId }
     }
   } catch (error) {
-    console.warn("[Payment Redirect] Failed to extract order_id:", error)
+    console.warn("[Payment Redirect] Failed to extract identifiers:", error)
   }
 
-  return null
+  return { orderId: null, correlationId: null }
 }
 
 async function redirectToCheckout(request: NextRequest) {
-  const orderId = await extractOrderId(request)
-  const checkoutUrl = buildCheckoutRedirectUrl(request.nextUrl.origin, orderId)
+  const identifiers = await extractIdentifiers(request)
+  const checkoutUrl = buildCheckoutRedirectUrl(request.nextUrl.origin, identifiers)
 
   return NextResponse.redirect(checkoutUrl, {
     status: 303,

@@ -1,9 +1,15 @@
 export type PaymentStatus = "pending" | "active" | "failed" | "not_found"
 export type PaymentState = "pending" | "success" | "failure"
+export type CheckoutFlow = "button" | "redirect"
 
 export type PaymentViewModel = {
   state: PaymentState
   message: string
+}
+
+type CheckoutRedirectIdentifiers = {
+  orderId?: string | null
+  correlationId?: string | null
 }
 
 type SubscriptionStatusInput = {
@@ -17,6 +23,11 @@ const MISSING_ORDER_ID_MESSAGE = "Ми обробляємо платіж. Якщ
 const PAYMENT_SUCCESS_MESSAGE = "Оплату підтверджено. Підписка активується автоматично, а деталі ми надішлемо на email."
 const PAYMENT_FAILURE_MESSAGE = "Оплату не вдалося підтвердити. Якщо кошти були списані, напишіть нам — ми перевіримо платіж вручну."
 const PAYMENT_ERROR_MESSAGE = "Ми очікуємо підтвердження платежу. Якщо лист не надійде протягом кількох хвилин, напишіть нам."
+
+export function resolveCheckoutFlow(planId: string): CheckoutFlow {
+  void planId
+  return "button"
+}
 
 export function normalizeSubscriptionStatus({ status, expiresAt }: SubscriptionStatusInput): PaymentStatus {
   if (status === "active") return "active"
@@ -37,7 +48,20 @@ export function normalizeSubscriptionStatus({ status, expiresAt }: SubscriptionS
 export function extractOrderIdFromValue(value: unknown): string | null {
   if (typeof value === "string") {
     const trimmed = value.trim()
-    return trimmed || null
+    if (!trimmed) return null
+
+    if (
+      (trimmed.startsWith("{") && trimmed.endsWith("}")) ||
+      (trimmed.startsWith("[") && trimmed.endsWith("]"))
+    ) {
+      try {
+        return extractOrderIdFromValue(JSON.parse(trimmed))
+      } catch {
+        // Ignore parse failures and treat the value as a raw order id.
+      }
+    }
+
+    return trimmed
   }
 
   if (value && typeof value === "object") {
@@ -52,12 +76,56 @@ export function extractOrderIdFromValue(value: unknown): string | null {
   return null
 }
 
-export function buildCheckoutRedirectUrl(origin: string, orderId: string | null) {
+export function extractCheckoutCorrelationIdFromValue(value: unknown): string | null {
+  if (typeof value === "string") {
+    const trimmed = value.trim()
+    if (!trimmed) return null
+
+    if (
+      (trimmed.startsWith("{") && trimmed.endsWith("}")) ||
+      (trimmed.startsWith("[") && trimmed.endsWith("]"))
+    ) {
+      try {
+        return extractCheckoutCorrelationIdFromValue(JSON.parse(trimmed))
+      } catch {
+        return null
+      }
+    }
+
+    return null
+  }
+
+  if (value && typeof value === "object") {
+    const record = value as Record<string, unknown>
+
+    if (typeof record.checkout_correlation_id === "string" && record.checkout_correlation_id.trim()) {
+      return record.checkout_correlation_id.trim()
+    }
+
+    if (typeof record.correlation_id === "string" && record.correlation_id.trim()) {
+      return record.correlation_id.trim()
+    }
+
+    return (
+      extractCheckoutCorrelationIdFromValue(record.merchant_data) ??
+      extractCheckoutCorrelationIdFromValue(record.request) ??
+      extractCheckoutCorrelationIdFromValue(record.response)
+    )
+  }
+
+  return null
+}
+
+export function buildCheckoutRedirectUrl(origin: string, identifiers: CheckoutRedirectIdentifiers) {
   const checkoutUrl = new URL("/checkout", origin)
   checkoutUrl.searchParams.set("status", "processing")
 
-  if (orderId) {
-    checkoutUrl.searchParams.set("order_id", orderId)
+  if (identifiers.orderId) {
+    checkoutUrl.searchParams.set("order_id", identifiers.orderId)
+  }
+
+  if (identifiers.correlationId) {
+    checkoutUrl.searchParams.set("correlation_id", identifiers.correlationId)
   }
 
   return checkoutUrl

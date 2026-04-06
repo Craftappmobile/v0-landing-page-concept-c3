@@ -1,13 +1,16 @@
 "use client"
 
 import { Suspense, useEffect, useRef, useState } from "react"
+import Script from "next/script"
 import { useSearchParams } from "next/navigation"
 import Link from "next/link"
 import { AlertCircle, ArrowLeft, CheckCircle2, Loader2, ShieldCheck } from "lucide-react"
+import type { HutkoButtonWidgetConfig } from "@/lib/hutko"
 import { isPlanId, PLAN_CONFIG } from "@/lib/plans"
 import {
   getInitialPaymentView,
   normalizeCheckoutStatus,
+  resolveCheckoutFlow,
   resolvePaymentStatusView,
   type PaymentState,
   type PaymentStatus,
@@ -16,17 +19,33 @@ import { Button } from "@/components/ui/button"
 
 type PaymentStatusResponse = {
   status?: PaymentStatus
+  order_id?: string | null
 }
 
 type PaymentCreateResponse = {
   error?: string
   checkout_url?: string
   order_id?: string
+  checkout_correlation_id?: string
+  hutko_config?: HutkoButtonWidgetConfig
 }
 
-type EmbeddedCheckoutSession = {
-  orderId: string
-  checkoutUrl: string
+type PaymentSession = {
+  mode: "button"
+  orderId: string | null
+  correlationId: string | null
+  config: HutkoButtonWidgetConfig
+}
+
+type HutkoWindow = Window & {
+  hutko?: (selector: string, config: HutkoButtonWidgetConfig) => void
+}
+
+function buildStatusUrl(orderId: string | null, correlationId: string | null) {
+  const params = new URLSearchParams()
+  if (orderId) params.set("order_id", orderId)
+  if (correlationId) params.set("correlation_id", correlationId)
+  return `/api/payment/status?${params.toString()}`
 }
 
 export default function CheckoutPage() {
@@ -41,8 +60,10 @@ function CheckoutForm() {
   const searchParams = useSearchParams()
   const requestedPlanId = searchParams.get("plan") || "year"
   const planId = isPlanId(requestedPlanId) ? requestedPlanId : "year"
+  const checkoutFlow = resolveCheckoutFlow(planId)
   const status = normalizeCheckoutStatus(searchParams.get("status"))
   const redirectOrderId = searchParams.get("order_id")?.trim() || null
+  const redirectCorrelationId = searchParams.get("correlation_id")?.trim() || null
   const plan = PLAN_CONFIG[planId]
 
   const [name, setName] = useState("")
@@ -51,28 +72,32 @@ function CheckoutForm() {
   const [error, setError] = useState<string | null>(null)
   const [paymentState, setPaymentState] = useState<PaymentState>("pending")
   const [paymentMessage, setPaymentMessage] = useState<string | null>(null)
-  const [paymentSession, setPaymentSession] = useState<EmbeddedCheckoutSession | null>(null)
+  const [paymentSession, setPaymentSession] = useState<PaymentSession | null>(null)
+  const [hutkoScriptReady, setHutkoScriptReady] = useState(false)
   const [embeddedOrderId, setEmbeddedOrderId] = useState<string | null>(null)
-  const checkoutFrameRef = useRef<HTMLIFrameElement | null>(null)
-  const isProcessingState = status === "processing" || !!embeddedOrderId
-  const activeOrderId = redirectOrderId ?? embeddedOrderId
+  const widgetContainerRef = useRef<HTMLDivElement | null>(null)
+  const widgetContainerId = "hutko-payment-widget"
+  const isRedirectProcessingState = status === "processing"
+  const shouldPollPaymentStatus = isRedirectProcessingState || paymentSession?.mode === "button"
+  const activeOrderId = redirectOrderId ?? embeddedOrderId ?? paymentSession?.orderId ?? null
+  const activeCorrelationId = redirectCorrelationId ?? paymentSession?.correlationId ?? null
 
   useEffect(() => { setError(null) }, [name, email])
 
   useEffect(() => {
-    if (isProcessingState) {
+    if (isRedirectProcessingState) {
       setPaymentSession(null)
     }
-  }, [isProcessingState])
+  }, [isRedirectProcessingState])
 
   useEffect(() => {
-    if (!isProcessingState) {
+    if (!shouldPollPaymentStatus) {
       setPaymentState("pending")
       setPaymentMessage(null)
       return
     }
 
-    if (!activeOrderId) {
+    if (!activeOrderId && !activeCorrelationId) {
       const initialView = getInitialPaymentView(activeOrderId)
       setPaymentState(initialView.state)
       setPaymentMessage(initialView.message)
@@ -86,7 +111,7 @@ function CheckoutForm() {
 
     const pollStatus = async (attempt: number) => {
       try {
-        const res = await fetch(`/api/payment/status?order_id=${encodeURIComponent(activeOrderId)}`, {
+        const res = await fetch(buildStatusUrl(activeOrderId, activeCorrelationId), {
           cache: "no-store",
         })
 
@@ -97,6 +122,10 @@ function CheckoutForm() {
         const data = await res.json() as PaymentStatusResponse
 
         if (cancelled) return
+
+        if (data.order_id) {
+          setEmbeddedOrderId(data.order_id)
+        }
 
         const nextView = resolvePaymentStatusView({
           status: data.status ?? "not_found",
@@ -134,9 +163,28 @@ function CheckoutForm() {
       cancelled = true
       if (timeoutId) clearTimeout(timeoutId)
     }
-  }, [activeOrderId, isProcessingState])
+  }, [activeCorrelationId, activeOrderId, shouldPollPaymentStatus])
 
-  if (isProcessingState) {
+  useEffect(() => {
+    if (paymentSession?.mode !== "button" || !hutkoScriptReady || paymentState !== "pending") {
+      return
+    }
+
+    const hutko = (window as HutkoWindow).hutko
+
+    if (typeof hutko !== "function") {
+      setError("Не вдалося завантажити платіжну форму Hutko. Оновіть сторінку та спробуйте ще раз.")
+      return
+    }
+
+    if (widgetContainerRef.current) {
+      widgetContainerRef.current.innerHTML = ""
+    }
+
+    hutko(`#${widgetContainerId}`, paymentSession.config)
+  }, [hutkoScriptReady, paymentSession, paymentState])
+
+  if (isRedirectProcessingState || (paymentSession?.mode === "button" && paymentState !== "pending")) {
     return (
       <Shell>
         <PaymentStatusCard state={paymentState} message={paymentMessage} orderId={activeOrderId} />
@@ -144,42 +192,19 @@ function CheckoutForm() {
     )
   }
 
-  function handleCheckoutFrameLoad() {
-    const iframe = checkoutFrameRef.current
-
-    if (!iframe) {
-      return
-    }
-
-    try {
-      const frameLocation = iframe.contentWindow?.location
-
-      if (!frameLocation || frameLocation.origin !== window.location.origin) {
-        return
-      }
-
-      const frameUrl = new URL(frameLocation.href)
-      const frameStatus = normalizeCheckoutStatus(frameUrl.searchParams.get("status"))
-      const frameOrderId = frameUrl.searchParams.get("order_id")?.trim() || null
-
-      if (frameStatus === "processing" && frameOrderId) {
-        setEmbeddedOrderId(frameOrderId)
-        setPaymentSession(null)
-      }
-    } catch {
-      // Ignore cross-origin loads while the user is on the Hutko payment page.
-    }
-  }
-
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault()
     if (!name.trim() || !email.trim()) { setError("Заповніть усі поля"); return }
-    setLoading(true); setError(null); setEmbeddedOrderId(null)
+    setLoading(true); setError(null); setPaymentSession(null); setEmbeddedOrderId(null)
     try {
       const res = await fetch("/api/payment/create", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ plan: planId, email: email.trim(), name: name.trim(), flow: "redirect" }),
+        body: JSON.stringify({
+          plan: planId,
+          email: email.trim(),
+          name: name.trim(),
+        }),
       })
       const data = await res.json() as PaymentCreateResponse
       if (!res.ok) {
@@ -187,10 +212,12 @@ function CheckoutForm() {
         setError(data.error || "Не вдалося створити платіж")
         return
       }
-      if (data.checkout_url && data.order_id) {
+      if (data.hutko_config) {
         setPaymentSession({
-          orderId: data.order_id,
-          checkoutUrl: data.checkout_url,
+          mode: "button",
+          orderId: data.order_id ?? null,
+          correlationId: data.checkout_correlation_id ?? null,
+          config: data.hutko_config,
         })
         return
       }
@@ -202,6 +229,15 @@ function CheckoutForm() {
 
   return (
     <Shell>
+      {checkoutFlow === "button" && (
+        <Script
+          src="https://pay.hutko.org/latest/checkout-vue/checkout.js"
+          strategy="afterInteractive"
+          onLoad={() => setHutkoScriptReady(true)}
+          onError={() => setError("Не вдалося завантажити платіжну форму Hutko. Оновіть сторінку та спробуйте ще раз.")}
+        />
+      )}
+
       <Link href="/#pricing" className="inline-flex items-center gap-1 text-sm text-muted-foreground hover:text-foreground mb-6">
         <ArrowLeft className="h-4 w-4" /> Назад до тарифів
       </Link>
@@ -234,37 +270,35 @@ function CheckoutForm() {
           </Button>
         )}
 
-        {paymentSession && (
+        {paymentSession?.mode === "button" && (
           <div className="rounded-xl border border-border bg-card p-4 shadow-sm">
             <div className="mb-3">
-              <p className="text-sm font-medium text-foreground">Крок 2. Завершіть оплату через Hutko</p>
+              <p className="text-sm font-medium text-foreground">Крок 2. Завершіть оплату через Hutko payment link</p>
               <p className="mt-1 text-xs text-muted-foreground">
-                Замовлення вже створено. Платіжна форма відкрилася нижче без редиректу на окрему сторінку.
+                Нижче завантажена точна Hutko payment-link форма для цього тарифу. Саме тут має відображатися поле промокоду, якщо воно ввімкнене для link/button у Hutko.
               </p>
             </div>
 
-            <iframe
-              ref={checkoutFrameRef}
-              src={paymentSession.checkoutUrl}
-              title="Оплата через Hutko"
-              onLoad={handleCheckoutFrameLoad}
-              allow="payment *"
-              className="min-h-[680px] w-full rounded-lg border border-border bg-background"
+            <div
+              ref={widgetContainerRef}
+              id={widgetContainerId}
+              className="min-h-[420px] rounded-lg border border-border bg-background p-2"
             />
 
-            <div className="mt-3 flex flex-col gap-2 sm:flex-row">
-              <Button asChild variant="outline" className="w-full sm:w-auto">
-                <a href={paymentSession.checkoutUrl} target="_blank" rel="noopener noreferrer">
-                  Відкрити оплату в окремій вкладці
-                </a>
-              </Button>
-              <p className="text-xs text-muted-foreground sm:self-center">
-                Якщо форма не завантажилась у цьому вікні, відкрийте її окремо.
+            {!hutkoScriptReady && (
+              <p className="mt-3 flex items-center gap-2 text-xs text-muted-foreground">
+                <Loader2 className="h-3.5 w-3.5 animate-spin" /> Завантажуємо платіжну форму Hutko...
               </p>
-            </div>
+            )}
+
+            {paymentMessage && (
+              <p className="mt-3 text-xs text-muted-foreground">
+                {paymentMessage}
+              </p>
+            )}
 
             <p className="mt-3 text-xs text-muted-foreground">
-              Номер замовлення: <span className="font-mono">{paymentSession.orderId}</span>
+              Номер замовлення: <span className="font-mono">{activeOrderId ?? "створюється"}</span>
             </p>
           </div>
         )}
