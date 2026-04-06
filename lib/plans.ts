@@ -75,7 +75,7 @@ const PLAN_DETAILS = {
   },
   forever: {
     name: "Безлімітна підписка (назавжди)",
-    hutkoButtonId: "4b4eed88c7256f7781b201bf1419c7b7a1a03cb9",
+    hutkoButtonId: "59c57623f890ece7d8fad1c030edc49699537392",
     checkoutLabel: "Довічна",
     pricingTabLabel: "Назавжди",
     pricingPeriodLabel: "одноразово",
