@@ -74,6 +74,9 @@ function CheckoutForm() {
   const [paymentMessage, setPaymentMessage] = useState<string | null>(null)
   const [paymentSession, setPaymentSession] = useState<PaymentSession | null>(null)
   const [hutkoScriptReady, setHutkoScriptReady] = useState(false)
+  const [widgetReady, setWidgetReady] = useState(false)
+  const [widgetError, setWidgetError] = useState<string | null>(null)
+  const [widgetReloadKey, setWidgetReloadKey] = useState(0)
   const [embeddedOrderId, setEmbeddedOrderId] = useState<string | null>(null)
   const widgetContainerRef = useRef<HTMLDivElement | null>(null)
   const widgetContainerId = "hutko-payment-widget"
@@ -89,6 +92,13 @@ function CheckoutForm() {
       setPaymentSession(null)
     }
   }, [isRedirectProcessingState])
+
+  useEffect(() => {
+    if (paymentSession?.mode !== "button" || paymentState !== "pending") {
+      setWidgetReady(false)
+      setWidgetError(null)
+    }
+  }, [paymentSession, paymentState])
 
   useEffect(() => {
     if (!shouldPollPaymentStatus) {
@@ -173,15 +183,70 @@ function CheckoutForm() {
     const hutko = (window as HutkoWindow).hutko
 
     if (typeof hutko !== "function") {
-      setError("Не вдалося завантажити платіжну форму Hutko. Оновіть сторінку та спробуйте ще раз.")
+      setWidgetError("Не вдалося ініціалізувати платіжну форму Hutko. Оновіть сторінку та спробуйте ще раз.")
       return
     }
 
-    if (widgetContainerRef.current) {
-      widgetContainerRef.current.innerHTML = ""
+    const container = widgetContainerRef.current
+
+    if (container) {
+      container.innerHTML = ""
     }
 
-    hutko(`#${widgetContainerId}`, paymentSession.config)
+    setWidgetReady(false)
+    setWidgetError(null)
+
+    try {
+      hutko(`#${widgetContainerId}`, paymentSession.config)
+    } catch {
+      setWidgetError("Платіжна форма Hutko тимчасово не завантажилась. Спробуйте ще раз.")
+      return
+    }
+
+    let cancelled = false
+    const startedAt = Date.now()
+    const intervalId = window.setInterval(() => {
+      if (cancelled) {
+        return
+      }
+
+      const hasMountedWidget = Boolean(
+        container && (
+          container.childElementCount > 0
+          || container.querySelector("iframe, form, button, input, [role='dialog']")
+        ),
+      )
+
+      if (hasMountedWidget) {
+        setWidgetReady(true)
+        window.clearInterval(intervalId)
+        return
+      }
+
+      if (Date.now() - startedAt >= 10000) {
+        setWidgetError("Платіжна форма Hutko не завантажилась вчасно. Спробуйте ще раз, оновіть сторінку або відкрийте checkout в режимі інкогніто.")
+        window.clearInterval(intervalId)
+      }
+    }, 500)
+
+    return () => {
+      cancelled = true
+      window.clearInterval(intervalId)
+    }
+  }, [hutkoScriptReady, paymentSession, paymentState, widgetReloadKey])
+
+  useEffect(() => {
+    if (paymentSession?.mode !== "button" || hutkoScriptReady || paymentState !== "pending") {
+      return
+    }
+
+    const timeoutId = window.setTimeout(() => {
+      setWidgetError("Скрипт Hutko не завантажився вчасно. Оновіть сторінку або спробуйте режим інкогніто.")
+    }, 10000)
+
+    return () => {
+      window.clearTimeout(timeoutId)
+    }
   }, [hutkoScriptReady, paymentSession, paymentState])
 
   if (isRedirectProcessingState || (paymentSession?.mode === "button" && paymentState !== "pending")) {
@@ -195,7 +260,7 @@ function CheckoutForm() {
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault()
     if (!name.trim() || !email.trim()) { setError("Заповніть усі поля"); return }
-    setLoading(true); setError(null); setPaymentSession(null); setEmbeddedOrderId(null)
+      setLoading(true); setError(null); setWidgetError(null); setWidgetReady(false); setPaymentSession(null); setEmbeddedOrderId(null)
     try {
       const res = await fetch("/api/payment/create", {
         method: "POST",
@@ -285,7 +350,26 @@ function CheckoutForm() {
               className="min-h-[420px] rounded-lg border border-border bg-background p-2"
             />
 
-            {!hutkoScriptReady && (
+            {widgetError && (
+              <div className="mt-3 rounded-lg border border-amber-200 bg-amber-50 px-3 py-2 text-xs text-amber-800">
+                <p>{widgetError}</p>
+                <Button
+                  type="button"
+                  variant="outline"
+                  size="sm"
+                  className="mt-2"
+                  onClick={() => {
+                    setWidgetError(null)
+                    setWidgetReady(false)
+                    setWidgetReloadKey((current) => current + 1)
+                  }}
+                >
+                  Спробувати завантажити форму ще раз
+                </Button>
+              </div>
+            )}
+
+            {(!hutkoScriptReady || (!widgetReady && !widgetError)) && (
               <p className="mt-3 flex items-center gap-2 text-xs text-muted-foreground">
                 <Loader2 className="h-3.5 w-3.5 animate-spin" /> Завантажуємо платіжну форму Hutko...
               </p>
