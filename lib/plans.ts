@@ -24,7 +24,7 @@ export type PlanConfig = {
 const PLAN_DETAILS = {
   quarter: {
     name: "Підписка на 3 місяці",
-    hutkoButtonId: "502c8f543460cd98575ee4d04fe839983389b911",
+    hutkoButtonId: "5b783977dd40be7328b22c6c355d626591c76cd3",
     checkoutLabel: "3 місяці",
     pricingTabLabel: "3 місяці",
     pricingPeriodLabel: "3 міс",
@@ -41,7 +41,7 @@ const PLAN_DETAILS = {
   },
   half: {
     name: "Підписка на 6 місяців",
-    hutkoButtonId: "a13641e52c47f06c7bac5488d0fef443dee458ca",
+    hutkoButtonId: "15f07a1fe848da2c47c16efcf1cd1c52d5160595",
     checkoutLabel: "6 місяців",
     pricingTabLabel: "6 місяців",
     pricingPeriodLabel: "6 міс",
@@ -58,7 +58,7 @@ const PLAN_DETAILS = {
   },
   year: {
     name: "Річна підписка",
-    hutkoButtonId: "a71624c5619178cb92ac074abf30736545c16095",
+    hutkoButtonId: "5730471c8749e0f0ccb54c08e01394ec886f8c23",
     checkoutLabel: "12 місяців",
     pricingTabLabel: "Річна",
     pricingPeriodLabel: "рік",
