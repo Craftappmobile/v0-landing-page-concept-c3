@@ -73,7 +73,9 @@ function CheckoutForm() {
   const [paymentState, setPaymentState] = useState<PaymentState>("pending")
   const [paymentMessage, setPaymentMessage] = useState<string | null>(null)
   const [paymentSession, setPaymentSession] = useState<PaymentSession | null>(null)
-  const [hutkoScriptReady, setHutkoScriptReady] = useState(false)
+  const [hutkoScriptReady, setHutkoScriptReady] = useState(
+    () => typeof window !== "undefined" && typeof (window as HutkoWindow).hutko === "function",
+  )
   const [widgetReady, setWidgetReady] = useState(false)
   const [widgetError, setWidgetError] = useState<string | null>(null)
   const [widgetReloadKey, setWidgetReloadKey] = useState(0)
@@ -86,6 +88,12 @@ function CheckoutForm() {
   const activeCorrelationId = redirectCorrelationId ?? paymentSession?.correlationId ?? null
 
   useEffect(() => { setError(null) }, [name, email])
+
+  useEffect(() => {
+    if (typeof window !== "undefined" && typeof (window as HutkoWindow).hutko === "function") {
+      setHutkoScriptReady(true)
+    }
+  }, [paymentSession, planId])
 
   useEffect(() => {
     if (isRedirectProcessingState) {
@@ -298,6 +306,7 @@ function CheckoutForm() {
         <Script
           src="https://pay.hutko.org/latest/checkout-vue/checkout.js"
           strategy="afterInteractive"
+          onReady={() => setHutkoScriptReady(true)}
           onLoad={() => setHutkoScriptReady(true)}
           onError={() => setError("Не вдалося завантажити платіжну форму Hutko. Оновіть сторінку та спробуйте ще раз.")}
         />
