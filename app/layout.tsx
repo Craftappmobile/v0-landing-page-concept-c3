@@ -27,17 +27,48 @@ const dmSerif = DM_Serif_Display({
   variable: '--font-dm-serif',
 })
 
+const siteUrl = process.env.NEXT_PUBLIC_SITE_URL?.trim() || 'https://vjazhi.com.ua'
+const siteTitle = 'Розрахуй і В\'яжи — Ваш помічник для в\'язання'
+const siteDescription =
+  'Мобільний додаток для в\'язальниць: 30 калькуляторів, трекер проєктів, облік пряжі та спільнота майстринь. Спробуйте Premium!'
+const shareImage = '/opengraph-image'
+
 /**
  * SEO-метадані для лендінгової сторінки.
  * Описують додаток "Розрахуй і В'яжи" для пошукових систем та соцмереж.
  */
 export const metadata: Metadata = {
-  title: 'Розрахуй і В\'яжи — Ваш помічник для в\'язання',
-  description:
-    'Мобільний додаток для в\'язальниць: 30 калькуляторів, трекер проєктів, облік пряжі та спільнота майстринь. Спробуйте Premium!',
+  metadataBase: new URL(siteUrl),
+  title: siteTitle,
+  description: siteDescription,
+  alternates: {
+    canonical: '/',
+  },
   icons: {
     icon: '/images/logo.jpg',
     apple: '/images/logo.jpg',
+  },
+  openGraph: {
+    type: 'website',
+    locale: 'uk_UA',
+    url: '/',
+    siteName: 'Розрахуй і В\'яжи',
+    title: siteTitle,
+    description: siteDescription,
+    images: [
+      {
+        url: shareImage,
+        width: 1200,
+        height: 630,
+        alt: 'Розрахуй і В\'яжи — прев’ю сайту',
+      },
+    ],
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: siteTitle,
+    description: siteDescription,
+    images: [shareImage],
   },
 }
 
