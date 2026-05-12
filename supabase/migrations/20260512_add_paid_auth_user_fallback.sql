@@ -54,7 +54,6 @@ BEGIN
     email,
     encrypted_password,
     email_confirmed_at,
-    confirmed_at,
     raw_app_meta_data,
     raw_user_meta_data,
     created_at,
@@ -68,7 +67,6 @@ BEGIN
     'authenticated',
     v_email,
     extensions.crypt(p_password, extensions.gen_salt('bf')),
-    now(),
     now(),
     jsonb_build_object('provider', 'email', 'providers', jsonb_build_array('email')),
     jsonb_build_object(
@@ -90,8 +88,7 @@ BEGIN
     provider,
     last_sign_in_at,
     created_at,
-    updated_at,
-    email
+    updated_at
   ) VALUES (
     extensions.gen_random_uuid(),
     v_user_id,
@@ -105,8 +102,7 @@ BEGIN
     'email',
     now(),
     now(),
-    now(),
-    v_email
+    now()
   );
 
   INSERT INTO public.profiles (
