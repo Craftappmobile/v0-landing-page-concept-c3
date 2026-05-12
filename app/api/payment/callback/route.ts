@@ -1,4 +1,4 @@
-import { NextRequest, NextResponse, after } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 import crypto from "crypto";
 import { createAdminClient } from "@/lib/supabase";
 import { sendWelcomeEmail } from "@/lib/email";
@@ -112,59 +112,65 @@ async function findInitialSubscription(
   return byCorrelation.data;
 }
 
-function scheduleCustomerAccess(args: {
+async function provisionCustomerAccess(args: {
   customerEmail: string;
   customerName: string;
   plan: PlanId;
   subscriptionId: string;
 }) {
-  after(async () => {
-    try {
-      const bgSupabase = createAdminClient();
-      if (args.customerEmail) {
-        const { userId, generatedPassword } = await getOrCreateUser(
-          bgSupabase, args.customerEmail, args.customerName,
+  const bgSupabase = createAdminClient();
+
+  try {
+    if (args.customerEmail) {
+      const { userId, generatedPassword } = await getOrCreateUser(
+        bgSupabase, args.customerEmail, args.customerName,
+      );
+
+      await bgSupabase
+        .from("subscriptions")
+        .update({ user_id: userId })
+        .eq("id", args.subscriptionId);
+
+      console.log("[Hutko Callback] Sending welcome email to:", args.customerEmail);
+      try {
+        const emailResult = await sendWelcomeEmail(
+          args.customerEmail, args.customerName, args.plan, generatedPassword,
         );
-
+        console.log("[Hutko Callback] Email result:", JSON.stringify(emailResult));
         await bgSupabase
           .from("subscriptions")
-          .update({ user_id: userId })
+          .update({
+            email_status: emailResult.success ? "sent" : "failed",
+            email_error: emailResult.error || null,
+          })
           .eq("id", args.subscriptionId);
-
-        console.log("[Hutko after()] Sending welcome email to:", args.customerEmail);
-        try {
-          const emailResult = await sendWelcomeEmail(
-            args.customerEmail, args.customerName, args.plan, generatedPassword,
-          );
-          console.log("[Hutko after()] Email result:", JSON.stringify(emailResult));
-          await bgSupabase
-            .from("subscriptions")
-            .update({
-              email_status: emailResult.success ? "sent" : "failed",
-              email_error: emailResult.error || null,
-            })
-            .eq("id", args.subscriptionId);
-        } catch (emailErr) {
-          console.error("[Hutko after()] Email exception:", emailErr);
-          await bgSupabase
-            .from("subscriptions")
-            .update({
-              email_status: "exception",
-              email_error: String(emailErr),
-            })
-            .eq("id", args.subscriptionId);
-        }
-      } else {
-        console.log("[Hutko after()] No customer email found");
+      } catch (emailErr) {
+        console.error("[Hutko Callback] Email exception:", emailErr);
         await bgSupabase
           .from("subscriptions")
-          .update({ email_status: "no_email_found" })
+          .update({
+            email_status: "exception",
+            email_error: String(emailErr),
+          })
           .eq("id", args.subscriptionId);
       }
-    } catch (bgError) {
-      console.error("[Hutko after()] Background error:", bgError);
+    } else {
+      console.log("[Hutko Callback] No customer email found");
+      await bgSupabase
+        .from("subscriptions")
+        .update({ email_status: "no_email_found" })
+        .eq("id", args.subscriptionId);
     }
-  });
+  } catch (bgError) {
+    console.error("[Hutko Callback] Customer access provisioning error:", bgError);
+    await bgSupabase
+      .from("subscriptions")
+      .update({
+        email_status: "exception",
+        email_error: String(bgError),
+      })
+      .eq("id", args.subscriptionId);
+  }
 }
 
 async function createDirectPaymentSubscription(
@@ -356,7 +362,7 @@ export async function POST(request: NextRequest) {
           });
 
           console.log("[Hutko Callback] Direct payment subscription created:", order_id, directSubscription.id);
-          scheduleCustomerAccess({
+          await provisionCustomerAccess({
             customerEmail: customerEmailFromMerchant,
             customerName: customerNameFromMerchant,
             plan: directPaymentPlan,
@@ -404,7 +410,7 @@ export async function POST(request: NextRequest) {
           const shouldScheduleWelcomeEmail = !(targetSubscription.status === "active" && targetSubscription.email_status === "sent");
 
           if (shouldScheduleWelcomeEmail) {
-            scheduleCustomerAccess({
+            await provisionCustomerAccess({
               customerEmail,
               customerName,
               plan: subscriptionPlan,
@@ -465,16 +471,35 @@ export async function POST(request: NextRequest) {
  * Find existing user by email or create a new one in Supabase Auth.
  * Returns userId and generatedPassword (null if user already existed).
  */
+async function findAuthUserByEmail(
+  supabase: ReturnType<typeof createAdminClient>,
+  email: string,
+) {
+  const normalizedEmail = email.toLowerCase();
+  const perPage = 1000;
+  let page = 1;
+
+  while (true) {
+    const { data, error } = await supabase.auth.admin.listUsers({ page, perPage });
+    if (error) throw new Error("Failed to list users: " + error.message);
+
+    const existing = data?.users?.find(
+      (u) => u.email?.toLowerCase() === normalizedEmail,
+    );
+    if (existing) return existing;
+
+    if (!data?.users || data.users.length < perPage) return null;
+    page += 1;
+  }
+}
+
 async function getOrCreateUser(
   supabase: ReturnType<typeof createAdminClient>,
   email: string,
   fullName: string,
 ): Promise<{ userId: string; generatedPassword: string | null }> {
   // Check if user already exists
-  const { data: existingUsers } = await supabase.auth.admin.listUsers();
-  const existing = existingUsers?.users?.find(
-    (u) => u.email?.toLowerCase() === email.toLowerCase(),
-  );
+  const existing = await findAuthUserByEmail(supabase, email);
   if (existing) {
     console.log("[Auth] User already exists:", email);
     return { userId: existing.id, generatedPassword: null };
@@ -490,6 +515,12 @@ async function getOrCreateUser(
   });
 
   if (error || !newUser.user) {
+    const existingAfterCreateError = await findAuthUserByEmail(supabase, email);
+    if (existingAfterCreateError) {
+      console.log("[Auth] User already exists after create retry:", email);
+      return { userId: existingAfterCreateError.id, generatedPassword: null };
+    }
+
     throw new Error("Failed to create user: " + error?.message);
   }
 
