@@ -3,6 +3,7 @@ import { createAdminClient } from "@/lib/supabase";
 import { sendWelcomeEmail } from "@/lib/email";
 import { generateSecurePassword } from "@/lib/password";
 import { isPlanId } from "@/lib/plans";
+import { requirePaymentSupportToken } from "@/lib/payment-support-auth";
 
 async function findAuthUserByEmail(
   supabase: ReturnType<typeof createAdminClient>,
@@ -67,6 +68,9 @@ async function getOrCreateUser(
 
 export async function POST(request: NextRequest) {
   try {
+    const authError = requirePaymentSupportToken(request);
+    if (authError) return authError;
+
     const body = await request.json().catch(() => ({})) as Record<string, unknown>;
     const orderId = typeof body.order_id === "string" ? body.order_id.trim() : "";
     const paymentId = typeof body.payment_id === "string" ? body.payment_id.trim() : "";
