@@ -11,6 +11,10 @@ function parseLimit(value: string | null): number {
   return Math.min(Math.floor(parsed), MAX_LIMIT);
 }
 
+function parseBoolean(value: string | null): boolean {
+  return value === "1" || value === "true" || value === "yes";
+}
+
 export async function GET(request: NextRequest) {
   try {
     const authError = requirePaymentSupportToken(request);
@@ -18,7 +22,12 @@ export async function GET(request: NextRequest) {
 
     const url = new URL(request.url);
     const limit = parseLimit(url.searchParams.get("limit"));
+    const includeNullEmailStatus = parseBoolean(url.searchParams.get("include_null_email_status"));
     const supabase = createAdminClient();
+
+    const problemFilter = includeNullEmailStatus
+      ? "user_id.is.null,email_status.is.null,email_status.in.(exception,failed,no_email_found)"
+      : "user_id.is.null,email_status.in.(exception,failed,no_email_found)";
 
     const { data, error } = await supabase
       .from("subscriptions")
@@ -26,7 +35,8 @@ export async function GET(request: NextRequest) {
         "id, order_id, hutko_payment_id, email, customer_name, plan, status, user_id, email_status, email_error, paid_amount, paid_currency, created_at, updated_at",
       )
       .eq("status", "active")
-      .or("user_id.is.null,email_status.is.null,email_status.in.(exception,failed,no_email_found)")
+      .not("email", "is", null)
+      .or(problemFilter)
       .order("created_at", { ascending: false })
       .limit(limit);
 
