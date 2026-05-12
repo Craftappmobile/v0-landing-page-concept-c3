@@ -137,3 +137,21 @@ REVOKE ALL ON FUNCTION public.create_paid_auth_user(text, text, text) FROM PUBLI
 REVOKE ALL ON FUNCTION public.create_paid_auth_user(text, text, text) FROM anon;
 REVOKE ALL ON FUNCTION public.create_paid_auth_user(text, text, text) FROM authenticated;
 GRANT EXECUTE ON FUNCTION public.create_paid_auth_user(text, text, text) TO service_role;
+
+CREATE OR REPLACE FUNCTION public.find_paid_auth_user_by_email(p_email text)
+RETURNS uuid
+LANGUAGE sql
+SECURITY DEFINER
+SET search_path TO ''
+AS $function$
+  SELECT id
+  FROM auth.users
+  WHERE lower(email::text) = lower(nullif(trim(p_email), ''))
+    AND deleted_at IS NULL
+  LIMIT 1;
+$function$;
+
+REVOKE ALL ON FUNCTION public.find_paid_auth_user_by_email(text) FROM PUBLIC;
+REVOKE ALL ON FUNCTION public.find_paid_auth_user_by_email(text) FROM anon;
+REVOKE ALL ON FUNCTION public.find_paid_auth_user_by_email(text) FROM authenticated;
+GRANT EXECUTE ON FUNCTION public.find_paid_auth_user_by_email(text) TO service_role;

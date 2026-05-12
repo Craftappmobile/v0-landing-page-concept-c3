@@ -475,22 +475,15 @@ async function findAuthUserByEmail(
   supabase: ReturnType<typeof createAdminClient>,
   email: string,
 ) {
-  const normalizedEmail = email.toLowerCase();
-  const perPage = 1000;
-  let page = 1;
+  const { data: userId, error } = await supabase.rpc("find_paid_auth_user_by_email", {
+    p_email: email,
+  });
 
-  while (true) {
-    const { data, error } = await supabase.auth.admin.listUsers({ page, perPage });
-    if (error) throw new Error("Failed to list users: " + error.message);
-
-    const existing = data?.users?.find(
-      (u) => u.email?.toLowerCase() === normalizedEmail,
-    );
-    if (existing) return existing;
-
-    if (!data?.users || data.users.length < perPage) return null;
-    page += 1;
+  if (error) {
+    throw new Error("Failed to find user by email: " + error.message);
   }
+
+  return typeof userId === "string" && userId ? { id: userId } : null;
 }
 
 async function getOrCreateUser(
