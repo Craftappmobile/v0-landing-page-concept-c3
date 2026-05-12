@@ -4,17 +4,37 @@ import { createAdminClient } from "@/lib/supabase";
 import { sendWelcomeEmail } from "@/lib/email";
 import { generateSecurePassword } from "@/lib/password";
 import { isPlanId, PLAN_CONFIG } from "@/lib/plans";
+import type { PlanId } from "@/lib/plans";
+import {
+  extractHutkoReservationCustomer,
+  normalizeHutkoEmail,
+  parseHutkoMerchantData,
+  resolveDirectPaymentPlanId,
+} from "@/lib/payment-flow";
 
 const MERCHANT_PASSWORD = process.env.HUTKO_MERCHANT_PASSWORD || "";
 
-type MerchantData = {
-  plan?: string;
-  name?: string;
-  email?: string;
-  checkout_correlation_id?: string;
-  renewal?: boolean;
-  parent_order?: string;
-};
+type HutkoCallbackBody = Record<string, unknown>;
+
+function getString(value: unknown): string {
+  if (typeof value === "string") return value.trim();
+  if (typeof value === "number" && Number.isFinite(value)) return String(value);
+  return "";
+}
+
+function getSignableString(value: unknown): string | null {
+  if (value === null || value === undefined || value === "") return null;
+  if (typeof value === "object") return JSON.stringify(value);
+  return String(value);
+}
+
+function resolveKnownPlanId(...values: Array<string | null | undefined>) {
+  for (const value of values) {
+    if (value && isPlanId(value)) return value;
+  }
+
+  return null;
+}
 
 /**
  * Verify Hutko callback signature (SHA1).
@@ -22,19 +42,18 @@ type MerchantData = {
  */
 function verifySignature(
   password: string,
-  params: Record<string, string | number>,
+  params: Record<string, unknown>,
   receivedSignature: string
 ): boolean {
-  const filtered: Record<string, string | number> = {};
+  const filtered: Record<string, string> = {};
   for (const [key, value] of Object.entries(params)) {
+    const signableValue = getSignableString(value);
     if (
       key !== "signature" &&
       key !== "response_signature_string" &&
-      value !== "" &&
-      value !== null &&
-      value !== undefined
+      signableValue !== null
     ) {
-      filtered[key] = value;
+      filtered[key] = signableValue;
     }
   }
   const sortedKeys = Object.keys(filtered).sort();
@@ -42,15 +61,6 @@ function verifySignature(
   const signString = [password, ...values].join("|");
   const expected = crypto.createHash("sha1").update(signString, "utf8").digest("hex");
   return expected === receivedSignature;
-}
-
-function parseMerchantData(rawValue: string | undefined): MerchantData {
-  try {
-    const parsed = JSON.parse(rawValue || "{}") as MerchantData;
-    return parsed && typeof parsed === "object" ? parsed : {};
-  } catch {
-    return {};
-  }
 }
 
 function addDaysToLatestDate(baseIso: string | null | undefined, days: number, now: Date): string {
@@ -73,7 +83,7 @@ async function findInitialSubscription(
 ) {
   const byOrderId = await supabase
     .from("subscriptions")
-    .select("id, order_id, email, customer_name")
+    .select("id, order_id, email, customer_name, plan, plan_type, status, email_status")
     .eq("order_id", args.orderId)
     .maybeSingle();
 
@@ -91,7 +101,7 @@ async function findInitialSubscription(
 
   const byCorrelation = await supabase
     .from("subscriptions")
-    .select("id, order_id, email, customer_name")
+    .select("id, order_id, email, customer_name, plan, plan_type, status, email_status")
     .eq("checkout_correlation_id", args.correlationId)
     .maybeSingle();
 
@@ -102,27 +112,142 @@ async function findInitialSubscription(
   return byCorrelation.data;
 }
 
+function scheduleCustomerAccess(args: {
+  customerEmail: string;
+  customerName: string;
+  plan: PlanId;
+  subscriptionId: string;
+}) {
+  after(async () => {
+    try {
+      const bgSupabase = createAdminClient();
+      if (args.customerEmail) {
+        const { userId, generatedPassword } = await getOrCreateUser(
+          bgSupabase, args.customerEmail, args.customerName,
+        );
+
+        await bgSupabase
+          .from("subscriptions")
+          .update({ user_id: userId })
+          .eq("id", args.subscriptionId);
+
+        console.log("[Hutko after()] Sending welcome email to:", args.customerEmail);
+        try {
+          const emailResult = await sendWelcomeEmail(
+            args.customerEmail, args.customerName, args.plan, generatedPassword,
+          );
+          console.log("[Hutko after()] Email result:", JSON.stringify(emailResult));
+          await bgSupabase
+            .from("subscriptions")
+            .update({
+              email_status: emailResult.success ? "sent" : "failed",
+              email_error: emailResult.error || null,
+            })
+            .eq("id", args.subscriptionId);
+        } catch (emailErr) {
+          console.error("[Hutko after()] Email exception:", emailErr);
+          await bgSupabase
+            .from("subscriptions")
+            .update({
+              email_status: "exception",
+              email_error: String(emailErr),
+            })
+            .eq("id", args.subscriptionId);
+        }
+      } else {
+        console.log("[Hutko after()] No customer email found");
+        await bgSupabase
+          .from("subscriptions")
+          .update({ email_status: "no_email_found" })
+          .eq("id", args.subscriptionId);
+      }
+    } catch (bgError) {
+      console.error("[Hutko after()] Background error:", bgError);
+    }
+  });
+}
+
+async function createDirectPaymentSubscription(
+  supabase: ReturnType<typeof createAdminClient>,
+  args: {
+    orderId: string;
+    customerEmail: string;
+    customerName: string;
+    plan: PlanId;
+    nowIso: string;
+    expiresAt: string;
+    paymentId: string | null;
+    rectoken: string | null;
+    paidAmount: number | null;
+    paidCurrency: string | null;
+  },
+) {
+  const planConfig = PLAN_CONFIG[args.plan];
+  const insertData: Record<string, string | number | boolean | null> = {
+    order_id: args.orderId,
+    email: args.customerEmail,
+    customer_name: args.customerName,
+    plan: args.plan,
+    plan_type: args.plan,
+    amount: planConfig.amount,
+    currency: "UAH",
+    status: "active",
+    payment_provider: "hutko",
+    platform: "web",
+    auto_renewal: planConfig.isRecurring,
+    started_at: args.nowIso,
+    expires_at: args.expiresAt,
+    updated_at: args.nowIso,
+    hutko_payment_id: args.paymentId,
+    rectoken: args.rectoken,
+    paid_currency: args.paidCurrency,
+  };
+
+  if (args.paidAmount !== null) {
+    insertData.paid_amount = args.paidAmount;
+  }
+
+  const { data, error } = await supabase
+    .from("subscriptions")
+    .insert(insertData)
+    .select("id, order_id, email, customer_name, plan, plan_type, status, email_status")
+    .single();
+
+  if (error || !data) {
+    throw new Error("Failed to create direct payment subscription: " + error?.message);
+  }
+
+  return data;
+}
+
 export async function POST(request: NextRequest) {
   try {
-    const body = await request.json();
+    const body = await request.json() as HutkoCallbackBody;
 
     // Hutko sends callback data in body directly
     const {
-      order_id,
-      order_status,
-      signature,
-      rectoken,
-      payment_id,
-      merchant_data,
+      order_id: rawOrderId,
+      order_status: rawOrderStatus,
+      signature: rawSignature,
+      rectoken: rawRectoken,
+      payment_id: rawPaymentId,
+      merchant_data: rawMerchantData,
+      additional_info: rawAdditionalInfo,
       ...restParams
-    } = body as Record<string, string>;
+    } = body;
+
+    const order_id = getString(rawOrderId);
+    const order_status = getString(rawOrderStatus);
+    const signature = getString(rawSignature);
+    const rectoken = getString(rawRectoken);
+    const payment_id = getString(rawPaymentId);
 
     if (!order_id || !signature) {
       return NextResponse.json({ error: "Missing required fields" }, { status: 400 });
     }
 
     // Build params for signature verification (exclude signature itself)
-    const paramsForSign: Record<string, string | number> = { order_id, order_status };
+    const paramsForSign: Record<string, unknown> = { order_id, order_status };
     // Include all other params that Hutko sent (except signature)
     for (const [key, value] of Object.entries(restParams)) {
       if (key !== "signature" && key !== "response_signature_string" && value) {
@@ -131,7 +256,8 @@ export async function POST(request: NextRequest) {
     }
     if (rectoken) paramsForSign.rectoken = rectoken;
     if (payment_id) paramsForSign.payment_id = payment_id;
-    if (merchant_data) paramsForSign.merchant_data = merchant_data;
+    if (rawMerchantData) paramsForSign.merchant_data = rawMerchantData;
+    if (rawAdditionalInfo) paramsForSign.additional_info = rawAdditionalInfo;
 
     // Verify signature
     if (!verifySignature(MERCHANT_PASSWORD, paramsForSign, signature)) {
@@ -140,36 +266,20 @@ export async function POST(request: NextRequest) {
     }
 
     const supabase = createAdminClient();
-    const parsedMerchantData = parseMerchantData(merchant_data);
+    const parsedMerchantData = parseHutkoMerchantData(rawMerchantData);
+    const reservationCustomer = extractHutkoReservationCustomer(rawAdditionalInfo);
+    const directPaymentPlan = resolveDirectPaymentPlanId(parsedMerchantData.plan_code);
     const plan = typeof parsedMerchantData.plan === "string" ? parsedMerchantData.plan : "";
-    const customerNameFromMerchant = typeof parsedMerchantData.name === "string"
-      ? parsedMerchantData.name
-      : "";
-    const customerEmailFromMerchant = typeof parsedMerchantData.email === "string"
-      ? parsedMerchantData.email
-      : "";
-    const checkoutCorrelationId = typeof parsedMerchantData.checkout_correlation_id === "string"
-      ? parsedMerchantData.checkout_correlation_id
-      : "";
+    const customerNameFromMerchant = parsedMerchantData.name || reservationCustomer.name || "";
+    const senderEmailFromCallback = normalizeHutkoEmail(restParams.sender_email);
+    const customerEmailFromMerchant = parsedMerchantData.email || senderEmailFromCallback || reservationCustomer.email || "";
+    const checkoutCorrelationId = parsedMerchantData.checkout_correlation_id || "";
     const isRenewal = parsedMerchantData.renewal === true;
-    const parentOrder = typeof parsedMerchantData.parent_order === "string"
-      ? parsedMerchantData.parent_order
-      : "";
-    const senderEmailFromCallback = typeof restParams.sender_email === "string"
-      ? restParams.sender_email
-      : "";
+    const parentOrder = parsedMerchantData.parent_order || "";
     const paidAmount = parseOptionalAmount(
-      typeof restParams.actual_amount === "string"
-        ? restParams.actual_amount
-        : typeof restParams.amount === "string"
-          ? restParams.amount
-          : undefined,
+      getString(restParams.actual_amount) || getString(restParams.amount) || undefined,
     );
-    const paidCurrency = typeof restParams.actual_currency === "string"
-      ? restParams.actual_currency
-      : typeof restParams.currency === "string"
-        ? restParams.currency
-        : null;
+    const paidCurrency = getString(restParams.actual_currency) || getString(restParams.currency) || null;
 
     if (order_status === "approved") {
       const durationDays = isPlanId(plan) ? PLAN_CONFIG[plan].days : 90;
@@ -222,108 +332,88 @@ export async function POST(request: NextRequest) {
         });
 
         if (!targetSubscription) {
-          console.error("[Hutko Callback] Initial subscription not found:", order_id, checkoutCorrelationId);
-          return NextResponse.json({ error: "Subscription not found" }, { status: 500 });
-        }
-
-        // Update initial subscription to active
-        const updateData: Record<string, string | boolean | null | number> = {
-          status: "active",
-          hutko_payment_id: payment_id || null,
-          started_at: nowIso,
-          expires_at: addDaysToLatestDate(null, durationDays, now),
-          updated_at: nowIso,
-          paid_currency: paidCurrency,
-        };
-
-        if (paidAmount !== null) {
-          updateData.paid_amount = paidAmount;
-        }
-
-        if (targetSubscription.order_id !== order_id) {
-          updateData.order_id = order_id;
-        }
-
-        if (rectoken) {
-          updateData.rectoken = rectoken;
-        }
-
-        await supabase
-          .from("subscriptions")
-          .update(updateData)
-          .eq("id", targetSubscription.id);
-
-        console.log("[Hutko Callback] Subscription activated:", order_id, targetSubscription.id);
-
-        // Get customer info from merchant_data or subscription record
-        let customerName = customerNameFromMerchant || targetSubscription.customer_name || "";
-        let customerEmail = customerEmailFromMerchant || senderEmailFromCallback;
-
-        // Fallback: get email from subscription record
-        if (!customerEmail) {
-          customerEmail = targetSubscription.email || "";
-          customerName = customerName || targetSubscription.customer_name || "";
-        }
-
-        // Use after() to handle user creation and email AFTER responding to Hutko
-        // This prevents Vercel function timeout from blocking the callback response
-        const emailData = {
-          customerEmail,
-          customerName,
-          plan,
-          orderId: order_id,
-          subscriptionId: targetSubscription.id,
-        };
-        after(async () => {
-          try {
-            const bgSupabase = createAdminClient();
-            if (emailData.customerEmail) {
-              // Create user in Supabase Auth (or get existing)
-              const { userId, generatedPassword } = await getOrCreateUser(
-                bgSupabase, emailData.customerEmail, emailData.customerName,
-              );
-
-              // Link subscription to user
-              await bgSupabase
-                .from("subscriptions")
-                .update({ user_id: userId })
-                .eq("id", emailData.subscriptionId);
-
-              // Send welcome email with credentials
-              console.log("[Hutko after()] Sending welcome email to:", emailData.customerEmail);
-              try {
-                const emailResult = await sendWelcomeEmail(
-                  emailData.customerEmail, emailData.customerName, emailData.plan, generatedPassword,
-                );
-                console.log("[Hutko after()] Email result:", JSON.stringify(emailResult));
-                await bgSupabase
-                  .from("subscriptions")
-                  .update({
-                    email_status: emailResult.success ? "sent" : "failed",
-                    email_error: emailResult.error || null,
-                  })
-                  .eq("id", emailData.subscriptionId);
-              } catch (emailErr) {
-                console.error("[Hutko after()] Email exception:", emailErr);
-                await bgSupabase
-                  .from("subscriptions")
-                  .update({
-                    email_status: "exception",
-                    email_error: String(emailErr),
-                  })
-                  .eq("id", emailData.subscriptionId);
-              }
-            } else {
-              console.log("[Hutko after()] No customer email found");
-              await bgSupabase
-                .from("subscriptions")
-                .update({ email_status: "no_email_found" })
-                .eq("id", emailData.subscriptionId);
-            }
-          } catch (bgError) {
-            console.error("[Hutko after()] Background error:", bgError);
+          if (!directPaymentPlan) {
+            console.error("[Hutko Callback] Direct payment is missing valid plan_code:", order_id, parsedMerchantData.plan_code);
+            return NextResponse.json({ error: "Missing or invalid plan_code" }, { status: 400 });
           }
-        });
+
+          if (!customerEmailFromMerchant) {
+            console.error("[Hutko Callback] Direct payment is missing customer email:", order_id);
+            return NextResponse.json({ error: "Missing customer email" }, { status: 400 });
+          }
+
+          const directSubscription = await createDirectPaymentSubscription(supabase, {
+            orderId: order_id,
+            customerEmail: customerEmailFromMerchant,
+            customerName: customerNameFromMerchant,
+            plan: directPaymentPlan,
+            nowIso,
+            expiresAt: addDaysToLatestDate(null, PLAN_CONFIG[directPaymentPlan].days, now),
+            paymentId: payment_id || null,
+            rectoken: rectoken || null,
+            paidAmount,
+            paidCurrency,
+          });
+
+          console.log("[Hutko Callback] Direct payment subscription created:", order_id, directSubscription.id);
+          scheduleCustomerAccess({
+            customerEmail: customerEmailFromMerchant,
+            customerName: customerNameFromMerchant,
+            plan: directPaymentPlan,
+            subscriptionId: directSubscription.id,
+          });
+        } else {
+          const subscriptionPlan = resolveKnownPlanId(plan, targetSubscription.plan, targetSubscription.plan_type) ?? directPaymentPlan;
+
+          if (!subscriptionPlan) {
+            console.error("[Hutko Callback] Subscription activation is missing valid plan:", order_id, targetSubscription.id);
+            return NextResponse.json({ error: "Missing or invalid plan" }, { status: 400 });
+          }
+
+          // Update initial subscription to active
+          const updateData: Record<string, string | boolean | null | number> = {
+            status: "active",
+            hutko_payment_id: payment_id || null,
+            started_at: nowIso,
+            expires_at: addDaysToLatestDate(null, PLAN_CONFIG[subscriptionPlan].days, now),
+            updated_at: nowIso,
+            paid_currency: paidCurrency,
+          };
+
+          if (paidAmount !== null) {
+            updateData.paid_amount = paidAmount;
+          }
+
+          if (targetSubscription.order_id !== order_id) {
+            updateData.order_id = order_id;
+          }
+
+          if (rectoken) {
+            updateData.rectoken = rectoken;
+          }
+
+          await supabase
+            .from("subscriptions")
+            .update(updateData)
+            .eq("id", targetSubscription.id);
+
+          console.log("[Hutko Callback] Subscription activated:", order_id, targetSubscription.id);
+
+          const customerName = customerNameFromMerchant || targetSubscription.customer_name || "";
+          const customerEmail = customerEmailFromMerchant || targetSubscription.email || "";
+          const shouldScheduleWelcomeEmail = !(targetSubscription.status === "active" && targetSubscription.email_status === "sent");
+
+          if (shouldScheduleWelcomeEmail) {
+            scheduleCustomerAccess({
+              customerEmail,
+              customerName,
+              plan: subscriptionPlan,
+              subscriptionId: targetSubscription.id,
+            });
+          } else {
+            console.log("[Hutko Callback] Duplicate approved callback already emailed:", order_id, targetSubscription.id);
+          }
+        }
       }
     } else {
       if (isRenewal && parentOrder) {
@@ -340,8 +430,8 @@ export async function POST(request: NextRequest) {
         });
 
         if (!targetSubscription) {
-          console.error("[Hutko Callback] Failed payment subscription not found:", order_id, checkoutCorrelationId);
-          return NextResponse.json({ error: "Subscription not found" }, { status: 500 });
+          console.log("[Hutko Callback] Failed direct payment without subscription:", order_id, order_status);
+          return NextResponse.json({ status: "ok" });
         }
 
         // Initial payment failed or declined

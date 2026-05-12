@@ -3,11 +3,15 @@ import test from "node:test"
 
 import {
   buildCheckoutRedirectUrl,
+  extractHutkoReservationCustomer,
   extractCheckoutCorrelationIdFromValue,
   extractOrderIdFromValue,
   getInitialPaymentView,
+  normalizeHutkoEmail,
   normalizeCheckoutStatus,
   normalizeSubscriptionStatus,
+  parseHutkoMerchantData,
+  resolveDirectPaymentPlanId,
   resolveCheckoutFlow,
   resolvePaymentStatusView,
 } from "../lib/payment-flow.ts"
@@ -52,6 +56,49 @@ test("extractCheckoutCorrelationIdFromValue finds correlation ids in merchant_da
     "chk_456",
   )
   assert.equal(extractCheckoutCorrelationIdFromValue("plain-string"), null)
+})
+
+test("parseHutkoMerchantData supports existing website object payloads", () => {
+  assert.deepEqual(
+    parseHutkoMerchantData('{"plan":"quarter","name":"Ольга","email":"Olga@Example.com","checkout_correlation_id":"chk_123"}'),
+    {
+      plan: "quarter",
+      name: "Ольга",
+      email: "olga@example.com",
+      checkout_correlation_id: "chk_123",
+    },
+  )
+})
+
+test("parseHutkoMerchantData supports direct payment-link field arrays", () => {
+  assert.deepEqual(
+    parseHutkoMerchantData([
+      { name: "sender_email", label: "Email", value: "Test@Example.com" },
+      { name: "sender_name", label: "Ім'я", value: "Тест" },
+      { name: "plan_code", label: "Код тарифу", value: "3" },
+    ]),
+    {
+      email: "test@example.com",
+      name: "Тест",
+      plan_code: "3",
+    },
+  )
+})
+
+test("direct payment plan codes map to internal plans", () => {
+  assert.equal(resolveDirectPaymentPlanId("3"), "quarter")
+  assert.equal(resolveDirectPaymentPlanId(6), "half")
+  assert.equal(resolveDirectPaymentPlanId("12"), "year")
+  assert.equal(resolveDirectPaymentPlanId("9999"), "forever")
+  assert.equal(resolveDirectPaymentPlanId("227480"), null)
+})
+
+test("Hutko customer helpers normalize email and reservation_data", () => {
+  assert.equal(normalizeHutkoEmail("[Test@Example.com](mailto:Test@Example.com)"), "test@example.com")
+  assert.deepEqual(
+    extractHutkoReservationCustomer({ reservation_data: { sender_email: "Buyer@Example.com", sender_name: "Покупець" } }),
+    { email: "buyer@example.com", name: "Покупець" },
+  )
 })
 
 test("buildCheckoutRedirectUrl always redirects into processing state", () => {
