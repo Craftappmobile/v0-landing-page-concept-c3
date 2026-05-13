@@ -167,7 +167,9 @@ https://vjazhi.com.ua/api/payment/callback
 - `merchant_data` підтримує Hutko array-формат з полями `sender_email`, `sender_name`, `plan_code`.
 - Провіжнінг доступу більше не залежить від `supabase.auth.admin.listUsers()`.
 - Пошук Auth user за email іде через service-role RPC `find_paid_auth_user_by_email`.
-- Якщо `supabase.auth.admin.createUser()` падає, є service-role-only SQL fallback `create_paid_auth_user`.
+- Нові Auth users створюються тільки через Supabase Auth Admin API `createUser`.
+- Direct SQL fallback `create_paid_auth_user` прибраний з production flow і задепрекейчений міграцією.
+- Якщо `supabase.auth.admin.createUser()` падає, система не створює напіввалідний Auth user напряму в `auth.users`; підписка має потрапити в reconciliation/retry.
 - Support endpoints захищені через `PAYMENT_SUPPORT_TOKEN`.
 - Додано reconciliation для пошуку оплат, де доступ не виданий або лист не відправився.
 

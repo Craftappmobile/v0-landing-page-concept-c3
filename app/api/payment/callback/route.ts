@@ -514,24 +514,9 @@ async function getOrCreateUser(
       return { userId: existingAfterCreateError.id, generatedPassword: null };
     }
 
-    console.error("[Auth] Admin createUser failed, trying SQL fallback:", error?.message);
-    const { data: fallbackUserId, error: fallbackError } = await supabase.rpc(
-      "create_paid_auth_user",
-      {
-        p_email: email,
-        p_password: generatedPassword,
-        p_full_name: fullName,
-      },
-    );
-
-    if (!fallbackError && typeof fallbackUserId === "string" && fallbackUserId) {
-      console.log("[Auth] User created via SQL fallback:", email, fallbackUserId);
-      return { userId: fallbackUserId, generatedPassword };
-    }
-
     throw new Error(
-      "Failed to create user: " +
-      (fallbackError?.message ? `${error?.message}; fallback: ${fallbackError.message}` : error?.message),
+      "Failed to create user via Supabase Auth Admin API: " +
+      (error?.message || "missing user in createUser response"),
     );
   }
 

@@ -1,4 +1,5 @@
 import assert from "node:assert/strict"
+import { readFileSync } from "node:fs"
 import test from "node:test"
 
 import {
@@ -199,4 +200,16 @@ test("generateHutkoSignature sorts non-empty params before hashing", () => {
   })
 
   assert.equal(signature, "47059808cd2b0da36d0f209b69e3e3dba0a921be")
+})
+
+test("payment access provisioning never uses direct auth.users SQL fallback", () => {
+  const routeFiles = [
+    "../app/api/payment/callback/route.ts",
+    "../app/api/payment/retry-access/route.ts",
+  ]
+
+  for (const routeFile of routeFiles) {
+    const source = readFileSync(new URL(routeFile, import.meta.url), "utf8")
+    assert.equal(source.includes("create_paid_auth_user"), false, `${routeFile} must use Auth Admin API only`)
+  }
 })
