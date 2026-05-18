@@ -41,35 +41,41 @@ export function Header() {
         </Link>
 
         <nav className="hidden items-center gap-8 md:flex">
-          <a
-            href="#features"
+          <Link
+            href="/#features"
             className="text-sm font-medium text-muted-foreground transition-colors hover:text-foreground"
           >
             {"Можливості"}
-          </a>
-          <a
-            href="#community"
+          </Link>
+          <Link
+            href="/#community"
             className="text-sm font-medium text-muted-foreground transition-colors hover:text-foreground"
           >
             {"Спільнота"}
-          </a>
-          <a
-            href="#pricing"
+          </Link>
+          <Link
+            href="/#pricing"
             className="text-sm font-medium text-muted-foreground transition-colors hover:text-foreground"
           >
             {"Підписка"}
-          </a>
-          <a
-            href="#faq"
+          </Link>
+          <Link
+            href="/#faq"
             className="text-sm font-medium text-muted-foreground transition-colors hover:text-foreground"
           >
             {"FAQ"}
-          </a>
+          </Link>
+          <Link
+            href="/blog"
+            className="text-sm font-medium text-muted-foreground transition-colors hover:text-foreground"
+          >
+            {"Блог"}
+          </Link>
         </nav>
 
         <div className="hidden md:block">
           <Button asChild>
-            <a href="#pricing">{"Обрати тариф"}</a>
+            <Link href="/#pricing">{"Обрати тариф"}</Link>
           </Button>
         </div>
 
@@ -86,39 +92,46 @@ export function Header() {
       {mobileMenuOpen && (
         <div className="border-t border-border md:hidden">
           <nav className="flex flex-col gap-1 px-4 py-3">
-            <a
-              href="#features"
+            <Link
+              href="/#features"
               className="rounded-md px-3 py-2 text-sm font-medium text-muted-foreground transition-colors hover:bg-secondary hover:text-foreground"
               onClick={() => setMobileMenuOpen(false)}
             >
               {"Можливості"}
-            </a>
-            <a
-              href="#community"
+            </Link>
+            <Link
+              href="/#community"
               className="rounded-md px-3 py-2 text-sm font-medium text-muted-foreground transition-colors hover:bg-secondary hover:text-foreground"
               onClick={() => setMobileMenuOpen(false)}
             >
               {"Спільнота"}
-            </a>
-            <a
-              href="#pricing"
+            </Link>
+            <Link
+              href="/#pricing"
               className="rounded-md px-3 py-2 text-sm font-medium text-muted-foreground transition-colors hover:bg-secondary hover:text-foreground"
               onClick={() => setMobileMenuOpen(false)}
             >
               {"Підписка"}
-            </a>
-            <a
-              href="#faq"
+            </Link>
+            <Link
+              href="/#faq"
               className="rounded-md px-3 py-2 text-sm font-medium text-muted-foreground transition-colors hover:bg-secondary hover:text-foreground"
               onClick={() => setMobileMenuOpen(false)}
             >
               {"FAQ"}
-            </a>
+            </Link>
+            <Link
+              href="/blog"
+              className="rounded-md px-3 py-2 text-sm font-medium text-muted-foreground transition-colors hover:bg-secondary hover:text-foreground"
+              onClick={() => setMobileMenuOpen(false)}
+            >
+              {"Блог"}
+            </Link>
             <div className="mt-2 px-3">
               <Button className="w-full" asChild>
-                <a href="#pricing" onClick={() => setMobileMenuOpen(false)}>
+                <Link href="/#pricing" onClick={() => setMobileMenuOpen(false)}>
                   {"Обрати тариф"}
-                </a>
+                </Link>
               </Button>
             </div>
           </nav>

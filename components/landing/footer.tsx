@@ -30,7 +30,7 @@ export function Footer() {
             <ul className="mt-3 flex flex-col gap-2">
               <li>
                 <Link
-                  href="#features"
+                  href="/#features"
                   className="text-sm text-muted-foreground transition-colors hover:text-foreground"
                 >
                   {"Можливості"}
@@ -38,7 +38,7 @@ export function Footer() {
               </li>
               <li>
                 <Link
-                  href="#pricing"
+                  href="/#pricing"
                   className="text-sm text-muted-foreground transition-colors hover:text-foreground"
                 >
                   {"Підписка"}
@@ -46,10 +46,18 @@ export function Footer() {
               </li>
               <li>
                 <Link
-                  href="#faq"
+                  href="/#faq"
                   className="text-sm text-muted-foreground transition-colors hover:text-foreground"
                 >
                   {"FAQ"}
+                </Link>
+              </li>
+              <li>
+                <Link
+                  href="/blog"
+                  className="text-sm text-muted-foreground transition-colors hover:text-foreground"
+                >
+                  {"Блог"}
                 </Link>
               </li>
             </ul>
