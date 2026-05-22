@@ -48,6 +48,9 @@ export const metadata: Metadata = {
     icon: '/images/logo.jpg',
     apple: '/images/logo.jpg',
   },
+  verification: {
+    google: 'd3xZlCeJeVKfbnGBagIp2kmZUQIbeJrWwMSrAlGpUeE',
+  },
   openGraph: {
     type: 'website',
     locale: 'uk_UA',
