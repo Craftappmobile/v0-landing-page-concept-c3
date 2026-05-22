@@ -5,6 +5,7 @@ import { ArrowRight } from "lucide-react"
 import { Footer } from "@/components/landing/footer"
 import { Header } from "@/components/landing/header"
 import { formatPostDate, getAllPosts } from "@/lib/blog"
+import { getAllBlogCategories, getPostsForBlogCategory } from "@/lib/blog-categories"
 
 export const metadata: Metadata = {
   title: "Блог про в’язання — інструкції, поради та розрахунки",
@@ -34,8 +35,10 @@ export const metadata: Metadata = {
 function categoryLabel(category: string) {
   const labels: Record<string, string> = {
     guide: "Гайд",
+    "how-to": "Гайд",
     overview: "Огляд",
     "master-class": "Майстер-клас",
+    "Розрахунки": "Розрахунки",
   }
 
   return labels[category] || "Стаття"
@@ -43,6 +46,7 @@ function categoryLabel(category: string) {
 
 export default function BlogPage() {
   const posts = getAllPosts()
+  const categories = getAllBlogCategories()
 
   return (
     <div className="flex min-h-screen flex-col">
@@ -61,6 +65,20 @@ export default function BlogPage() {
               светри та адаптацію описів. Читайте покрокові гайди й майстер-класи, щоб в’язати
               впевненіше, точніше та без зайвого перев’язування.
             </p>
+          </div>
+        </section>
+
+        <section className="mx-auto max-w-5xl px-4 pt-10 lg:px-8" aria-labelledby="blog-categories-heading">
+          <div className="rounded-3xl border border-border bg-card/40 p-5 md:p-6">
+            <h2 id="blog-categories-heading" className="text-2xl font-serif text-foreground">Категорії блогу</h2>
+            <p className="mt-2 text-sm leading-7 text-muted-foreground">Оберіть тему: розрахунки, реглан, пряжа, шкарпетки, светри, майстер-класи або типові помилки.</p>
+            <div className="mt-5 flex flex-wrap gap-3">
+              {categories.map((category) => (
+                <Link key={category.slug} href={`/blog/${category.slug}`} className="rounded-full border border-primary/20 bg-primary/5 px-4 py-2 text-sm font-semibold text-primary hover:bg-primary/10">
+                  {category.title} · {getPostsForBlogCategory(category, posts).length}
+                </Link>
+              ))}
+            </div>
           </div>
         </section>
 

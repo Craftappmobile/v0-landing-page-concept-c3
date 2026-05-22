@@ -1,6 +1,7 @@
 import type { MetadataRoute } from "next"
 
 import { getAllPosts } from "@/lib/blog"
+import { getAllBlogCategories } from "@/lib/blog-categories"
 import { getAllCalculators } from "@/lib/calculators"
 
 const siteUrl = process.env.NEXT_PUBLIC_SITE_URL?.trim().replace(/\/$/, "") || "https://vjazhi.com.ua"
@@ -8,6 +9,7 @@ const siteUrl = process.env.NEXT_PUBLIC_SITE_URL?.trim().replace(/\/$/, "") || "
 const staticRoutes = [
   { path: "", priority: 1 },
   { path: "/blog", priority: 0.9 },
+  { path: "/kalkuliatory", priority: 0.95 },
   { path: "/privacy", priority: 0.2 },
   { path: "/terms", priority: 0.2 },
   { path: "/refund", priority: 0.2 },
@@ -26,7 +28,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
   const staticEntries: MetadataRoute.Sitemap = staticRoutes.map((route) => ({
     url: `${siteUrl}${route.path}`,
     lastModified: new Date(),
-    changeFrequency: route.path === "/blog" ? "daily" : "monthly",
+    changeFrequency: route.path === "/blog" || route.path === "/kalkuliatory" ? "daily" : "monthly",
     priority: route.priority,
   }))
 
@@ -37,6 +39,13 @@ export default function sitemap(): MetadataRoute.Sitemap {
     priority: 0.7,
   }))
 
+  const blogCategoryEntries: MetadataRoute.Sitemap = getAllBlogCategories().map((category) => ({
+    url: `${siteUrl}/blog/${category.slug}`,
+    lastModified: new Date(),
+    changeFrequency: "weekly" as const,
+    priority: 0.75,
+  }))
+
   const calculatorEntries: MetadataRoute.Sitemap = getAllCalculators().map((calculator) => ({
     url: `${siteUrl}/kalkuliatory/${calculator.slug}`,
     lastModified: new Date(),
@@ -44,5 +53,5 @@ export default function sitemap(): MetadataRoute.Sitemap {
     priority: 0.8,
   }))
 
-  return [...staticEntries, ...calculatorEntries, ...blogEntries]
+  return [...staticEntries, ...calculatorEntries, ...blogCategoryEntries, ...blogEntries]
 }

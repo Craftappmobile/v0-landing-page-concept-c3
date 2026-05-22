@@ -37,7 +37,7 @@ export function GaugeCalculator() {
   return (
     <Card className="overflow-hidden rounded-3xl border-primary/20 shadow-lg">
       <CardHeader className="bg-primary/5">
-        <CardTitle className="font-serif text-3xl">Демо-калькулятор щільності</CardTitle>
+        <CardTitle className="font-serif text-3xl">Калькулятор щільності</CardTitle>
         <CardDescription className="text-base leading-7">
           Введіть дані зі зразка 10×10 см. Калькулятор перерахує петлі та ряди на 1 см.
         </CardDescription>

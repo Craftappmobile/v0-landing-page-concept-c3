@@ -102,7 +102,7 @@ export function RaglanShoulderCalculator() {
   return (
     <Card className="overflow-hidden rounded-3xl border-primary/20 shadow-lg">
       <CardHeader className="bg-primary/5">
-        <CardTitle className="font-serif text-3xl">Демо-калькулятор реглан-погону</CardTitle>
+        <CardTitle className="font-serif text-3xl">Калькулятор реглан-погону</CardTitle>
         <CardDescription className="text-base leading-7">
           Розрахуйте стартову горловину, погони, росток і два етапи прибавок для реглану зверху.
         </CardDescription>

@@ -3,6 +3,7 @@ import Link from "next/link"
 import { notFound } from "next/navigation"
 import { ArrowRight } from "lucide-react"
 
+import { GarmentFitCalculator } from "@/components/calculators/garment-fit-calculators"
 import { GaugeCalculator } from "@/components/calculators/gauge-calculator"
 import { PatternAdaptationCalculator } from "@/components/calculators/pattern-adaptation-calculator"
 import { RaglanShoulderCalculator } from "@/components/calculators/raglan-shoulder-calculator"
@@ -60,6 +61,7 @@ function CalculatorDemo({ calculator }: { calculator: CalculatorDefinition }) {
   if (slug === "shchilnist") return <GaugeCalculator />
   if (slug === "adaptatsiya") return <PatternAdaptationCalculator />
   if (slug === "rahlan") return <RaglanShoulderCalculator />
+  if (slug === "horlovyna" || slug === "rukav" || slug === "shapka" || slug === "shkarpetky") return <GarmentFitCalculator slug={slug} />
   if (calculator.demo) return <SeoDemoCalculator calculator={calculator} />
   return null
 }
@@ -101,7 +103,7 @@ export default async function CalculatorPage({ params }: CalculatorPageProps) {
 
         <section className="border-b border-border bg-card/40">
           <div className="mx-auto max-w-5xl px-4 py-14 lg:px-8 lg:py-20">
-            <p className="text-sm font-semibold uppercase tracking-[0.2em] text-primary">Демо-калькулятор</p>
+            <p className="text-sm font-semibold uppercase tracking-[0.2em] text-primary">Онлайн-калькулятор</p>
             <h1 className="mt-4 max-w-4xl text-4xl font-serif leading-tight text-foreground md:text-6xl">
               {calculator.shortTitle}
             </h1>

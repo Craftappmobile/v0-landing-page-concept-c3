@@ -55,7 +55,7 @@ export function YarnConsumptionCalculator() {
   return (
     <Card className="overflow-hidden rounded-3xl border-primary/20 shadow-lg">
       <CardHeader className="bg-primary/5">
-        <CardTitle className="font-serif text-3xl">Демо-калькулятор витрати пряжі</CardTitle>
+        <CardTitle className="font-serif text-3xl">Калькулятор витрати пряжі</CardTitle>
         <CardDescription className="text-base leading-7">
           Результат показує орієнтовну витрату за загальними таблицями. Для точної покупки додайте запас на зразок, шви, візерунок і довжину виробу.
         </CardDescription>

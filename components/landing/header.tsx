@@ -60,6 +60,12 @@ export function Header() {
             {"Підписка"}
           </Link>
           <Link
+            href="/kalkuliatory"
+            className="text-sm font-medium text-muted-foreground transition-colors hover:text-foreground"
+          >
+            {"Калькулятори"}
+          </Link>
+          <Link
             href="/#faq"
             className="text-sm font-medium text-muted-foreground transition-colors hover:text-foreground"
           >
@@ -112,6 +118,13 @@ export function Header() {
               onClick={() => setMobileMenuOpen(false)}
             >
               {"Підписка"}
+            </Link>
+            <Link
+              href="/kalkuliatory"
+              className="rounded-md px-3 py-2 text-sm font-medium text-muted-foreground transition-colors hover:bg-secondary hover:text-foreground"
+              onClick={() => setMobileMenuOpen(false)}
+            >
+              {"Калькулятори"}
             </Link>
             <Link
               href="/#faq"
