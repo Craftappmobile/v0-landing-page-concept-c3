@@ -9,6 +9,8 @@ import rehypeSlug from "rehype-slug"
 import rehypeAutolinkHeadings from "rehype-autolink-headings"
 import rehypeStringify from "rehype-stringify"
 
+import { renderBlogDiagram } from "./blog-diagrams"
+
 const POSTS_DIRECTORY = path.join(process.cwd(), "content", "posts")
 const WORDS_PER_MINUTE = 180
 
@@ -111,6 +113,16 @@ function removeDuplicateTitle(content: string) {
   return lines.join("\n").trim()
 }
 
+function renderDiagramShortcode(shortcode: string, diagramId: string) {
+  return renderBlogDiagram(diagramId) || shortcode
+}
+
+function replaceBlogDiagramShortcodes(html: string) {
+  return html.replace(/<p>\s*\{\{diagram:([a-zA-Z0-9-]+)\}\}\s*<\/p>/g, (_match, diagramId: string) => {
+    return renderDiagramShortcode(_match, diagramId)
+  })
+}
+
 function createSummary(fileName: string): BlogPostSummary {
   const fullPath = path.join(POSTS_DIRECTORY, fileName)
   const raw = fs.readFileSync(fullPath, "utf8")
@@ -174,7 +186,7 @@ export async function markdownToHtml(markdown: string) {
     .use(rehypeStringify)
     .process(markdown)
 
-  return processed.toString()
+  return replaceBlogDiagramShortcodes(processed.toString())
 }
 
 export function formatPostDate(date: string) {
