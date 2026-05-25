@@ -8,6 +8,7 @@ const siteUrl = process.env.NEXT_PUBLIC_SITE_URL?.trim().replace(/\/$/, "") || "
 
 const staticRoutes = [
   { path: "", priority: 1 },
+  { path: "/about", priority: 0.7 },
   { path: "/blog", priority: 0.9 },
   { path: "/kalkuliatory", priority: 0.95 },
   { path: "/privacy", priority: 0.2 },
