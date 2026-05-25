@@ -68,6 +68,23 @@ export default function BlogPage() {
           </div>
         </section>
 
+        <section className="mx-auto max-w-5xl px-4 pt-10 lg:px-8" aria-labelledby="blog-trust-heading">
+          <div className="rounded-3xl border border-primary/20 bg-primary/5 p-5 md:p-6">
+            <p className="text-sm font-semibold uppercase tracking-[0.18em] text-primary">E-E-A-T</p>
+            <h2 id="blog-trust-heading" className="mt-2 text-2xl font-serif text-foreground">
+              Як ми готуємо статті та розрахунки
+            </h2>
+            <p className="mt-3 max-w-3xl text-sm leading-7 text-muted-foreground">
+              У матеріалах блогу ми пояснюємо формули, показуємо приклади, типові помилки та
+              посилаємося на калькулятори, щоб читачки могли перевірити розрахунок на власній
+              щільності й мірках.
+            </p>
+            <Link href="/about" className="mt-4 inline-flex items-center gap-2 text-sm font-semibold text-primary hover:text-primary/80">
+              Дізнатися про методологію проєкту <ArrowRight className="h-4 w-4" />
+            </Link>
+          </div>
+        </section>
+
         <section className="mx-auto max-w-5xl px-4 pt-10 lg:px-8" aria-labelledby="blog-categories-heading">
           <div className="rounded-3xl border border-border bg-card/40 p-5 md:p-6">
             <h2 id="blog-categories-heading" className="text-2xl font-serif text-foreground">Категорії блогу</h2>
