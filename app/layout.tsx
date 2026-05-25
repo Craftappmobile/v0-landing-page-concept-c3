@@ -50,6 +50,9 @@ export const metadata: Metadata = {
   },
   verification: {
     google: 'd3xZlCeJeVKfbnGBagIp2kmZUQIbeJrWwMSrAlGpUeE',
+    other: {
+      'msvalidate.01': '3C24BE13D7527F19D8FA8E15439B41E5',
+    },
   },
   openGraph: {
     type: 'website',
