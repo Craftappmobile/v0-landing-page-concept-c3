@@ -68,11 +68,7 @@ export function InstagramPromoChat() {
         <p className="mt-2 text-xs leading-5 text-muted-foreground">
           Натисніть кнопку нижче та напишіть у чат слово{" "}
           <span className="rounded bg-primary/10 px-1.5 py-0.5 font-mono font-bold text-primary">сайт</span>
-          {" "}— бот одразу надішле промокод{" "}
-          <span className="rounded bg-destructive/10 px-1.5 py-0.5 font-mono font-bold text-destructive">
-            YARNPREMIUM
-          </span>
-          .
+          {" "}— бот одразу надішле промокод для активації знижки.
         </p>
       </div>
 
