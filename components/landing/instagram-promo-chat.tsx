@@ -16,18 +16,6 @@ declare global {
   }
 }
 
-function isSearchEngineReferrer(referrer: string) {
-  const normalizedReferrer = referrer.toLowerCase()
-
-  return [
-    "google.",
-    "bing.",
-    "duckduckgo.",
-    "yandex.",
-    "yahoo.",
-  ].some((domain) => normalizedReferrer.includes(domain))
-}
-
 export function InstagramPromoChat() {
   const [isVisible, setIsVisible] = useState(false)
 
@@ -37,10 +25,8 @@ export function InstagramPromoChat() {
 
     if (isDismissed && !shouldPreview) return
 
-    if (shouldPreview || isSearchEngineReferrer(document.referrer)) {
-      const timer = window.setTimeout(() => setIsVisible(true), 1800)
-      return () => window.clearTimeout(timer)
-    }
+    const timer = window.setTimeout(() => setIsVisible(true), 1800)
+    return () => window.clearTimeout(timer)
   }, [])
 
   function dismissChat() {
