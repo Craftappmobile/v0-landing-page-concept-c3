@@ -7,7 +7,6 @@ import { isPlanId, PLAN_CONFIG } from "@/lib/plans";
 import type { PlanId } from "@/lib/plans";
 import {
   extractHutkoReservationCustomer,
-  normalizeHutkoEmail,
   parseHutkoMerchantData,
   resolveDirectPaymentPlanId,
 } from "@/lib/payment-flow";
@@ -273,15 +272,36 @@ export async function POST(request: NextRequest) {
 
     const supabase = createAdminClient();
     const parsedMerchantData = parseHutkoMerchantData(rawMerchantData);
+    const parsedCallbackFields = parseHutkoMerchantData(restParams);
+    const parsedAdditionalInfo = parseHutkoMerchantData(rawAdditionalInfo);
     const reservationCustomer = extractHutkoReservationCustomer(rawAdditionalInfo);
-    const directPaymentPlan = resolveDirectPaymentPlanId(parsedMerchantData.plan_code);
-    const plan = typeof parsedMerchantData.plan === "string" ? parsedMerchantData.plan : "";
-    const customerNameFromMerchant = parsedMerchantData.name || reservationCustomer.name || "";
-    const senderEmailFromCallback = normalizeHutkoEmail(restParams.sender_email);
-    const customerEmailFromMerchant = parsedMerchantData.email || senderEmailFromCallback || reservationCustomer.email || "";
-    const checkoutCorrelationId = parsedMerchantData.checkout_correlation_id || "";
-    const isRenewal = parsedMerchantData.renewal === true;
-    const parentOrder = parsedMerchantData.parent_order || "";
+    const directPaymentPlan = resolveDirectPaymentPlanId(
+      parsedMerchantData.plan_code || parsedCallbackFields.plan_code || parsedAdditionalInfo.plan_code,
+    );
+    const plan = typeof parsedMerchantData.plan === "string"
+      ? parsedMerchantData.plan
+      : parsedCallbackFields.plan || parsedAdditionalInfo.plan || "";
+    const customerNameFromMerchant = parsedMerchantData.name
+      || parsedCallbackFields.name
+      || parsedAdditionalInfo.name
+      || reservationCustomer.name
+      || "";
+    const customerEmailFromMerchant = parsedMerchantData.email
+      || parsedCallbackFields.email
+      || parsedAdditionalInfo.email
+      || reservationCustomer.email
+      || "";
+    const checkoutCorrelationId = parsedMerchantData.checkout_correlation_id
+      || parsedCallbackFields.checkout_correlation_id
+      || parsedAdditionalInfo.checkout_correlation_id
+      || "";
+    const isRenewal = parsedMerchantData.renewal === true
+      || parsedCallbackFields.renewal === true
+      || parsedAdditionalInfo.renewal === true;
+    const parentOrder = parsedMerchantData.parent_order
+      || parsedCallbackFields.parent_order
+      || parsedAdditionalInfo.parent_order
+      || "";
     const paidAmount = parseOptionalAmount(
       getString(restParams.actual_amount) || getString(restParams.amount) || undefined,
     );
@@ -339,7 +359,11 @@ export async function POST(request: NextRequest) {
 
         if (!targetSubscription) {
           if (!directPaymentPlan) {
-            console.error("[Hutko Callback] Direct payment is missing valid plan_code:", order_id, parsedMerchantData.plan_code);
+            console.error(
+              "[Hutko Callback] Direct payment is missing valid plan_code:",
+              order_id,
+              parsedMerchantData.plan_code || parsedCallbackFields.plan_code || parsedAdditionalInfo.plan_code,
+            );
             return NextResponse.json({ error: "Missing or invalid plan_code" }, { status: 400 });
           }
 

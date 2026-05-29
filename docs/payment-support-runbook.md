@@ -133,12 +133,13 @@ from auth.users;
 ## 5. Налаштування direct payment links у Hutko
 
 Hutko не надсилає у callback `payment link id` або `button id`, тому тариф треба передавати через приховане поле `plan_code`.
+Email покупця не обовʼязково дублювати окремим додатковим полем, якщо Hutko/банк уже передає його автоматично як `sender_email` або в `additional_info`.
 
-Для кожного direct payment link мають бути поля:
+Для кожного direct payment link мають бути поля/дані:
 
 | Призначення | Назва поля callback | Коментар |
 |---|---|---|
-| Email клієнта | `sender_email` | Без пробілів і без `;` |
+| Email клієнта | `sender_email` | Може приходити автоматично від Hutko/банку; додаткове поле створювати не треба, якщо callback його вже містить |
 | Імʼя клієнта | `sender_name` | Без пробілів і без `;` |
 | Код тарифу | `plan_code` | Приховане поле |
 
@@ -164,7 +165,7 @@ https://vjazhi.com.ua/api/payment/callback
 ## 6. Що було виправлено технічно
 
 - Direct Hutko callback тепер може створювати `active` subscription без попереднього `pending` запису.
-- `merchant_data` підтримує Hutko array-формат з полями `sender_email`, `sender_name`, `plan_code`.
+- Callback підтримує поля `sender_email`, `sender_name`, `plan_code` з `merchant_data`, top-level callback payload і `additional_info`.
 - Провіжнінг доступу більше не залежить від `supabase.auth.admin.listUsers()`.
 - Пошук Auth user за email іде через service-role RPC `find_paid_auth_user_by_email`.
 - Нові Auth users створюються тільки через Supabase Auth Admin API `createUser`.

@@ -86,6 +86,21 @@ test("parseHutkoMerchantData supports direct payment-link field arrays", () => {
   )
 })
 
+test("parseHutkoMerchantData supports direct payment-link callback fields", () => {
+  assert.deepEqual(
+    parseHutkoMerchantData({
+      sender_email: "TopLevel@Example.com",
+      sender_name: "Покупець",
+      plan_code: 3,
+    }),
+    {
+      email: "toplevel@example.com",
+      name: "Покупець",
+      plan_code: "3",
+    },
+  )
+})
+
 test("direct payment plan codes map to internal plans", () => {
   assert.equal(resolveDirectPaymentPlanId("3"), "quarter")
   assert.equal(resolveDirectPaymentPlanId(6), "half")
