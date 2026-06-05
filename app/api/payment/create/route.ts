@@ -49,6 +49,8 @@ export async function POST(request: NextRequest) {
       plan,
       name: trimmedName,
       email: trimmedEmail,
+      access_email: trimmedEmail,
+      order_id: orderId,
       checkout_correlation_id: checkoutCorrelationId,
     });
 
@@ -81,6 +83,7 @@ export async function POST(request: NextRequest) {
 
     const hutkoConfig = buildHutkoButtonWidgetConfig({
       buttonId: planConfig.hutkoButtonId,
+      orderId,
       serverCallbackUrl: `${origin}/api/payment/callback`,
       senderEmail: trimmedEmail,
       lang: "uk",

@@ -12,6 +12,7 @@ import {
   normalizeCheckoutStatus,
   normalizeSubscriptionStatus,
   parseHutkoMerchantData,
+  resolvePaymentAccessEmail,
   resolveDirectPaymentPlanId,
   resolveCheckoutFlow,
   resolvePaymentStatusView,
@@ -61,11 +62,13 @@ test("extractCheckoutCorrelationIdFromValue finds correlation ids in merchant_da
 
 test("parseHutkoMerchantData supports existing website object payloads", () => {
   assert.deepEqual(
-    parseHutkoMerchantData('{"plan":"quarter","name":"Ольга","email":"Olga@Example.com","checkout_correlation_id":"chk_123"}'),
+    parseHutkoMerchantData('{"plan":"quarter","name":"Ольга","email":"Olga@Example.com","access_email":"Access@Example.com","order_id":"order_123","checkout_correlation_id":"chk_123"}'),
     {
       plan: "quarter",
       name: "Ольга",
       email: "olga@example.com",
+      access_email: "access@example.com",
+      order_id: "order_123",
       checkout_correlation_id: "chk_123",
     },
   )
@@ -74,14 +77,18 @@ test("parseHutkoMerchantData supports existing website object payloads", () => {
 test("parseHutkoMerchantData supports direct payment-link field arrays", () => {
   assert.deepEqual(
     parseHutkoMerchantData([
+      { name: "access_email", label: "Email для доступу", value: "Access@Test.com" },
       { name: "sender_email", label: "Email", value: "Test@Example.com" },
       { name: "sender_name", label: "Ім'я", value: "Тест" },
       { name: "plan_code", label: "Код тарифу", value: "3" },
+      { name: "order_id", label: "Order", value: "order_abc" },
     ]),
     {
+      access_email: "access@test.com",
       email: "test@example.com",
       name: "Тест",
       plan_code: "3",
+      order_id: "order_abc",
     },
   )
 })
@@ -89,16 +96,41 @@ test("parseHutkoMerchantData supports direct payment-link field arrays", () => {
 test("parseHutkoMerchantData supports direct payment-link callback fields", () => {
   assert.deepEqual(
     parseHutkoMerchantData({
+      access_email: "access@example.com",
       sender_email: "TopLevel@Example.com",
       sender_name: "Покупець",
       plan_code: 3,
+      order_id: "order_callback",
     }),
     {
+      access_email: "access@example.com",
       email: "toplevel@example.com",
       name: "Покупець",
       plan_code: "3",
+      order_id: "order_callback",
     },
   )
+})
+
+test("resolvePaymentAccessEmail prioritizes subscription email over access and payer emails", () => {
+  assert.equal(
+    resolvePaymentAccessEmail({
+      subscriptionEmail: "Subscription@Example.com",
+      accessEmail: "Access@Example.com",
+      payerEmail: "Wallet@Example.com",
+    }),
+    "subscription@example.com",
+  )
+
+  assert.equal(
+    resolvePaymentAccessEmail({
+      accessEmail: "Access@Example.com",
+      payerEmail: "Wallet@Example.com",
+    }),
+    "access@example.com",
+  )
+
+  assert.equal(resolvePaymentAccessEmail({ payerEmail: "Wallet@Example.com" }), "wallet@example.com")
 })
 
 test("direct payment plan codes map to internal plans", () => {
@@ -147,21 +179,22 @@ test("resolveCheckoutFlow uses Hutko button-link checkout for every plan", () =>
 test("buildHutkoButtonWidgetConfig supports payment-link params without forcing generic checkout fields", () => {
   const config = buildHutkoButtonWidgetConfig({
     buttonId: "button_token",
+    orderId: "order_123",
     serverCallbackUrl: "https://example.com/api/payment/callback",
     senderEmail: "knit@example.com",
-    merchantData: '{"checkout_correlation_id":"chk_123"}',
+    merchantData: '{"checkout_correlation_id":"chk_123","order_id":"order_123"}',
     requiredRectoken: "Y",
   })
 
   assert.deepEqual(config.params, {
     button: "button_token",
+    order_id: "order_123",
     server_callback_url: "https://example.com/api/payment/callback",
     sender_email: "knit@example.com",
-    merchant_data: '{"checkout_correlation_id":"chk_123"}',
+    merchant_data: '{"checkout_correlation_id":"chk_123","order_id":"order_123"}',
     required_rectoken: "Y",
   })
 
-  assert.equal("order_id" in config.params, false)
   assert.equal("order_desc" in config.params, false)
 })
 

@@ -8,6 +8,7 @@ import type { PlanId } from "@/lib/plans";
 import {
   extractHutkoReservationCustomer,
   parseHutkoMerchantData,
+  resolvePaymentAccessEmail,
   resolveDirectPaymentPlanId,
 } from "@/lib/payment-flow";
 
@@ -76,22 +77,68 @@ function parseOptionalAmount(value: string | undefined): number | null {
   return Number.isFinite(parsed) ? parsed : null;
 }
 
-async function findInitialSubscription(
-  supabase: ReturnType<typeof createAdminClient>,
-  args: { orderId: string; correlationId: string },
-) {
-  const byOrderId = await supabase
-    .from("subscriptions")
-    .select("id, order_id, email, customer_name, plan, plan_type, status, email_status")
-    .eq("order_id", args.orderId)
-    .maybeSingle();
+function logEmailMismatch(args: {
+  context: "direct_payment" | "existing_subscription";
+  orderId: string;
+  merchantOrderId?: string | null;
+  subscriptionId?: string;
+  subscriptionEmail?: string | null;
+  accessEmail?: string | null;
+  payerEmail?: string | null;
+}) {
+  const normalizedEmails = [
+    args.subscriptionEmail,
+    args.accessEmail,
+    args.payerEmail,
+  ]
+    .filter((value): value is string => typeof value === "string" && value.trim().length > 0)
+    .map((value) => value.trim().toLowerCase());
 
-  if (byOrderId.error) {
-    throw byOrderId.error;
+  if (new Set(normalizedEmails).size <= 1) {
+    return;
   }
 
-  if (byOrderId.data) {
-    return byOrderId.data;
+  console.warn("[Hutko Callback] Email mismatch detected:", {
+    context: args.context,
+    orderId: args.orderId,
+    merchantOrderId: args.merchantOrderId || null,
+    subscriptionId: args.subscriptionId || null,
+    subscriptionEmail: args.subscriptionEmail || null,
+    accessEmail: args.accessEmail || null,
+    payerEmail: args.payerEmail || null,
+  });
+}
+
+async function findInitialSubscription(
+  supabase: ReturnType<typeof createAdminClient>,
+  args: { orderId: string; merchantOrderId?: string; correlationId: string },
+) {
+  const findByOrderId = async (orderId: string) => {
+    if (!orderId) return null;
+
+    const result = await supabase
+      .from("subscriptions")
+      .select("id, order_id, email, customer_name, plan, plan_type, status, email_status")
+      .eq("order_id", orderId)
+      .maybeSingle();
+
+    if (result.error) {
+      throw result.error;
+    }
+
+    return result.data;
+  };
+
+  const byOrderId = await findByOrderId(args.orderId);
+  if (byOrderId) {
+    return byOrderId;
+  }
+
+  if (args.merchantOrderId && args.merchantOrderId !== args.orderId) {
+    const byMerchantOrderId = await findByOrderId(args.merchantOrderId);
+    if (byMerchantOrderId) {
+      return byMerchantOrderId;
+    }
   }
 
   if (!args.correlationId) {
@@ -286,10 +333,22 @@ export async function POST(request: NextRequest) {
       || parsedAdditionalInfo.name
       || reservationCustomer.name
       || "";
-    const customerEmailFromMerchant = parsedMerchantData.email
+    const merchantAccessEmail = parsedMerchantData.access_email
+      || parsedCallbackFields.access_email
+      || parsedAdditionalInfo.access_email
+      || "";
+    const payerEmailFromMerchant = parsedMerchantData.email
       || parsedCallbackFields.email
       || parsedAdditionalInfo.email
       || reservationCustomer.email
+      || "";
+    const customerEmailFromMerchant = resolvePaymentAccessEmail({
+      accessEmail: merchantAccessEmail,
+      payerEmail: payerEmailFromMerchant,
+    });
+    const merchantOrderId = parsedMerchantData.order_id
+      || parsedCallbackFields.order_id
+      || parsedAdditionalInfo.order_id
       || "";
     const checkoutCorrelationId = parsedMerchantData.checkout_correlation_id
       || parsedCallbackFields.checkout_correlation_id
@@ -354,6 +413,7 @@ export async function POST(request: NextRequest) {
       } else {
         const targetSubscription = await findInitialSubscription(supabase, {
           orderId: order_id,
+          merchantOrderId,
           correlationId: checkoutCorrelationId,
         });
 
@@ -372,8 +432,16 @@ export async function POST(request: NextRequest) {
             return NextResponse.json({ error: "Missing customer email" }, { status: 400 });
           }
 
-          const directSubscription = await createDirectPaymentSubscription(supabase, {
+          logEmailMismatch({
+            context: "direct_payment",
             orderId: order_id,
+            merchantOrderId,
+            accessEmail: merchantAccessEmail,
+            payerEmail: payerEmailFromMerchant,
+          });
+
+          const directSubscription = await createDirectPaymentSubscription(supabase, {
+            orderId: merchantOrderId || order_id,
             customerEmail: customerEmailFromMerchant,
             customerName: customerNameFromMerchant,
             plan: directPaymentPlan,
@@ -401,6 +469,16 @@ export async function POST(request: NextRequest) {
           }
 
           // Update initial subscription to active
+          logEmailMismatch({
+            context: "existing_subscription",
+            orderId: order_id,
+            merchantOrderId,
+            subscriptionId: targetSubscription.id,
+            subscriptionEmail: targetSubscription.email,
+            accessEmail: merchantAccessEmail,
+            payerEmail: payerEmailFromMerchant,
+          });
+
           const updateData: Record<string, string | boolean | null | number> = {
             status: "active",
             hutko_payment_id: payment_id || null,
@@ -414,8 +492,8 @@ export async function POST(request: NextRequest) {
             updateData.paid_amount = paidAmount;
           }
 
-          if (targetSubscription.order_id !== order_id) {
-            updateData.order_id = order_id;
+          if (!targetSubscription.order_id && (merchantOrderId || order_id)) {
+            updateData.order_id = merchantOrderId || order_id;
           }
 
           if (rectoken) {
@@ -429,8 +507,12 @@ export async function POST(request: NextRequest) {
 
           console.log("[Hutko Callback] Subscription activated:", order_id, targetSubscription.id);
 
-          const customerName = customerNameFromMerchant || targetSubscription.customer_name || "";
-          const customerEmail = customerEmailFromMerchant || targetSubscription.email || "";
+          const customerName = targetSubscription.customer_name || customerNameFromMerchant || "";
+          const customerEmail = resolvePaymentAccessEmail({
+            subscriptionEmail: targetSubscription.email,
+            accessEmail: merchantAccessEmail,
+            payerEmail: payerEmailFromMerchant,
+          });
           const shouldScheduleWelcomeEmail = !(targetSubscription.status === "active" && targetSubscription.email_status === "sent");
 
           if (shouldScheduleWelcomeEmail) {
@@ -456,6 +538,7 @@ export async function POST(request: NextRequest) {
       } else {
         const targetSubscription = await findInitialSubscription(supabase, {
           orderId: order_id,
+          merchantOrderId,
           correlationId: checkoutCorrelationId,
         });
 
@@ -470,8 +553,8 @@ export async function POST(request: NextRequest) {
           updated_at: new Date().toISOString(),
         };
 
-        if (targetSubscription.order_id !== order_id) {
-          updateData.order_id = order_id;
+        if (!targetSubscription.order_id && (merchantOrderId || order_id)) {
+          updateData.order_id = merchantOrderId || order_id;
         }
 
         await supabase

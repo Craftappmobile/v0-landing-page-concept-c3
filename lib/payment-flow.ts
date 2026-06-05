@@ -14,6 +14,8 @@ export type HutkoMerchantData = {
   plan_code?: string
   name?: string
   email?: string
+  access_email?: string
+  order_id?: string
   checkout_correlation_id?: string
   renewal?: boolean
   parent_order?: string
@@ -67,6 +69,19 @@ export function normalizeHutkoEmail(value: unknown): string | null {
   return (bracketMatch?.[0] ?? emailLike).trim().toLowerCase() || null
 }
 
+export function resolvePaymentAccessEmail(args: {
+  subscriptionEmail?: unknown
+  accessEmail?: unknown
+  payerEmail?: unknown
+}) {
+  return (
+    normalizeHutkoEmail(args.subscriptionEmail) ??
+    normalizeHutkoEmail(args.accessEmail) ??
+    normalizeHutkoEmail(args.payerEmail) ??
+    ""
+  )
+}
+
 export function resolveDirectPaymentPlanId(planCode: unknown): DirectPaymentPlanId | null {
   const normalizedPlanCode = stringValue(planCode)
   return normalizedPlanCode ? DIRECT_PAYMENT_PLAN_CODE_TO_PLAN_ID[normalizedPlanCode] ?? null : null
@@ -76,6 +91,11 @@ function assignMerchantField(target: HutkoMerchantData, fieldName: unknown, fiel
   const name = stringValue(fieldName)
   const value = stringValue(fieldValue)
   if (!name || !value) return
+
+  if (name === "access_email" || name === "app_email") {
+    target.access_email = normalizeHutkoEmail(value) ?? value
+    return
+  }
 
   if (name === "sender_email" || name === "customer_email" || name === "email") {
     target.email = normalizeHutkoEmail(value) ?? value
@@ -87,7 +107,13 @@ function assignMerchantField(target: HutkoMerchantData, fieldName: unknown, fiel
     return
   }
 
-  if (name === "plan_code" || name === "plan" || name === "checkout_correlation_id" || name === "parent_order") {
+  if (
+    name === "plan_code" ||
+    name === "plan" ||
+    name === "checkout_correlation_id" ||
+    name === "parent_order" ||
+    name === "order_id"
+  ) {
     target[name] = value
   }
 }
@@ -131,14 +157,18 @@ export function parseHutkoMerchantData(rawValue: unknown): HutkoMerchantData {
     const plan = stringValue(record.plan)
     const planCode = stringValue(record.plan_code)
     const name = stringValue(record.name) ?? stringValue(record.sender_name) ?? stringValue(record.customer_name)
+    const accessEmail = normalizeHutkoEmail(record.access_email) ?? normalizeHutkoEmail(record.app_email)
     const email = normalizeHutkoEmail(record.email) ?? normalizeHutkoEmail(record.sender_email) ?? normalizeHutkoEmail(record.customer_email)
+    const orderId = stringValue(record.order_id)
     const checkoutCorrelationId = stringValue(record.checkout_correlation_id)
     const parentOrder = stringValue(record.parent_order)
 
     if (plan) parsed.plan = plan
     if (planCode) parsed.plan_code = planCode
     if (name) parsed.name = name
+    if (accessEmail) parsed.access_email = accessEmail
     if (email) parsed.email = email
+    if (orderId) parsed.order_id = orderId
     if (checkoutCorrelationId) parsed.checkout_correlation_id = checkoutCorrelationId
     if (record.renewal === true) parsed.renewal = true
     if (parentOrder) parsed.parent_order = parentOrder
