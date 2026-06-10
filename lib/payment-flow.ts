@@ -82,6 +82,12 @@ export function resolvePaymentAccessEmail(args: {
   )
 }
 
+export function resolveDirectPaymentAccessEmail(args: {
+  accessEmail?: unknown
+}) {
+  return normalizeHutkoEmail(args.accessEmail) ?? ""
+}
+
 export function resolveDirectPaymentPlanId(planCode: unknown): DirectPaymentPlanId | null {
   const normalizedPlanCode = stringValue(planCode)
   return normalizedPlanCode ? DIRECT_PAYMENT_PLAN_CODE_TO_PLAN_ID[normalizedPlanCode] ?? null : null

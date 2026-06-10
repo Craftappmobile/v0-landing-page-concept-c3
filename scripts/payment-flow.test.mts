@@ -12,6 +12,7 @@ import {
   normalizeCheckoutStatus,
   normalizeSubscriptionStatus,
   parseHutkoMerchantData,
+  resolveDirectPaymentAccessEmail,
   resolvePaymentAccessEmail,
   resolveDirectPaymentPlanId,
   resolveCheckoutFlow,
@@ -131,6 +132,15 @@ test("resolvePaymentAccessEmail prioritizes subscription email over access and p
   )
 
   assert.equal(resolvePaymentAccessEmail({ payerEmail: "Wallet@Example.com" }), "wallet@example.com")
+})
+
+test("resolveDirectPaymentAccessEmail never falls back to payer email", () => {
+  assert.equal(
+    resolveDirectPaymentAccessEmail({ accessEmail: "Access@Example.com" }),
+    "access@example.com",
+  )
+
+  assert.equal(resolveDirectPaymentAccessEmail({}), "")
 })
 
 test("direct payment plan codes map to internal plans", () => {

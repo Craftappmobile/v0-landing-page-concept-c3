@@ -8,6 +8,7 @@ import type { PlanId } from "@/lib/plans";
 import {
   extractHutkoReservationCustomer,
   parseHutkoMerchantData,
+  resolveDirectPaymentAccessEmail,
   resolvePaymentAccessEmail,
   resolveDirectPaymentPlanId,
 } from "@/lib/payment-flow";
@@ -427,9 +428,15 @@ export async function POST(request: NextRequest) {
             return NextResponse.json({ error: "Missing or invalid plan_code" }, { status: 400 });
           }
 
-          if (!customerEmailFromMerchant) {
-            console.error("[Hutko Callback] Direct payment is missing customer email:", order_id);
-            return NextResponse.json({ error: "Missing customer email" }, { status: 400 });
+          const directAccessEmail = resolveDirectPaymentAccessEmail({
+            accessEmail: merchantAccessEmail,
+          });
+
+          if (!directAccessEmail) {
+            console.error("[Hutko Callback] Direct payment is missing explicit access email:", order_id, {
+              payerEmail: payerEmailFromMerchant || null,
+            });
+            return NextResponse.json({ error: "Missing access email" }, { status: 400 });
           }
 
           logEmailMismatch({
@@ -442,7 +449,7 @@ export async function POST(request: NextRequest) {
 
           const directSubscription = await createDirectPaymentSubscription(supabase, {
             orderId: merchantOrderId || order_id,
-            customerEmail: customerEmailFromMerchant,
+            customerEmail: directAccessEmail,
             customerName: customerNameFromMerchant,
             plan: directPaymentPlan,
             nowIso,
@@ -455,7 +462,7 @@ export async function POST(request: NextRequest) {
 
           console.log("[Hutko Callback] Direct payment subscription created:", order_id, directSubscription.id);
           await provisionCustomerAccess({
-            customerEmail: customerEmailFromMerchant,
+            customerEmail: directAccessEmail,
             customerName: customerNameFromMerchant,
             plan: directPaymentPlan,
             subscriptionId: directSubscription.id,
