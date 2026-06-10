@@ -133,13 +133,16 @@ from auth.users;
 ## 5. Налаштування direct payment links у Hutko
 
 Hutko не надсилає у callback `payment link id` або `button id`, тому тариф треба передавати через приховане поле `plan_code`.
-Email покупця не обовʼязково дублювати окремим додатковим полем, якщо Hutko/банк уже передає його автоматично як `sender_email` або в `additional_info`.
+Email платника від Hutko (`sender_email` / `additional_info.sender_email`) **не можна** використовувати як email доступу: він може відрізнятися від email, який клієнт ввів для реєстрації.
+
+Direct payment link може автоматично видати доступ **лише** якщо callback містить явний `access_email` / `app_email`.
 
 Для кожного direct payment link мають бути поля/дані:
 
 | Призначення | Назва поля callback | Коментар |
 |---|---|---|
-| Email клієнта | `sender_email` | Може приходити автоматично від Hutko/банку; додаткове поле створювати не треба, якщо callback його вже містить |
+| Email доступу | `access_email` | Обовʼязкове поле. Саме на цей email створюється акаунт і підписка |
+| Email платника | `sender_email` | Не є джерелом доступу; використовується лише для аудиту / reconciliation |
 | Імʼя клієнта | `sender_name` | Без пробілів і без `;` |
 | Код тарифу | `plan_code` | Приховане поле |
 
@@ -162,10 +165,12 @@ Callback URL сервера для всіх payment links:
 https://vjazhi.com.ua/api/payment/callback
 ```
 
+Якщо direct payment callback прийде без `access_email`, бекенд не створить акаунт на `sender_email`. Такий callback буде прийнятий у режимі `manual_review` і записаний у `public.payment_callback_events` для ручного відновлення доступу.
+
 ## 6. Що було виправлено технічно
 
-- Direct Hutko callback тепер може створювати `active` subscription без попереднього `pending` запису.
-- Callback підтримує поля `sender_email`, `sender_name`, `plan_code` з `merchant_data`, top-level callback payload і `additional_info`.
+- Direct Hutko callback може створити `active` subscription без попереднього `pending` запису **лише** якщо має явний `access_email`.
+- Callback читає `sender_email`, `sender_name`, `plan_code` з `merchant_data`, top-level callback payload і `additional_info`, але `sender_email` використовується лише як payer/audit email, не як email доступу.
 - Провіжнінг доступу більше не залежить від `supabase.auth.admin.listUsers()`.
 - Пошук Auth user за email іде через service-role RPC `find_paid_auth_user_by_email`.
 - Нові Auth users створюються тільки через Supabase Auth Admin API `createUser`.

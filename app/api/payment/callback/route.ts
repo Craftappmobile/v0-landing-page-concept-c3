@@ -110,6 +110,56 @@ function logEmailMismatch(args: {
   });
 }
 
+async function recordPaymentCallbackEvent(
+  supabase: ReturnType<typeof createAdminClient>,
+  args: {
+    eventType: string;
+    reason: string;
+    orderId: string;
+    merchantOrderId?: string | null;
+    paymentId?: string | null;
+    checkoutCorrelationId?: string | null;
+    orderStatus?: string | null;
+    payerEmail?: string | null;
+    accessEmail?: string | null;
+    customerName?: string | null;
+    planCode?: string | null;
+    plan?: string | null;
+    paidAmount?: number | null;
+    paidCurrency?: string | null;
+    payloadSummary?: Record<string, unknown>;
+  },
+): Promise<boolean> {
+  const { error } = await supabase.from("payment_callback_events").insert({
+    event_type: args.eventType,
+    reason: args.reason,
+    order_id: args.orderId || null,
+    merchant_order_id: args.merchantOrderId || null,
+    hutko_payment_id: args.paymentId || null,
+    checkout_correlation_id: args.checkoutCorrelationId || null,
+    order_status: args.orderStatus || null,
+    payer_email: args.payerEmail || null,
+    access_email: args.accessEmail || null,
+    customer_name: args.customerName || null,
+    plan_code: args.planCode || null,
+    plan: args.plan || null,
+    paid_amount: args.paidAmount ?? null,
+    paid_currency: args.paidCurrency || null,
+    payload_summary: args.payloadSummary || {},
+  });
+
+  if (error) {
+    console.error("[Hutko Callback] Failed to record callback event:", {
+      orderId: args.orderId,
+      reason: args.reason,
+      error: error.message,
+    });
+    return false;
+  }
+
+  return true;
+}
+
 async function findInitialSubscription(
   supabase: ReturnType<typeof createAdminClient>,
   args: { orderId: string; merchantOrderId?: string; correlationId: string },
@@ -419,13 +469,43 @@ export async function POST(request: NextRequest) {
         });
 
         if (!targetSubscription) {
+          const directPaymentPayloadSummary = {
+            hasMerchantData: Boolean(rawMerchantData),
+            hasAdditionalInfo: Boolean(rawAdditionalInfo),
+            merchantDataKeys: Object.keys(parsedMerchantData),
+            callbackFieldKeys: Object.keys(parsedCallbackFields),
+            additionalInfoKeys: Object.keys(parsedAdditionalInfo),
+          };
+
           if (!directPaymentPlan) {
             console.error(
               "[Hutko Callback] Direct payment is missing valid plan_code:",
               order_id,
               parsedMerchantData.plan_code || parsedCallbackFields.plan_code || parsedAdditionalInfo.plan_code,
             );
-            return NextResponse.json({ error: "Missing or invalid plan_code" }, { status: 400 });
+            const recorded = await recordPaymentCallbackEvent(supabase, {
+              eventType: "direct_payment_rejected",
+              reason: "missing_or_invalid_plan_code",
+              orderId: order_id,
+              merchantOrderId,
+              paymentId: payment_id || null,
+              checkoutCorrelationId,
+              orderStatus: order_status,
+              payerEmail: payerEmailFromMerchant || null,
+              accessEmail: merchantAccessEmail || null,
+              customerName: customerNameFromMerchant || null,
+              planCode: parsedMerchantData.plan_code || parsedCallbackFields.plan_code || parsedAdditionalInfo.plan_code || null,
+              plan: plan || null,
+              paidAmount,
+              paidCurrency,
+              payloadSummary: directPaymentPayloadSummary,
+            });
+
+            if (!recorded) {
+              return NextResponse.json({ error: "Failed to record manual review event" }, { status: 500 });
+            }
+
+            return NextResponse.json({ status: "manual_review", reason: "missing_or_invalid_plan_code" });
           }
 
           const directAccessEmail = resolveDirectPaymentAccessEmail({
@@ -436,7 +516,29 @@ export async function POST(request: NextRequest) {
             console.error("[Hutko Callback] Direct payment is missing explicit access email:", order_id, {
               payerEmail: payerEmailFromMerchant || null,
             });
-            return NextResponse.json({ error: "Missing access email" }, { status: 400 });
+            const recorded = await recordPaymentCallbackEvent(supabase, {
+              eventType: "direct_payment_rejected",
+              reason: "missing_access_email",
+              orderId: order_id,
+              merchantOrderId,
+              paymentId: payment_id || null,
+              checkoutCorrelationId,
+              orderStatus: order_status,
+              payerEmail: payerEmailFromMerchant || null,
+              accessEmail: merchantAccessEmail || null,
+              customerName: customerNameFromMerchant || null,
+              planCode: parsedMerchantData.plan_code || parsedCallbackFields.plan_code || parsedAdditionalInfo.plan_code || null,
+              plan: directPaymentPlan,
+              paidAmount,
+              paidCurrency,
+              payloadSummary: directPaymentPayloadSummary,
+            });
+
+            if (!recorded) {
+              return NextResponse.json({ error: "Failed to record manual review event" }, { status: 500 });
+            }
+
+            return NextResponse.json({ status: "manual_review", reason: "missing_access_email" });
           }
 
           logEmailMismatch({
