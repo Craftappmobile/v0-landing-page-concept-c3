@@ -3,7 +3,7 @@ import assert from "node:assert/strict"
 import { PLAN_CONFIG, PLAN_IDS, PLAN_LIST } from "../lib/plans.ts"
 
 function priceValueToKopecks(priceValue) {
-  const normalized = priceValue.replace(/\s+/g, "")
+  const normalized = priceValue.replace(/\s+/g, "").replace(",", ".")
 
   assert.match(
     normalized,

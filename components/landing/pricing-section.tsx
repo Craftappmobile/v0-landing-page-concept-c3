@@ -96,6 +96,16 @@ export function PricingSection() {
             ))}
           </ul>
 
+          {plan.renewalNotice && (
+            <div className="mb-6 rounded-2xl border border-primary/20 bg-primary/5 p-4 text-sm leading-6 text-foreground">
+              <p className="font-semibold">{"Що входить у тариф"}</p>
+              <p className="mt-1 text-muted-foreground">
+                {"Всі можливості PRO доступні одразу після оплати."}
+              </p>
+              <p className="mt-3 font-medium text-primary">{plan.renewalNotice}</p>
+            </div>
+          )}
+
           {/* CTA */}
           <Button className="w-full" size="lg" asChild>
             <Link href={`/checkout?plan=${plan.id}`}>{"Придбати підписку"}</Link>
