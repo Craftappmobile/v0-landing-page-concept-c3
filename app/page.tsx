@@ -23,7 +23,6 @@ import { PricingSection } from "@/components/landing/pricing-section"
 import { FaqSection } from "@/components/landing/faq-section"
 import { CtaSection } from "@/components/landing/cta-section"
 import { Footer } from "@/components/landing/footer"
-import { InstagramPromoChat } from "@/components/landing/instagram-promo-chat"
 
 /**
  * Серверний компонент головної сторінки (Next.js App Router).
@@ -43,7 +42,6 @@ export default function Page() {
         <FaqSection />
         <CtaSection />
       </main>
-      <InstagramPromoChat />
       <Footer />
     </div>
   )
