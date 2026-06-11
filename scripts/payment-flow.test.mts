@@ -5,6 +5,7 @@ import test from "node:test"
 import {
   buildCheckoutRedirectUrl,
   extractHutkoReservationCustomer,
+  extractHutkoFailureDetails,
   extractCheckoutCorrelationIdFromValue,
   extractOrderIdFromValue,
   getInitialPaymentView,
@@ -159,6 +160,29 @@ test("Hutko customer helpers normalize email and reservation_data", () => {
   )
 })
 
+test("extractHutkoFailureDetails preserves non-sensitive Hutko failure metadata", () => {
+  assert.deepEqual(
+    extractHutkoFailureDetails({
+      order_status: "declined",
+      response_code: "271366907219563",
+      error_code: "1024",
+      error_description: "3DSecure authentication failed",
+      additional_info: JSON.stringify({ response_status: "AUTHENTICATION_FAILED" }),
+    }),
+    {
+      code: "1024",
+      message: "3DSecure authentication failed",
+      details: {
+        error_code: "1024",
+        error_description: "3DSecure authentication failed",
+        order_status: "declined",
+        response_code: "271366907219563",
+        response_status: "AUTHENTICATION_FAILED",
+      },
+    },
+  )
+})
+
 test("buildCheckoutRedirectUrl always redirects into processing state", () => {
   const withOrderId = buildCheckoutRedirectUrl("https://vjazhi.com.ua", {
     orderId: "order_abc",
@@ -270,4 +294,13 @@ test("payment access provisioning never uses direct auth.users SQL fallback", ()
     const source = readFileSync(new URL(routeFile, import.meta.url), "utf8")
     assert.equal(source.includes("create_paid_auth_user"), false, `${routeFile} must use Auth Admin API only`)
   }
+})
+
+test("failed Hutko callback stores failure details for support", () => {
+  const source = readFileSync(new URL("../app/api/payment/callback/route.ts", import.meta.url), "utf8")
+
+  assert.equal(source.includes("extractHutkoFailureDetails(body)"), true)
+  assert.equal(source.includes("payment_failure_code"), true)
+  assert.equal(source.includes("payment_failure_message"), true)
+  assert.equal(source.includes("payment_failure_details"), true)
 })

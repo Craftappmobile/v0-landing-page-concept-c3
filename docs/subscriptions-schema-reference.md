@@ -30,6 +30,9 @@
 | `expires_at` | code | дата завершення доступу, використовується в status і recurring |
 | `rectoken` | migration + code | токен для наступних recurring charges |
 | `hutko_payment_id` | migration + code | payment identifier з callback |
+| `payment_failure_code` | migration + code | код відмови Hutko/API для останньої невдалої спроби |
+| `payment_failure_message` | migration + code | опис причини відмови Hutko/API для support triage |
+| `payment_failure_details` | migration + code | JSONB із non-sensitive provider-specific failure metadata |
 | `user_id` | code | зв'язок із Supabase Auth user |
 | `email_status` | migration + code | стан післяплатіжного email workflow |
 | `email_error` | migration + code | остання помилка email workflow |
@@ -48,6 +51,9 @@
 - `currency`
 - `rectoken`
 - `hutko_payment_id`
+- `payment_failure_code`
+- `payment_failure_message`
+- `payment_failure_details`
 - `email_status`
 - `email_error`
 - `cancelled_at`
