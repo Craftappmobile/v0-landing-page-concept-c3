@@ -33,7 +33,16 @@ export async function sendWelcomeEmail(
       to: [to],
       subject: "🧶 Вашу підписку активовано!",
       html: `
-        <div style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; max-width: 560px; margin: 0 auto; padding: 32px 16px;">
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Вашу підписку активовано</title>
+</head>
+<body>
+  <div style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; max-width: 560px; margin: 0 auto; padding: 32px 16px;">
           <h1 style="font-size: 24px; color: #1a1a1a;">${customerName || ""}, дякуємо за придбання підписки 💛</h1>
 
           <p style="font-size: 16px; color: #333; line-height: 1.6;">
@@ -64,7 +73,9 @@ export async function sendWelcomeEmail(
           </p>
 
           ${credentialsBlock}
-        </div>
+  </div>
+</body>
+</html>
       `,
     });
 
@@ -95,7 +106,16 @@ export async function sendCancellationEmail(
       to: [to],
       subject: "Автопродовження вимкнено",
       html: `
-        <div style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; max-width: 560px; margin: 0 auto; padding: 32px 16px;">
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Автопродовження вимкнено</title>
+</head>
+<body>
+  <div style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; max-width: 560px; margin: 0 auto; padding: 32px 16px;">
           <h1 style="font-size: 24px; color: #1a1a1a;">Привіт, ${customerName || ""}!</h1>
           <p style="font-size: 16px; color: #333; line-height: 1.6;">
             Автопродовження для підписки <strong>«${planName}»</strong> вимкнено.
@@ -110,7 +130,9 @@ export async function sendCancellationEmail(
           <p style="font-size: 12px; color: #999;">
             Питання? Пишіть: <a href="mailto:craftappmobile@gmail.com" style="color: #7c3aed;">craftappmobile@gmail.com</a>
           </p>
-        </div>
+  </div>
+</body>
+</html>
       `,
     });
 
