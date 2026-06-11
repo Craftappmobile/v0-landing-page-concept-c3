@@ -6,6 +6,7 @@ import { generateSecurePassword } from "@/lib/password";
 import { isPlanId, PLAN_CONFIG } from "@/lib/plans";
 import type { PlanId } from "@/lib/plans";
 import {
+  extractHutkoFailureDetails,
   extractHutkoReservationCustomer,
   parseHutkoMerchantData,
   resolveDirectPaymentAccessEmail,
@@ -127,6 +128,9 @@ async function recordPaymentCallbackEvent(
     plan?: string | null;
     paidAmount?: number | null;
     paidCurrency?: string | null;
+    failureCode?: string | null;
+    failureMessage?: string | null;
+    failureDetails?: Record<string, string>;
     payloadSummary?: Record<string, unknown>;
   },
 ): Promise<boolean> {
@@ -145,6 +149,9 @@ async function recordPaymentCallbackEvent(
     plan: args.plan || null,
     paid_amount: args.paidAmount ?? null,
     paid_currency: args.paidCurrency || null,
+    payment_failure_code: args.failureCode || null,
+    payment_failure_message: args.failureMessage || null,
+    payment_failure_details: args.failureDetails || {},
     payload_summary: args.payloadSummary || {},
   });
 
@@ -416,6 +423,7 @@ export async function POST(request: NextRequest) {
       getString(restParams.actual_amount) || getString(restParams.amount) || undefined,
     );
     const paidCurrency = getString(restParams.actual_currency) || getString(restParams.currency) || null;
+    const failureDetails = extractHutkoFailureDetails(body);
 
     if (order_status === "approved") {
       const durationDays = isPlanId(plan) ? PLAN_CONFIG[plan].days : 90;
@@ -439,12 +447,15 @@ export async function POST(request: NextRequest) {
           return NextResponse.json({ error: "Parent subscription not found" }, { status: 500 });
         }
 
-        const updateData: Record<string, string | number | null> = {
+        const updateData: Record<string, string | number | null | Record<string, string>> = {
           status: "active",
           hutko_payment_id: payment_id || null,
           expires_at: addDaysToLatestDate(existingSub.expires_at, durationDays, now),
           updated_at: nowIso,
           paid_currency: paidCurrency,
+          payment_failure_code: null,
+          payment_failure_message: null,
+          payment_failure_details: {},
         };
 
         if (paidAmount !== null) {
@@ -588,13 +599,16 @@ export async function POST(request: NextRequest) {
             payerEmail: payerEmailFromMerchant,
           });
 
-          const updateData: Record<string, string | boolean | null | number> = {
+          const updateData: Record<string, string | boolean | null | number | Record<string, string>> = {
             status: "active",
             hutko_payment_id: payment_id || null,
             started_at: nowIso,
             expires_at: addDaysToLatestDate(null, PLAN_CONFIG[subscriptionPlan].days, now),
             updated_at: nowIso,
             paid_currency: paidCurrency,
+            payment_failure_code: null,
+            payment_failure_message: null,
+            payment_failure_details: {},
           };
 
           if (paidAmount !== null) {
@@ -640,7 +654,12 @@ export async function POST(request: NextRequest) {
       if (isRenewal && parentOrder) {
         await supabase
           .from("subscriptions")
-          .update({ updated_at: new Date().toISOString() })
+          .update({
+            updated_at: new Date().toISOString(),
+            payment_failure_code: failureDetails.code,
+            payment_failure_message: failureDetails.message,
+            payment_failure_details: failureDetails.details,
+          })
           .eq("order_id", parentOrder);
 
         console.log("[Hutko Callback] Renewal payment failed:", parentOrder, order_status, "via", order_id);
@@ -652,14 +671,43 @@ export async function POST(request: NextRequest) {
         });
 
         if (!targetSubscription) {
+          await recordPaymentCallbackEvent(supabase, {
+            eventType: "payment_failed",
+            reason: "subscription_not_found",
+            orderId: order_id,
+            merchantOrderId,
+            paymentId: payment_id || null,
+            checkoutCorrelationId,
+            orderStatus: order_status,
+            payerEmail: payerEmailFromMerchant || null,
+            accessEmail: merchantAccessEmail || null,
+            customerName: customerNameFromMerchant || null,
+            planCode: parsedMerchantData.plan_code || parsedCallbackFields.plan_code || parsedAdditionalInfo.plan_code || null,
+            plan: plan || directPaymentPlan || null,
+            paidAmount,
+            paidCurrency,
+            failureCode: failureDetails.code,
+            failureMessage: failureDetails.message,
+            failureDetails: failureDetails.details,
+            payloadSummary: {
+              hasMerchantData: Boolean(rawMerchantData),
+              hasAdditionalInfo: Boolean(rawAdditionalInfo),
+              merchantDataKeys: Object.keys(parsedMerchantData),
+              callbackFieldKeys: Object.keys(parsedCallbackFields),
+              additionalInfoKeys: Object.keys(parsedAdditionalInfo),
+            },
+          });
           console.log("[Hutko Callback] Failed direct payment without subscription:", order_id, order_status);
           return NextResponse.json({ status: "ok" });
         }
 
         // Initial payment failed or declined
-        const updateData: Record<string, string> = {
+        const updateData: Record<string, string | Record<string, string> | null> = {
           status: "failed",
           updated_at: new Date().toISOString(),
+          payment_failure_code: failureDetails.code,
+          payment_failure_message: failureDetails.message,
+          payment_failure_details: failureDetails.details,
         };
 
         if (!targetSubscription.order_id && (merchantOrderId || order_id)) {

@@ -9,6 +9,12 @@ export type PaymentViewModel = {
 
 export type DirectPaymentPlanId = "quarter" | "half" | "year" | "forever"
 
+export type HutkoFailureDetails = {
+  code: string | null
+  message: string | null
+  details: Record<string, string>
+}
+
 export type HutkoMerchantData = {
   plan?: string
   plan_code?: string
@@ -45,6 +51,52 @@ const DIRECT_PAYMENT_PLAN_CODE_TO_PLAN_ID: Record<string, DirectPaymentPlanId> =
   "9999": "forever",
 }
 
+const HUTKO_FAILURE_DETAIL_KEYS = new Set([
+  "api_error_code",
+  "api_error_description",
+  "api_error_id",
+  "api_error_identifier",
+  "decline_code",
+  "decline_reason",
+  "error_code",
+  "error_description",
+  "error_message",
+  "failure_code",
+  "failure_reason",
+  "order_status",
+  "payment_error_code",
+  "payment_error_description",
+  "response_code",
+  "response_description",
+  "response_status",
+  "status_description",
+])
+
+const HUTKO_FAILURE_CODE_KEYS = [
+  "api_error_code",
+  "error_code",
+  "payment_error_code",
+  "failure_code",
+  "decline_code",
+  "response_code",
+  "api_error_id",
+  "api_error_identifier",
+  "response_status",
+  "order_status",
+]
+
+const HUTKO_FAILURE_MESSAGE_KEYS = [
+  "api_error_description",
+  "error_description",
+  "payment_error_description",
+  "failure_reason",
+  "decline_reason",
+  "response_description",
+  "status_description",
+  "error_message",
+  "order_status",
+]
+
 function stringValue(value: unknown): string | null {
   if (typeof value === "string") {
     const trimmed = value.trim()
@@ -56,6 +108,58 @@ function stringValue(value: unknown): string | null {
   }
 
   return null
+}
+
+function normalizePayloadKey(key: string) {
+  return key.trim().replace(/[\s-]+/g, "_").replace(/([a-z0-9])([A-Z])/g, "$1_$2").toLowerCase()
+}
+
+function collectHutkoFailureDetails(value: unknown, target: Record<string, string>, depth = 0) {
+  if (!value || depth > 3) return
+
+  if (typeof value === "string") {
+    const trimmed = value.trim()
+    if (!trimmed || !(trimmed.startsWith("{") || trimmed.startsWith("["))) return
+    try {
+      collectHutkoFailureDetails(JSON.parse(trimmed), target, depth + 1)
+    } catch {
+      // Ignore non-JSON callback strings.
+    }
+    return
+  }
+
+  if (Array.isArray(value)) {
+    for (const item of value) collectHutkoFailureDetails(item, target, depth + 1)
+    return
+  }
+
+  if (typeof value !== "object") return
+
+  for (const [rawKey, rawValue] of Object.entries(value as Record<string, unknown>)) {
+    const key = normalizePayloadKey(rawKey)
+    const normalizedValue = stringValue(rawValue)
+
+    if (HUTKO_FAILURE_DETAIL_KEYS.has(key) && normalizedValue) {
+      target[key] = normalizedValue
+    }
+
+    if (rawValue && typeof rawValue === "object") {
+      collectHutkoFailureDetails(rawValue, target, depth + 1)
+    } else if (typeof rawValue === "string" && rawValue.trim().startsWith("{")) {
+      collectHutkoFailureDetails(rawValue, target, depth + 1)
+    }
+  }
+}
+
+export function extractHutkoFailureDetails(payload: unknown): HutkoFailureDetails {
+  const details: Record<string, string> = {}
+  collectHutkoFailureDetails(payload, details)
+
+  return {
+    code: HUTKO_FAILURE_CODE_KEYS.map((key) => details[key]).find(Boolean) ?? null,
+    message: HUTKO_FAILURE_MESSAGE_KEYS.map((key) => details[key]).find(Boolean) ?? null,
+    details,
+  }
 }
 
 export function normalizeHutkoEmail(value: unknown): string | null {

@@ -94,6 +94,18 @@ Route:
 
 Тобто **callback є єдиним source of truth** для фінального оновлення subscription state.
 
+### Відхилені платежі
+
+Якщо Hutko повертає будь-який статус, крім `approved`, callback зберігає
+support-friendly failure details у `subscriptions`:
+
+- `payment_failure_code`;
+- `payment_failure_message`;
+- `payment_failure_details`.
+
+Якщо callback не вдається прив'язати до subscription, metadata зберігається у
+`payment_callback_events`, щоб support не шукав причину вручну в Hutko-кабінеті.
+
 ## Redirect і polling
 
 - `app/api/payment/redirect/route.ts` приймає `GET` або `POST` від Hutko;
