@@ -14,6 +14,7 @@ export type PlanConfig = {
   perMonthLabel: string
   badge: string | null
   amount: number
+  renewalAmount: number | null
   days: number
   isRecurring: boolean
   paymentDescription: string
@@ -34,6 +35,7 @@ const PLAN_DETAILS = {
     perMonthLabel: "Перший платіж за 3 місяці",
     badge: null,
     amount: 14900,
+    renewalAmount: 45496,
     days: 90,
     isRecurring: true,
     paymentDescription: "Підписка «Розрахуй і В'яжи» — 3 місяці",
@@ -52,6 +54,7 @@ const PLAN_DETAILS = {
     perMonthLabel: "Перший платіж за 6 місяців",
     badge: null,
     amount: 29900,
+    renewalAmount: 60000,
     days: 180,
     isRecurring: true,
     paymentDescription: "Підписка «Розрахуй і В'яжи» — 6 місяців",
@@ -70,6 +73,7 @@ const PLAN_DETAILS = {
     perMonthLabel: "Перший платіж за 1 рік",
     badge: null,
     amount: 44900,
+    renewalAmount: 91800,
     days: 365,
     isRecurring: true,
     paymentDescription: "Підписка «Розрахуй і В'яжи» — 12 місяців",
@@ -88,6 +92,7 @@ const PLAN_DETAILS = {
     perMonthLabel: "Довічний доступ",
     badge: null,
     amount: 249900,
+    renewalAmount: null,
     days: 36500,
     isRecurring: false,
     paymentDescription: "Підписка «Розрахуй і В'яжи» — Довічна",
@@ -106,4 +111,9 @@ export const PLAN_LIST: PlanConfig[] = PLAN_IDS.map((id) => ({
 
 export function isPlanId(value: string): value is PlanId {
   return value in PLAN_DETAILS
+}
+
+export function getPlanRenewalAmount(planId: PlanId): number {
+  const plan = PLAN_CONFIG[planId]
+  return plan.renewalAmount ?? plan.amount
 }

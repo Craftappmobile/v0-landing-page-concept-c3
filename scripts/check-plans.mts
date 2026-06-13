@@ -57,8 +57,11 @@ for (const id of PLAN_IDS) {
   assert.ok(plan.days > 0, `${id}.days must be greater than 0`)
 
   if (plan.isRecurring) {
+    assert.ok(plan.renewalAmount !== null, `${id}.renewalAmount must be set for recurring plans`)
+    assert.ok(plan.renewalAmount > 0, `${id}.renewalAmount must be greater than 0`)
     requireText(`${id}.recurringDescription`, plan.recurringDescription ?? "")
   } else {
+    assert.equal(plan.renewalAmount, null, `${id} must not have renewalAmount`)
     assert.equal(plan.recurringDescription, null, `${id} must not have recurringDescription`)
   }
 }
