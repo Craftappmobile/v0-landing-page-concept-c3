@@ -19,6 +19,7 @@ import {
   resolveCheckoutFlow,
   resolvePaymentStatusView,
 } from "../lib/payment-flow.ts"
+import { getPlanRenewalAmount } from "../lib/plans.ts"
 import { buildHutkoButtonWidgetConfig, generateHutkoSignature } from "../lib/hutko.ts"
 
 test("normalizeSubscriptionStatus maps subscription states for payment polling", () => {
@@ -150,6 +151,13 @@ test("direct payment plan codes map to internal plans", () => {
   assert.equal(resolveDirectPaymentPlanId("12"), "year")
   assert.equal(resolveDirectPaymentPlanId("9999"), "forever")
   assert.equal(resolveDirectPaymentPlanId("227480"), null)
+})
+
+test("getPlanRenewalAmount returns full recurring price without affecting lifetime plan", () => {
+  assert.equal(getPlanRenewalAmount("quarter"), 45496)
+  assert.equal(getPlanRenewalAmount("half"), 60000)
+  assert.equal(getPlanRenewalAmount("year"), 91800)
+  assert.equal(getPlanRenewalAmount("forever"), 249900)
 })
 
 test("Hutko customer helpers normalize email and reservation_data", () => {

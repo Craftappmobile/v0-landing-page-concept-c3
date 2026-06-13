@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import crypto from "crypto";
 import { createAdminClient } from "@/lib/supabase";
-import { isPlanId, PLAN_CONFIG } from "@/lib/plans";
+import { getPlanRenewalAmount, isPlanId, PLAN_CONFIG } from "@/lib/plans";
 
 const MERCHANT_ID = process.env.HUTKO_MERCHANT_ID || "";
 const MERCHANT_PASSWORD = process.env.HUTKO_MERCHANT_PASSWORD || "";
@@ -103,7 +103,7 @@ export async function GET(request: NextRequest) {
       order_id: newOrderId,
       merchant_id: Number(MERCHANT_ID),
       order_desc: planConfig.recurringDescription || planConfig.paymentDescription,
-      amount: planConfig.amount,
+      amount: getPlanRenewalAmount(planId),
       currency: "UAH",
       version: "1.0.1",
       rectoken: sub.rectoken,
