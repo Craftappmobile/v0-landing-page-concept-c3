@@ -8,7 +8,8 @@
     "start": "next start",
     "lint": "next lint",
     "check:plans": "node --no-warnings --experimental-strip-types scripts/check-plans.mts && tsc --noEmit",
-    "test:payment": "node --no-warnings --experimental-strip-types --test scripts/payment-flow.test.mts"
+    "test:payment": "node --no-warnings --experimental-strip-types --test scripts/payment-flow.test.mts",
+    "indexnow": "node --no-warnings --experimental-strip-types scripts/indexnow-ping.mts"
   },
   "dependencies": {
     "@hookform/resolvers": "^3.9.1",
