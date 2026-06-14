@@ -1,6 +1,11 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createAdminClient } from "@/lib/supabase";
 import { sendCancellationEmail } from "@/lib/email";
+import {
+  CANCELLATION_SUBSCRIPTION_SELECT,
+  getCancellationEmailPattern,
+  normalizeCancellationEmail,
+} from "@/lib/cancel-subscription";
 
 /**
  * Disable subscription auto-renewal by email.
@@ -10,18 +15,20 @@ export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
     const { email } = body as { email: string };
+    const normalizedEmail = normalizeCancellationEmail(email);
 
-    if (!email) {
+    if (!normalizedEmail) {
       return NextResponse.json({ error: "Email обов'язковий" }, { status: 400 });
     }
 
     const supabase = createAdminClient();
+    const emailPattern = getCancellationEmailPattern(normalizedEmail);
 
     // Find active subscriptions with auto-renewal enabled for this email
     const { data: subs, error } = await supabase
       .from("subscriptions")
-      .select("id, order_id, plan, customer_name")
-      .eq("email", email)
+      .select(CANCELLATION_SUBSCRIPTION_SELECT)
+      .ilike("email", emailPattern)
       .eq("status", "active")
       .eq("auto_renewal", true);
 
@@ -45,7 +52,7 @@ export async function POST(request: NextRequest) {
         cancelled_at: now,
         updated_at: now,
       })
-      .eq("email", email)
+      .ilike("email", emailPattern)
       .eq("status", "active")
       .eq("auto_renewal", true);
 
@@ -54,12 +61,12 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: "Помилка скасування" }, { status: 500 });
     }
 
-    console.log(`[Cancel] Disabled auto-renewal for ${subs.length} subscription(s) for ${email}`);
+    console.log(`[Cancel] Disabled auto-renewal for ${subs.length} subscription(s) for ${normalizedEmail}`);
 
     // Send cancellation confirmation email
     const firstSub = subs[0];
-    console.log("[Cancel] Sending cancellation email to:", email);
-    const emailResult = await sendCancellationEmail(email, firstSub?.customer_name || "", firstSub?.plan || "");
+    console.log("[Cancel] Sending cancellation email to:", normalizedEmail);
+    const emailResult = await sendCancellationEmail(normalizedEmail, firstSub?.customer_name || "", firstSub?.plan || "");
     console.log("[Cancel] Email result:", JSON.stringify(emailResult));
 
     return NextResponse.json({

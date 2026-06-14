@@ -9,6 +9,7 @@
     "lint": "next lint",
     "check:plans": "node --no-warnings --experimental-strip-types scripts/check-plans.mts && tsc --noEmit",
     "test:payment": "node --no-warnings --experimental-strip-types --test scripts/payment-flow.test.mts",
+    "test:cancel": "node --no-warnings --experimental-strip-types --test scripts/cancel-api.test.mts",
     "indexnow": "node --no-warnings --experimental-strip-types scripts/indexnow-ping.mts"
   },
   "dependencies": {
