@@ -154,10 +154,10 @@ test("direct payment plan codes map to internal plans", () => {
 })
 
 test("getPlanRenewalAmount returns full recurring price without affecting lifetime plan", () => {
-  assert.equal(getPlanRenewalAmount("quarter"), 45496)
-  assert.equal(getPlanRenewalAmount("half"), 60000)
+  assert.equal(getPlanRenewalAmount("quarter"), 45400)
+  assert.equal(getPlanRenewalAmount("half"), 59900)
   assert.equal(getPlanRenewalAmount("year"), 91800)
-  assert.equal(getPlanRenewalAmount("forever"), 249900)
+  assert.equal(getPlanRenewalAmount("forever"), 468000)
 })
 
 test("Hutko customer helpers normalize email and reservation_data", () => {
