@@ -129,7 +129,8 @@ Endpoint:
 
 - перевіряє `CRON_SECRET`, якщо він заданий;
 - вимагає валідний `NEXT_PUBLIC_SITE_URL`;
-- блокує deprecated domain `https://rozrahuy-i-vyazhi.vercel.app`;
+- використовує `NEXT_PUBLIC_SITE_URL` як базовий домен для recurring callback;
+- у тестовому сценарії `landing-promo` дозволено `https://rozrahuy-i-vyazhi.vercel.app` як окремий landing-домен для перевірки цін;
 - знаходить `active` підписки з `auto_renewal = true`, `rectoken IS NOT NULL`, `expires_at <= tomorrow`;
 - викликає Hutko recurring API;
 - **не оновлює БД напряму після успішної відповіді Hutko**, а чекає callback.

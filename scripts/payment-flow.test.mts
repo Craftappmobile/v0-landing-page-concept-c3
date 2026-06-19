@@ -19,7 +19,7 @@ import {
   resolveCheckoutFlow,
   resolvePaymentStatusView,
 } from "../lib/payment-flow.ts"
-import { getPlanRenewalAmount } from "../lib/plans.ts"
+import { getPlanInitialAccessDays, getPlanRenewalAccessDays, getPlanRenewalAmount } from "../lib/plans.ts"
 import { buildHutkoButtonWidgetConfig, generateHutkoSignature } from "../lib/hutko.ts"
 
 test("normalizeSubscriptionStatus maps subscription states for payment polling", () => {
@@ -157,7 +157,16 @@ test("getPlanRenewalAmount returns full recurring price without affecting lifeti
   assert.equal(getPlanRenewalAmount("quarter"), 45400)
   assert.equal(getPlanRenewalAmount("half"), 59900)
   assert.equal(getPlanRenewalAmount("year"), 91800)
-  assert.equal(getPlanRenewalAmount("forever"), 468000)
+  assert.equal(getPlanRenewalAmount("forever"), 368000)
+})
+
+test("gift months apply only to first payment while renewals use standard durations", () => {
+  assert.equal(getPlanInitialAccessDays("quarter"), 120)
+  assert.equal(getPlanRenewalAccessDays("quarter"), 90)
+  assert.equal(getPlanInitialAccessDays("half"), 270)
+  assert.equal(getPlanRenewalAccessDays("half"), 180)
+  assert.equal(getPlanInitialAccessDays("year"), 545)
+  assert.equal(getPlanRenewalAccessDays("year"), 365)
 })
 
 test("Hutko customer helpers normalize email and reservation_data", () => {

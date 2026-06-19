@@ -6,7 +6,6 @@ import { getPlanRenewalAmount, isPlanId, PLAN_CONFIG } from "@/lib/plans";
 const MERCHANT_ID = process.env.HUTKO_MERCHANT_ID || "";
 const MERCHANT_PASSWORD = process.env.HUTKO_MERCHANT_PASSWORD || "";
 const HUTKO_RECURRING_URL = "https://pay.hutko.org/api/recurring";
-const DEPRECATED_SITE_URL = "https://rozrahuy-i-vyazhi.vercel.app";
 
 function getRecurringCallbackBaseUrl(): string {
   const siteUrl = process.env.NEXT_PUBLIC_SITE_URL?.trim();
@@ -16,10 +15,6 @@ function getRecurringCallbackBaseUrl(): string {
   }
 
   const normalizedSiteUrl = siteUrl.replace(/\/$/, "");
-
-  if (normalizedSiteUrl === DEPRECATED_SITE_URL) {
-    throw new Error("NEXT_PUBLIC_SITE_URL points to deprecated domain");
-  }
 
   return normalizedSiteUrl;
 }

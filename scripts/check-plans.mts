@@ -54,14 +54,17 @@ for (const id of PLAN_IDS) {
     `${plan.priceValue} грн`,
     `${id}.priceWithCurrency must match priceValue`,
   )
-  assert.ok(plan.days > 0, `${id}.days must be greater than 0`)
+  assert.ok(plan.initialDays > 0, `${id}.initialDays must be greater than 0`)
 
   if (plan.isRecurring) {
     assert.ok(plan.renewalAmount !== null, `${id}.renewalAmount must be set for recurring plans`)
     assert.ok(plan.renewalAmount > 0, `${id}.renewalAmount must be greater than 0`)
+    assert.ok(plan.renewalDays !== null, `${id}.renewalDays must be set for recurring plans`)
+    assert.ok((plan.renewalDays ?? 0) > 0, `${id}.renewalDays must be greater than 0`)
     requireText(`${id}.recurringDescription`, plan.recurringDescription ?? "")
   } else {
     assert.equal(plan.renewalAmount, null, `${id} must not have renewalAmount`)
+    assert.equal(plan.renewalDays, null, `${id} must not have renewalDays`)
     assert.equal(plan.recurringDescription, null, `${id} must not have recurringDescription`)
   }
 }

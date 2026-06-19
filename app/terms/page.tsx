@@ -166,7 +166,7 @@ export default function TermsPage() {
               {PLAN_LIST.map((plan) => (
                 <li key={plan.id} className="list-disc text-sm text-muted-foreground">
                   {plan.isRecurring
-                    ? `${plan.termsLabel} — ${plan.priceWithCurrency} (доступ активується на ${plan.days} днів з моменту оплати)`
+                    ? `${plan.termsLabel} — ${plan.priceWithCurrency} (перша оплата активує доступ на ${plan.initialDays} днів, далі автопродовження на ${plan.renewalDays ?? plan.initialDays} днів)`
                     : `${plan.termsLabel} — ${plan.priceWithCurrency} (одноразовий платіж, безстроковий доступ без обмежень)`}
                 </li>
               ))}

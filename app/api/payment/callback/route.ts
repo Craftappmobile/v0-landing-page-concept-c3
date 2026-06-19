@@ -3,7 +3,12 @@ import crypto from "crypto";
 import { createAdminClient } from "@/lib/supabase";
 import { sendWelcomeEmail } from "@/lib/email";
 import { generateSecurePassword } from "@/lib/password";
-import { isPlanId, PLAN_CONFIG } from "@/lib/plans";
+import {
+  getPlanInitialAccessDays,
+  getPlanRenewalAccessDays,
+  isPlanId,
+  PLAN_CONFIG,
+} from "@/lib/plans";
 import type { PlanId } from "@/lib/plans";
 import {
   extractHutkoFailureDetails,
@@ -426,7 +431,8 @@ export async function POST(request: NextRequest) {
     const failureDetails = extractHutkoFailureDetails(body);
 
     if (order_status === "approved") {
-      const durationDays = isPlanId(plan) ? PLAN_CONFIG[plan].days : 90;
+      const initialDurationDays = isPlanId(plan) ? getPlanInitialAccessDays(plan) : 90;
+      const renewalDurationDays = isPlanId(plan) ? getPlanRenewalAccessDays(plan) : 90;
       const now = new Date();
       const nowIso = now.toISOString();
 
@@ -450,7 +456,7 @@ export async function POST(request: NextRequest) {
         const updateData: Record<string, string | number | null | Record<string, string>> = {
           status: "active",
           hutko_payment_id: payment_id || null,
-          expires_at: addDaysToLatestDate(existingSub.expires_at, durationDays, now),
+          expires_at: addDaysToLatestDate(existingSub.expires_at, renewalDurationDays, now),
           updated_at: nowIso,
           paid_currency: paidCurrency,
           payment_failure_code: null,
@@ -566,7 +572,7 @@ export async function POST(request: NextRequest) {
             customerName: customerNameFromMerchant,
             plan: directPaymentPlan,
             nowIso,
-            expiresAt: addDaysToLatestDate(null, PLAN_CONFIG[directPaymentPlan].days, now),
+            expiresAt: addDaysToLatestDate(null, getPlanInitialAccessDays(directPaymentPlan), now),
             paymentId: payment_id || null,
             rectoken: rectoken || null,
             paidAmount,
@@ -603,7 +609,7 @@ export async function POST(request: NextRequest) {
             status: "active",
             hutko_payment_id: payment_id || null,
             started_at: nowIso,
-            expires_at: addDaysToLatestDate(null, PLAN_CONFIG[subscriptionPlan].days, now),
+            expires_at: addDaysToLatestDate(null, initialDurationDays, now),
             updated_at: nowIso,
             paid_currency: paidCurrency,
             payment_failure_code: null,

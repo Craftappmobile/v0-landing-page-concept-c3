@@ -15,7 +15,8 @@ export type PlanConfig = {
   badge: string | null
   amount: number
   renewalAmount: number | null
-  days: number
+  initialDays: number
+  renewalDays: number | null
   isRecurring: boolean
   paymentDescription: string
   recurringDescription: string | null
@@ -25,80 +26,84 @@ export type PlanConfig = {
 
 const PLAN_DETAILS = {
   quarter: {
-    name: "Підписка на 3 місяці",
-    hutkoButtonId: "5b783977dd40be7328b22c6c355d626591c76cd3",
-    checkoutLabel: "3 місяці",
-    pricingTabLabel: "3 місяці",
-    pricingPeriodLabel: "3 міс",
+    name: "Пакет «Старт»",
+    hutkoButtonId: "4042eadb25ce283bb871bccd2c0a594bd15d1a71",
+    checkoutLabel: "Старт — 3+1 міс",
+    pricingTabLabel: "Старт",
+    pricingPeriodLabel: "3+1 міс",
     priceValue: "454",
     priceWithCurrency: "454 грн",
-    perMonthLabel: "Перший платіж за 3 місяці",
-    badge: null,
+    perMonthLabel: "4 місяці доступу за ціною 3",
+    badge: "1 місяць у подарунок 🎁",
     amount: 45400,
     renewalAmount: 45400,
-    days: 90,
+    initialDays: 120,
+    renewalDays: 90,
     isRecurring: true,
-    paymentDescription: "Підписка «Розрахуй і В'яжи» — 3 місяці",
-    recurringDescription: "Підписка «Розрахуй і В'яжи» — 3 місяці (автопродовження)",
-    renewalNotice: "Наступний платіж через 3 місяці — 454 грн.",
-    termsLabel: "Преміум на 3 місяці",
+    paymentDescription: "Пакет «Старт» — 3 місяці + 1 місяць у подарунок",
+    recurringDescription: "Пакет «Старт» — автопродовження на 3 місяці",
+    renewalNotice: "Перший платіж відкриває 4 місяці PRO-доступу. Далі автопродовження кожні 3 місяці — 454 грн.",
+    termsLabel: "Преміум Старт на 3+1 місяці",
   },
   half: {
-    name: "Підписка на 6 місяців",
-    hutkoButtonId: "15f07a1fe848da2c47c16efcf1cd1c52d5160595",
-    checkoutLabel: "6 місяців",
-    pricingTabLabel: "6 місяців",
-    pricingPeriodLabel: "6 міс",
+    name: "Пакет «Оптимальний»",
+    hutkoButtonId: "aa0d547477ca4e5b7a7e46a16e589a6b7dbf698b",
+    checkoutLabel: "Оптимальний — 6+3 міс",
+    pricingTabLabel: "Оптимальний",
+    pricingPeriodLabel: "6+3 міс",
     priceValue: "599",
     priceWithCurrency: "599 грн",
-    perMonthLabel: "Перший платіж за 6 місяців",
-    badge: null,
+    perMonthLabel: "9 місяців доступу за ціною 6",
+    badge: "3 місяці у подарунок 🎁",
     amount: 59900,
     renewalAmount: 59900,
-    days: 180,
+    initialDays: 270,
+    renewalDays: 180,
     isRecurring: true,
-    paymentDescription: "Підписка «Розрахуй і В'яжи» — 6 місяців",
-    recurringDescription: "Підписка «Розрахуй і В'яжи» — 6 місяців (автопродовження)",
-    renewalNotice: "Наступний платіж через 6 місяців — 599 грн.",
-    termsLabel: "Преміум на 6 місяців",
+    paymentDescription: "Пакет «Оптимальний» — 6 місяців + 3 місяці у подарунок",
+    recurringDescription: "Пакет «Оптимальний» — автопродовження на 6 місяців",
+    renewalNotice: "Перший платіж відкриває 9 місяців PRO-доступу. Далі автопродовження кожні 6 місяців — 599 грн.",
+    termsLabel: "Преміум Оптимальний на 6+3 місяці",
   },
   year: {
-    name: "Річна підписка",
-    hutkoButtonId: "5730471c8749e0f0ccb54c08e01394ec886f8c23",
-    checkoutLabel: "12 місяців",
-    pricingTabLabel: "Річна",
-    pricingPeriodLabel: "рік",
+    name: "Пакет «Рік спокою»",
+    hutkoButtonId: "6fe48cdf6aa487af5da4801a24a6bf0ae8adf5a7",
+    checkoutLabel: "Рік спокою — 12+6 міс",
+    pricingTabLabel: "Рік спокою",
+    pricingPeriodLabel: "12+6 міс",
     priceValue: "918",
     priceWithCurrency: "918 грн",
-    perMonthLabel: "Перший платіж за 1 рік",
-    badge: null,
+    perMonthLabel: "18 місяців доступу за ціною 12",
+    badge: "6 місяців у подарунок 🎁",
     amount: 91800,
     renewalAmount: 91800,
-    days: 365,
+    initialDays: 545,
+    renewalDays: 365,
     isRecurring: true,
-    paymentDescription: "Підписка «Розрахуй і В'яжи» — 12 місяців",
-    recurringDescription: "Підписка «Розрахуй і В'яжи» — 12 місяців (автопродовження)",
-    renewalNotice: "Наступний платіж через 1 рік — 918 грн.",
-    termsLabel: "Преміум на рік",
+    paymentDescription: "Пакет «Рік спокою» — 12 місяців + 6 місяців у подарунок",
+    recurringDescription: "Пакет «Рік спокою» — автопродовження на 12 місяців",
+    renewalNotice: "Перший платіж відкриває 18 місяців PRO-доступу. Далі автопродовження кожні 12 місяців — 918 грн.",
+    termsLabel: "Преміум Рік спокою на 12+6 місяців",
   },
   forever: {
-    name: "Безлімітна підписка (назавжди)",
-    hutkoButtonId: "59c57623f890ece7d8fad1c030edc49699537392",
-    checkoutLabel: "Довічна",
-    pricingTabLabel: "Назавжди",
-    pricingPeriodLabel: "одноразово",
-    priceValue: "4680",
-    priceWithCurrency: "4680 грн",
-    perMonthLabel: "Довічний доступ",
-    badge: null,
-    amount: 468000,
+    name: "Пакет «V.I.P. Назавжди»",
+    hutkoButtonId: "5b168b28848835eae67acaab72d8e47b3aec3d9d",
+    checkoutLabel: "V.I.P. Назавжди",
+    pricingTabLabel: "V.I.P.",
+    pricingPeriodLabel: "назавжди",
+    priceValue: "3680",
+    priceWithCurrency: "3680 грн",
+    perMonthLabel: "Замість 4680 грн — економія 1000 грн",
+    badge: "Знижка -1000 грн 🔥",
+    amount: 368000,
     renewalAmount: null,
-    days: 36500,
+    initialDays: 36500,
+    renewalDays: null,
     isRecurring: false,
-    paymentDescription: "Підписка «Розрахуй і В'яжи» — Довічна",
+    paymentDescription: "Пакет «V.I.P. Назавжди» — довічний доступ зі знижкою",
     recurringDescription: null,
-    renewalNotice: "Одноразовий платіж без автопродовження.",
-    termsLabel: "Довічний доступ",
+    renewalNotice: "Одноразовий платіж 3680 грн без автопродовження.",
+    termsLabel: "V.I.P. довічний доступ",
   },
 } satisfies Record<PlanId, Omit<PlanConfig, "id">>
 
@@ -116,4 +121,13 @@ export function isPlanId(value: string): value is PlanId {
 export function getPlanRenewalAmount(planId: PlanId): number {
   const plan = PLAN_CONFIG[planId]
   return plan.renewalAmount ?? plan.amount
+}
+
+export function getPlanInitialAccessDays(planId: PlanId): number {
+  return PLAN_CONFIG[planId].initialDays
+}
+
+export function getPlanRenewalAccessDays(planId: PlanId): number {
+  const plan = PLAN_CONFIG[planId]
+  return plan.renewalDays ?? plan.initialDays
 }
