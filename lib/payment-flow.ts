@@ -98,6 +98,8 @@ const HUTKO_FAILURE_MESSAGE_KEYS = [
   "order_status",
 ]
 
+const HUTKO_FAILURE_DISABLING_ORDER_STATUSES = new Set(["reversed"])
+
 function stringValue(value: unknown): string | null {
   if (typeof value === "string") {
     const trimmed = value.trim()
@@ -326,6 +328,10 @@ export function normalizeSubscriptionStatus({ status, expiresAt }: SubscriptionS
   if (status === "failed") return "failed"
   if (!status) return "not_found"
   return "pending"
+}
+
+export function shouldDisableAutoRenewalForFailedOrderStatus(status: unknown): boolean {
+  return typeof status === "string" && HUTKO_FAILURE_DISABLING_ORDER_STATUSES.has(status.trim().toLowerCase())
 }
 
 export function extractOrderIdFromValue(value: unknown): string | null {

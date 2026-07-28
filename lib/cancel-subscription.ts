@@ -1,4 +1,5 @@
 export const CANCELLATION_SUBSCRIPTION_SELECT = "id, order_id, plan, customer_name";
+export const CANCELLABLE_SUBSCRIPTION_STATUSES = ["active", "failed"] as const;
 
 export function normalizeCancellationEmail(email: unknown): string | null {
   if (typeof email !== "string") return null;

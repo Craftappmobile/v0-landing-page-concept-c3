@@ -2,6 +2,7 @@ import assert from "node:assert/strict";
 import test from "node:test";
 
 import {
+  CANCELLABLE_SUBSCRIPTION_STATUSES,
   escapePostgrestLikePattern,
   getCancellationEmailPattern,
   normalizeCancellationEmail,
@@ -17,6 +18,10 @@ test("/api/cancel escapes wildcard characters before case-insensitive email filt
   assert.equal(escapePostgrestLikePattern("user_name%test@example.com"), "user\\_name\\%test@example.com");
 });
 
-test("/api/cancel uses the escaped normalized email as the active subscription lookup pattern", () => {
+test("/api/cancel uses the escaped normalized email as the auto-renewal lookup pattern", () => {
   assert.equal(getCancellationEmailPattern("user_name%test@example.com"), "user\\_name\\%test@example.com");
+});
+
+test("/api/cancel supports legacy failed subscriptions that still have auto-renewal enabled", () => {
+  assert.deepEqual(CANCELLABLE_SUBSCRIPTION_STATUSES, ["active", "failed"]);
 });

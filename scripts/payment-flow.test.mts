@@ -18,6 +18,7 @@ import {
   resolveDirectPaymentPlanId,
   resolveCheckoutFlow,
   resolvePaymentStatusView,
+  shouldDisableAutoRenewalForFailedOrderStatus,
 } from "../lib/payment-flow.ts"
 import { getPlanInitialAccessDays, getPlanRenewalAccessDays, getPlanRenewalAmount } from "../lib/plans.ts"
 import { buildHutkoButtonWidgetConfig, generateHutkoSignature } from "../lib/hutko.ts"
@@ -202,6 +203,13 @@ test("extractHutkoFailureDetails preserves non-sensitive Hutko failure metadata"
       },
     },
   )
+})
+
+test("reversed Hutko failures disable future auto-renewal cleanup", () => {
+  assert.equal(shouldDisableAutoRenewalForFailedOrderStatus("reversed"), true)
+  assert.equal(shouldDisableAutoRenewalForFailedOrderStatus(" ReVeRsEd "), true)
+  assert.equal(shouldDisableAutoRenewalForFailedOrderStatus("declined"), false)
+  assert.equal(shouldDisableAutoRenewalForFailedOrderStatus(null), false)
 })
 
 test("buildCheckoutRedirectUrl always redirects into processing state", () => {

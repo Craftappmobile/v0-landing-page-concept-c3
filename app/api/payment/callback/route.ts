@@ -17,6 +17,7 @@ import {
   resolveDirectPaymentAccessEmail,
   resolvePaymentAccessEmail,
   resolveDirectPaymentPlanId,
+  shouldDisableAutoRenewalForFailedOrderStatus,
 } from "@/lib/payment-flow";
 
 const MERCHANT_PASSWORD = process.env.HUTKO_MERCHANT_PASSWORD || "";
@@ -657,15 +658,25 @@ export async function POST(request: NextRequest) {
         }
       }
     } else {
+      const failedAt = new Date().toISOString();
+      const shouldDisableAutoRenewal = shouldDisableAutoRenewalForFailedOrderStatus(order_status);
+
       if (isRenewal && parentOrder) {
+        const updateData: Record<string, string | boolean | Record<string, string> | null> = {
+          updated_at: failedAt,
+          payment_failure_code: failureDetails.code,
+          payment_failure_message: failureDetails.message,
+          payment_failure_details: failureDetails.details,
+        };
+
+        if (shouldDisableAutoRenewal) {
+          updateData.auto_renewal = false;
+          updateData.cancelled_at = failedAt;
+        }
+
         await supabase
           .from("subscriptions")
-          .update({
-            updated_at: new Date().toISOString(),
-            payment_failure_code: failureDetails.code,
-            payment_failure_message: failureDetails.message,
-            payment_failure_details: failureDetails.details,
-          })
+          .update(updateData)
           .eq("order_id", parentOrder);
 
         console.log("[Hutko Callback] Renewal payment failed:", parentOrder, order_status, "via", order_id);
@@ -708,13 +719,18 @@ export async function POST(request: NextRequest) {
         }
 
         // Initial payment failed or declined
-        const updateData: Record<string, string | Record<string, string> | null> = {
+        const updateData: Record<string, string | boolean | Record<string, string> | null> = {
           status: "failed",
-          updated_at: new Date().toISOString(),
+          updated_at: failedAt,
           payment_failure_code: failureDetails.code,
           payment_failure_message: failureDetails.message,
           payment_failure_details: failureDetails.details,
         };
+
+        if (shouldDisableAutoRenewal) {
+          updateData.auto_renewal = false;
+          updateData.cancelled_at = failedAt;
+        }
 
         if (!targetSubscription.order_id && (merchantOrderId || order_id)) {
           updateData.order_id = merchantOrderId || order_id;

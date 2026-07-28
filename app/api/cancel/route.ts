@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { createAdminClient } from "@/lib/supabase";
 import { sendCancellationEmail } from "@/lib/email";
 import {
+  CANCELLABLE_SUBSCRIPTION_STATUSES,
   CANCELLATION_SUBSCRIPTION_SELECT,
   getCancellationEmailPattern,
   normalizeCancellationEmail,
@@ -24,12 +25,13 @@ export async function POST(request: NextRequest) {
     const supabase = createAdminClient();
     const emailPattern = getCancellationEmailPattern(normalizedEmail);
 
-    // Find active subscriptions with auto-renewal enabled for this email
+    // Find subscriptions that still have auto-renewal enabled for this email.
+    // Includes legacy failed rows left behind by reversed Hutko callbacks.
     const { data: subs, error } = await supabase
       .from("subscriptions")
       .select(CANCELLATION_SUBSCRIPTION_SELECT)
       .ilike("email", emailPattern)
-      .eq("status", "active")
+      .in("status", CANCELLABLE_SUBSCRIPTION_STATUSES)
       .eq("auto_renewal", true);
 
     if (error) {
@@ -39,11 +41,11 @@ export async function POST(request: NextRequest) {
 
     if (!subs || subs.length === 0) {
       return NextResponse.json({
-        error: "Активних підписок з увімкненим автопродовженням для цього email не знайдено",
+        error: "Підписок з увімкненим автопродовженням для цього email не знайдено",
       }, { status: 404 });
     }
 
-    // Disable auto-renewal for matching active subscriptions
+    // Disable auto-renewal for matching subscriptions without removing current access.
     const now = new Date().toISOString();
     const { error: updateError } = await supabase
       .from("subscriptions")
@@ -53,7 +55,7 @@ export async function POST(request: NextRequest) {
         updated_at: now,
       })
       .ilike("email", emailPattern)
-      .eq("status", "active")
+      .in("status", CANCELLABLE_SUBSCRIPTION_STATUSES)
       .eq("auto_renewal", true);
 
     if (updateError) {
