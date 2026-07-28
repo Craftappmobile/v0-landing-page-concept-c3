@@ -19,6 +19,7 @@ const features = [
 ]
 
 const plans = PLAN_LIST
+const DEFAULT_PLAN_ID = "half"
 
 /**
  * Секція з картками тарифних планів.
@@ -26,7 +27,10 @@ const plans = PLAN_LIST
  * Виділений тариф (`highlighted: true`) має зелену рамку та бейдж.
  */
 export function PricingSection() {
-  const [activeIdx, setActiveIdx] = useState(1)
+  const [activeIdx, setActiveIdx] = useState(() => {
+    const defaultPlanIndex = plans.findIndex((plan) => plan.id === DEFAULT_PLAN_ID)
+    return defaultPlanIndex >= 0 ? defaultPlanIndex : 0
+  })
   const plan = plans[activeIdx]
 
   return (

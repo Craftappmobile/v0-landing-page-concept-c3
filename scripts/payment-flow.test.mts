@@ -146,6 +146,7 @@ test("resolveDirectPaymentAccessEmail never falls back to payer email", () => {
 })
 
 test("direct payment plan codes map to internal plans", () => {
+  assert.equal(resolveDirectPaymentPlanId("1"), "month")
   assert.equal(resolveDirectPaymentPlanId("3"), "quarter")
   assert.equal(resolveDirectPaymentPlanId(6), "half")
   assert.equal(resolveDirectPaymentPlanId("12"), "year")
@@ -154,6 +155,7 @@ test("direct payment plan codes map to internal plans", () => {
 })
 
 test("getPlanRenewalAmount returns full recurring price without affecting lifetime plan", () => {
+  assert.equal(getPlanRenewalAmount("month"), 10000)
   assert.equal(getPlanRenewalAmount("quarter"), 45400)
   assert.equal(getPlanRenewalAmount("half"), 59900)
   assert.equal(getPlanRenewalAmount("year"), 91800)
@@ -161,6 +163,8 @@ test("getPlanRenewalAmount returns full recurring price without affecting lifeti
 })
 
 test("gift months apply only to first payment while renewals use standard durations", () => {
+  assert.equal(getPlanInitialAccessDays("month"), 30)
+  assert.equal(getPlanRenewalAccessDays("month"), 30)
   assert.equal(getPlanInitialAccessDays("quarter"), 120)
   assert.equal(getPlanRenewalAccessDays("quarter"), 90)
   assert.equal(getPlanInitialAccessDays("half"), 270)

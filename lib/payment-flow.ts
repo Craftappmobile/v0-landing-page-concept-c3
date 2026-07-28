@@ -7,7 +7,7 @@ export type PaymentViewModel = {
   message: string
 }
 
-export type DirectPaymentPlanId = "quarter" | "half" | "year" | "forever"
+export type DirectPaymentPlanId = "month" | "quarter" | "half" | "year" | "forever"
 
 export type HutkoFailureDetails = {
   code: string | null
@@ -45,6 +45,7 @@ const PAYMENT_FAILURE_MESSAGE = "Оплату не вдалося підтвер
 const PAYMENT_ERROR_MESSAGE = "Ми очікуємо підтвердження платежу. Якщо лист не надійде протягом кількох хвилин, напишіть нам."
 
 const DIRECT_PAYMENT_PLAN_CODE_TO_PLAN_ID: Record<string, DirectPaymentPlanId> = {
+  "1": "month",
   "3": "quarter",
   "6": "half",
   "12": "year",

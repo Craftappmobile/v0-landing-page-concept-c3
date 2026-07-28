@@ -1,4 +1,4 @@
-export const PLAN_IDS = ["quarter", "half", "year", "forever"] as const
+export const PLAN_IDS = ["month", "quarter", "half", "year", "forever"] as const
 
 export type PlanId = (typeof PLAN_IDS)[number]
 
@@ -25,6 +25,26 @@ export type PlanConfig = {
 }
 
 const PLAN_DETAILS = {
+  month: {
+    name: "Пакет «Тест»",
+    hutkoButtonId: "4a0596b9b6f16656dd620a8981c0de28978d5236",
+    checkoutLabel: "Тест — 1 міс",
+    pricingTabLabel: "Тест",
+    pricingPeriodLabel: "1 міс",
+    priceValue: "100",
+    priceWithCurrency: "100 грн",
+    perMonthLabel: "1 місяць повного PRO-доступу",
+    badge: null,
+    amount: 10000,
+    renewalAmount: 10000,
+    initialDays: 30,
+    renewalDays: 30,
+    isRecurring: true,
+    paymentDescription: "Пакет «Тест» — 1 місяць PRO-доступу",
+    recurringDescription: "Пакет «Тест» — щомісячне автопродовження",
+    renewalNotice: "Всі можливості PRO доступні одразу після оплати. Наступний платіж через 1 місяць — 100 грн.",
+    termsLabel: "Преміум Тест на 1 місяць",
+  },
   quarter: {
     name: "Пакет «Старт»",
     hutkoButtonId: "4042eadb25ce283bb871bccd2c0a594bd15d1a71",
