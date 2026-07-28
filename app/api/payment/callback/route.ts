@@ -18,11 +18,25 @@ import {
   resolvePaymentAccessEmail,
   resolveDirectPaymentPlanId,
   shouldDisableAutoRenewalForFailedOrderStatus,
+  shouldPreservePaidAccessOnFailedCallback,
 } from "@/lib/payment-flow";
 
 const MERCHANT_PASSWORD = process.env.HUTKO_MERCHANT_PASSWORD || "";
 
 type HutkoCallbackBody = Record<string, unknown>;
+
+type InitialSubscriptionMatch = {
+  id: string;
+  order_id: string | null;
+  email: string | null;
+  customer_name: string | null;
+  plan: string | null;
+  plan_type: string | null;
+  status: string | null;
+  email_status: string | null;
+  expires_at: string | null;
+  matchSource: "order_id" | "merchant_order_id" | "checkout_correlation_id";
+};
 
 function getString(value: unknown): string {
   if (typeof value === "string") return value.trim();
@@ -176,13 +190,13 @@ async function recordPaymentCallbackEvent(
 async function findInitialSubscription(
   supabase: ReturnType<typeof createAdminClient>,
   args: { orderId: string; merchantOrderId?: string; correlationId: string },
-) {
+): Promise<InitialSubscriptionMatch | null> {
   const findByOrderId = async (orderId: string) => {
     if (!orderId) return null;
 
     const result = await supabase
       .from("subscriptions")
-      .select("id, order_id, email, customer_name, plan, plan_type, status, email_status")
+      .select("id, order_id, email, customer_name, plan, plan_type, status, email_status, expires_at")
       .eq("order_id", orderId)
       .maybeSingle();
 
@@ -195,13 +209,13 @@ async function findInitialSubscription(
 
   const byOrderId = await findByOrderId(args.orderId);
   if (byOrderId) {
-    return byOrderId;
+    return { ...byOrderId, matchSource: "order_id" };
   }
 
   if (args.merchantOrderId && args.merchantOrderId !== args.orderId) {
     const byMerchantOrderId = await findByOrderId(args.merchantOrderId);
     if (byMerchantOrderId) {
-      return byMerchantOrderId;
+      return { ...byMerchantOrderId, matchSource: "merchant_order_id" };
     }
   }
 
@@ -211,7 +225,7 @@ async function findInitialSubscription(
 
   const byCorrelation = await supabase
     .from("subscriptions")
-    .select("id, order_id, email, customer_name, plan, plan_type, status, email_status")
+    .select("id, order_id, email, customer_name, plan, plan_type, status, email_status, expires_at")
     .eq("checkout_correlation_id", args.correlationId)
     .maybeSingle();
 
@@ -219,7 +233,9 @@ async function findInitialSubscription(
     throw byCorrelation.error;
   }
 
-  return byCorrelation.data;
+  return byCorrelation.data
+    ? { ...byCorrelation.data, matchSource: "checkout_correlation_id" }
+    : null;
 }
 
 async function provisionCustomerAccess(args: {
@@ -719,13 +735,24 @@ export async function POST(request: NextRequest) {
         }
 
         // Initial payment failed or declined
+        const shouldPreservePaidAccess = shouldPreservePaidAccessOnFailedCallback({
+          currentStatus: targetSubscription.status,
+          expiresAt: targetSubscription.expires_at,
+          matchSource: targetSubscription.matchSource,
+          orderStatus: order_status,
+          now: Date.parse(failedAt),
+        });
+
         const updateData: Record<string, string | boolean | Record<string, string> | null> = {
-          status: "failed",
           updated_at: failedAt,
           payment_failure_code: failureDetails.code,
           payment_failure_message: failureDetails.message,
           payment_failure_details: failureDetails.details,
         };
+
+        if (!shouldPreservePaidAccess) {
+          updateData.status = "failed";
+        }
 
         if (shouldDisableAutoRenewal) {
           updateData.auto_renewal = false;
@@ -741,7 +768,11 @@ export async function POST(request: NextRequest) {
           .update(updateData)
           .eq("id", targetSubscription.id);
 
-        console.log("[Hutko Callback] Payment failed:", order_id, order_status);
+        if (shouldPreservePaidAccess) {
+          console.log("[Hutko Callback] Preserved paid access after failed callback:", targetSubscription.id, order_status, "via", order_id);
+        } else {
+          console.log("[Hutko Callback] Payment failed:", order_id, order_status);
+        }
       }
     }
 

@@ -19,6 +19,7 @@ import {
   resolveCheckoutFlow,
   resolvePaymentStatusView,
   shouldDisableAutoRenewalForFailedOrderStatus,
+  shouldPreservePaidAccessOnFailedCallback,
 } from "../lib/payment-flow.ts"
 import { getPlanInitialAccessDays, getPlanRenewalAccessDays, getPlanRenewalAmount } from "../lib/plans.ts"
 import { buildHutkoButtonWidgetConfig, generateHutkoSignature } from "../lib/hutko.ts"
@@ -38,6 +39,18 @@ test("normalizeSubscriptionStatus keeps access active for cancelled subscription
 
   assert.equal(
     normalizeSubscriptionStatus({ status: "cancelled", expiresAt: "2020-01-01T00:00:00.000Z" }),
+    "failed",
+  )
+})
+
+test("normalizeSubscriptionStatus keeps access active for failed subscriptions until expiry", () => {
+  assert.equal(
+    normalizeSubscriptionStatus({ status: "failed", expiresAt: "2999-01-01T00:00:00.000Z" }),
+    "active",
+  )
+
+  assert.equal(
+    normalizeSubscriptionStatus({ status: "failed", expiresAt: "2020-01-01T00:00:00.000Z" }),
     "failed",
   )
 })
@@ -212,6 +225,48 @@ test("reversed Hutko failures disable future auto-renewal cleanup", () => {
   assert.equal(shouldDisableAutoRenewalForFailedOrderStatus(null), false)
 })
 
+test("failed callback guard preserves already-paid access for correlation-only declines", () => {
+  assert.equal(
+    shouldPreservePaidAccessOnFailedCallback({
+      currentStatus: "active",
+      expiresAt: "2999-01-01T00:00:00.000Z",
+      matchSource: "checkout_correlation_id",
+      orderStatus: "declined",
+    }),
+    true,
+  )
+
+  assert.equal(
+    shouldPreservePaidAccessOnFailedCallback({
+      currentStatus: "cancelled",
+      expiresAt: "2999-01-01T00:00:00.000Z",
+      matchSource: "checkout_correlation_id",
+      orderStatus: "declined",
+    }),
+    true,
+  )
+
+  assert.equal(
+    shouldPreservePaidAccessOnFailedCallback({
+      currentStatus: "active",
+      expiresAt: "2999-01-01T00:00:00.000Z",
+      matchSource: "order_id",
+      orderStatus: "declined",
+    }),
+    false,
+  )
+
+  assert.equal(
+    shouldPreservePaidAccessOnFailedCallback({
+      currentStatus: "active",
+      expiresAt: "2999-01-01T00:00:00.000Z",
+      matchSource: "checkout_correlation_id",
+      orderStatus: "reversed",
+    }),
+    false,
+  )
+})
+
 test("buildCheckoutRedirectUrl always redirects into processing state", () => {
   const withOrderId = buildCheckoutRedirectUrl("https://vjazhi.com.ua", {
     orderId: "order_abc",
@@ -332,4 +387,11 @@ test("failed Hutko callback stores failure details for support", () => {
   assert.equal(source.includes("payment_failure_code"), true)
   assert.equal(source.includes("payment_failure_message"), true)
   assert.equal(source.includes("payment_failure_details"), true)
+})
+
+test("callback route protects active subscriptions from correlation-only failed callbacks", () => {
+  const source = readFileSync(new URL("../app/api/payment/callback/route.ts", import.meta.url), "utf8")
+
+  assert.equal(source.includes("shouldPreservePaidAccessOnFailedCallback"), true)
+  assert.equal(source.includes("matchSource: \"checkout_correlation_id\""), true)
 })

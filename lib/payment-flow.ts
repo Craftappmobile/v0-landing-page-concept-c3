@@ -27,6 +27,8 @@ export type HutkoMerchantData = {
   parent_order?: string
 }
 
+export type FailedCallbackSubscriptionMatchSource = "order_id" | "merchant_order_id" | "checkout_correlation_id"
+
 type CheckoutRedirectIdentifiers = {
   orderId?: string | null
   correlationId?: string | null
@@ -99,6 +101,11 @@ const HUTKO_FAILURE_MESSAGE_KEYS = [
 ]
 
 const HUTKO_FAILURE_DISABLING_ORDER_STATUSES = new Set(["reversed"])
+
+function hasFutureSubscriptionAccess(expiresAt: string | null | undefined, now = Date.now()) {
+  const expiryTime = expiresAt ? Date.parse(expiresAt) : Number.NaN
+  return !Number.isNaN(expiryTime) && expiryTime > now
+}
 
 function stringValue(value: unknown): string | null {
   if (typeof value === "string") {
@@ -318,20 +325,46 @@ export function normalizeSubscriptionStatus({ status, expiresAt }: SubscriptionS
   if (status === "active") return "active"
 
   if (status === "cancelled") {
-    const expiryTime = expiresAt ? Date.parse(expiresAt) : Number.NaN
-    if (!Number.isNaN(expiryTime) && expiryTime > Date.now()) {
+    if (hasFutureSubscriptionAccess(expiresAt)) {
       return "active"
     }
     return "failed"
   }
 
-  if (status === "failed") return "failed"
+  if (status === "failed") {
+    if (hasFutureSubscriptionAccess(expiresAt)) {
+      return "active"
+    }
+    return "failed"
+  }
+
   if (!status) return "not_found"
   return "pending"
 }
 
 export function shouldDisableAutoRenewalForFailedOrderStatus(status: unknown): boolean {
   return typeof status === "string" && HUTKO_FAILURE_DISABLING_ORDER_STATUSES.has(status.trim().toLowerCase())
+}
+
+export function shouldPreservePaidAccessOnFailedCallback(args: {
+  currentStatus: string | null
+  expiresAt?: string | null
+  matchSource: FailedCallbackSubscriptionMatchSource
+  orderStatus?: unknown
+  now?: number | Date
+}) {
+  const currentTime = args.now instanceof Date
+    ? args.now.getTime()
+    : typeof args.now === "number"
+      ? args.now
+      : Date.now()
+
+  return (
+    args.matchSource === "checkout_correlation_id"
+    && !shouldDisableAutoRenewalForFailedOrderStatus(args.orderStatus)
+    && hasFutureSubscriptionAccess(args.expiresAt, currentTime)
+    && (args.currentStatus === "active" || args.currentStatus === "cancelled")
+  )
 }
 
 export function extractOrderIdFromValue(value: unknown): string | null {
