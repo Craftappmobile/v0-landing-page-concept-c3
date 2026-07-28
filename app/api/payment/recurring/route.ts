@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import crypto from "crypto";
 import { createAdminClient } from "@/lib/supabase";
 import { getPlanRenewalAmount, isPlanId, PLAN_CONFIG } from "@/lib/plans";
+import { RECURRING_MODE } from "@/lib/recurring-mode";
 
 const MERCHANT_ID = process.env.HUTKO_MERCHANT_ID || "";
 const MERCHANT_PASSWORD = process.env.HUTKO_MERCHANT_PASSWORD || "";
@@ -55,7 +56,8 @@ export async function GET(request: NextRequest) {
 
   const supabase = createAdminClient();
 
-  // Find active recurring subscriptions expiring within next 24 hours
+  // Only merchant-managed token subscriptions may be charged here.
+  // Hutko-scheduled and unclassified subscriptions must never be duplicated by this cron.
   const tomorrow = new Date();
   tomorrow.setDate(tomorrow.getDate() + 1);
 
@@ -64,6 +66,7 @@ export async function GET(request: NextRequest) {
     .select("*")
     .eq("status", "active")
     .eq("auto_renewal", true)
+    .eq("recurring_mode", RECURRING_MODE.MERCHANT_TOKEN)
     .not("rectoken", "is", null)
     .lte("expires_at", tomorrow.toISOString());
 

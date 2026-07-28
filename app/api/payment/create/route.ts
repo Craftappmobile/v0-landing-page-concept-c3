@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { createAdminClient } from "@/lib/supabase";
 import { buildHutkoButtonWidgetConfig } from "@/lib/hutko";
 import { isPlanId, PLAN_CONFIG } from "@/lib/plans";
+import { resolveHutkoCheckoutRecurringMode } from "@/lib/recurring-mode";
 
 const MERCHANT_PASSWORD = process.env.HUTKO_MERCHANT_PASSWORD || "";
 
@@ -69,6 +70,7 @@ export async function POST(request: NextRequest) {
       checkout_correlation_id: checkoutCorrelationId,
       platform: "web",
       auto_renewal: isRecurring,
+      recurring_mode: resolveHutkoCheckoutRecurringMode(isRecurring),
       started_at: now,
       expires_at: now, // will be updated by callback on successful payment
     });

@@ -26,6 +26,7 @@
 | `payment_provider` | code | зараз `hutko` |
 | `platform` | code | зараз `web` |
 | `auto_renewal` | code | вмикання recurring billing |
+| `recurring_mode` | migration + code | driver списання: `unknown`, `hutko_schedule`, `merchant_token`, `none` |
 | `started_at` | code | дата активації поточного періоду |
 | `expires_at` | code | дата завершення доступу, використовується в status і recurring |
 | `rectoken` | migration + code | токен для наступних recurring charges |
@@ -65,6 +66,12 @@
 - `rectoken`
 - recurring lookup: `(status, auto_renewal, expires_at)` з `WHERE rectoken IS NOT NULL`
 
+Міграція `20260728_add_recurring_mode_safeguard.sql` додає:
+
+- `recurring_mode` з безпечним default `unknown` для історичних записів;
+- check constraint для чотирьох підтримуваних режимів;
+- partial index для `merchant_token` recurring lookup.
+
 ## Що підтверджено кодом, але не цією sync-міграцією як нові колонки
 
 - `id`
@@ -88,9 +95,12 @@
 4. Для recurring flow потрібні одночасно:
    - `status = active`
    - `auto_renewal = true`
+   - `recurring_mode = merchant_token` для списання, ініційованого застосунком
    - `rectoken IS NOT NULL`
    - `expires_at <= tomorrow`
 5. Вимкнення автопродовження не повинно обривати вже оплачений доступ; орієнтиром лишається `expires_at`.
+6. `hutko_schedule` означає, що календарем керує Hutko; `/api/payment/recurring` не має списувати таку підписку.
+7. `unknown` є quarantine-режимом для історичних записів і також не допускається до app-initiated списань.
 
 ## Пов'язані файли
 

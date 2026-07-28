@@ -23,6 +23,7 @@ import {
 } from "../lib/payment-flow.ts"
 import { getPlanInitialAccessDays, getPlanRenewalAccessDays, getPlanRenewalAmount } from "../lib/plans.ts"
 import { buildHutkoButtonWidgetConfig, generateHutkoSignature } from "../lib/hutko.ts"
+import { RECURRING_MODE, resolveHutkoCheckoutRecurringMode } from "../lib/recurring-mode.ts"
 
 test("normalizeSubscriptionStatus maps subscription states for payment polling", () => {
   assert.equal(normalizeSubscriptionStatus({ status: "active" }), "active")
@@ -185,6 +186,11 @@ test("gift months apply only to first payment while renewals use standard durati
   assert.equal(getPlanRenewalAccessDays("half"), 180)
   assert.equal(getPlanInitialAccessDays("year"), 545)
   assert.equal(getPlanRenewalAccessDays("year"), 365)
+})
+
+test("Hutko payment-link checkout uses provider-managed recurring schedules", () => {
+  assert.equal(resolveHutkoCheckoutRecurringMode(true), RECURRING_MODE.HUTKO_SCHEDULE)
+  assert.equal(resolveHutkoCheckoutRecurringMode(false), RECURRING_MODE.NONE)
 })
 
 test("Hutko customer helpers normalize email and reservation_data", () => {
@@ -394,4 +400,20 @@ test("callback route protects active subscriptions from correlation-only failed 
 
   assert.equal(source.includes("shouldPreservePaidAccessOnFailedCallback"), true)
   assert.equal(source.includes("matchSource: \"checkout_correlation_id\""), true)
+})
+
+test("app recurring cron charges only explicitly merchant-managed token subscriptions", () => {
+  const source = readFileSync(new URL("../app/api/payment/recurring/route.ts", import.meta.url), "utf8")
+
+  assert.equal(source.includes('.eq("recurring_mode", RECURRING_MODE.MERCHANT_TOKEN)'), true)
+  assert.equal(source.includes('.eq("auto_renewal", true)'), true)
+  assert.equal(source.includes('.not("rectoken", "is", null)'), true)
+})
+
+test("Hutko checkout persistence classifies provider-managed schedules", () => {
+  const createSource = readFileSync(new URL("../app/api/payment/create/route.ts", import.meta.url), "utf8")
+  const callbackSource = readFileSync(new URL("../app/api/payment/callback/route.ts", import.meta.url), "utf8")
+
+  assert.equal(createSource.includes("recurring_mode: resolveHutkoCheckoutRecurringMode(isRecurring)"), true)
+  assert.equal(callbackSource.includes("recurring_mode: resolveHutkoCheckoutRecurringMode(planConfig.isRecurring)"), true)
 })

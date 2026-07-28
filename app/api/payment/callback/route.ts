@@ -10,6 +10,7 @@ import {
   PLAN_CONFIG,
 } from "@/lib/plans";
 import type { PlanId } from "@/lib/plans";
+import { resolveHutkoCheckoutRecurringMode } from "@/lib/recurring-mode";
 import {
   extractHutkoFailureDetails,
   extractHutkoReservationCustomer,
@@ -327,6 +328,7 @@ async function createDirectPaymentSubscription(
     payment_provider: "hutko",
     platform: "web",
     auto_renewal: planConfig.isRecurring,
+    recurring_mode: resolveHutkoCheckoutRecurringMode(planConfig.isRecurring),
     started_at: args.nowIso,
     expires_at: args.expiresAt,
     updated_at: args.nowIso,
@@ -624,6 +626,7 @@ export async function POST(request: NextRequest) {
 
           const updateData: Record<string, string | boolean | null | number | Record<string, string>> = {
             status: "active",
+            recurring_mode: resolveHutkoCheckoutRecurringMode(PLAN_CONFIG[subscriptionPlan].isRecurring),
             hutko_payment_id: payment_id || null,
             started_at: nowIso,
             expires_at: addDaysToLatestDate(null, initialDurationDays, now),

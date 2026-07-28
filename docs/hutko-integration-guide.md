@@ -125,15 +125,24 @@ support-friendly failure details у `subscriptions`:
 
 `GET /api/payment/recurring` запускається cron-ом з `vercel.json` (`0 6 * * *`).
 
+Hutko payment-link buttons можуть самі створювати календар регулярних платежів.
+Такі підписки зберігаються з `recurring_mode = hutko_schedule`, і застосунок
+не повинен дублювати їх через token API.
+
 Endpoint:
 
 - перевіряє `CRON_SECRET`, якщо він заданий;
 - вимагає валідний `NEXT_PUBLIC_SITE_URL`;
 - використовує `NEXT_PUBLIC_SITE_URL` як базовий домен для recurring callback;
 - у тестовому сценарії `landing-promo` дозволено `https://rozrahuy-i-vyazhi.vercel.app` як окремий landing-домен для перевірки цін;
-- знаходить `active` підписки з `auto_renewal = true`, `rectoken IS NOT NULL`, `expires_at <= tomorrow`;
+- знаходить лише `active` підписки з `recurring_mode = merchant_token`,
+  `auto_renewal = true`, `rectoken IS NOT NULL`, `expires_at <= tomorrow`;
 - викликає Hutko recurring API;
 - **не оновлює БД напряму після успішної відповіді Hutko**, а чекає callback.
+
+Режими `hutko_schedule` та `unknown` навмисно виключені з cron, щоб уникнути
+подвійного списання. Нові recurring checkout-и через поточні Hutko buttons
+класифікуються як `hutko_schedule`; одноразовий lifetime checkout — як `none`.
 
 ## Cancellation
 
@@ -145,6 +154,9 @@ Endpoint:
 - відправляє cancellation email.
 
 Поточний оплачений період при цьому зберігається.
+
+Важливо: локальне вимкнення `auto_renewal` саме по собі ще не підтверджує,
+що календар Hutko зупинено. Provider-side cancellation буде окремим етапом інтеграції.
 
 ## Incident checklist
 

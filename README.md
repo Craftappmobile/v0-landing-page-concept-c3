@@ -65,7 +65,8 @@
    - зберігає `rectoken`, `hutko_payment_id`, `updated_at`;
    - через `after()` створює/знаходить користувача, лінкує `user_id`, шле email, оновлює `email_status` / `email_error`.
 5. `GET /api/payment/status` використовується checkout-сторінкою для polling після redirect.
-6. `GET /api/payment/recurring` запускається Vercel Cron і ініціює автосписання для активних recurring-підписок.
+6. Hutko payment-link buttons керують provider-side календарем для `hutko_schedule` підписок.
+   `GET /api/payment/recurring` ініціює списання лише для явно класифікованих `merchant_token` підписок.
 7. `POST /api/cancel` вимикає `auto_renewal`, але зберігає доступ до кінця оплаченого періоду.
 
 ## Env-змінні
@@ -154,6 +155,7 @@
 
 - `NEXT_PUBLIC_SITE_URL`;
 - `CRON_SECRET`;
+- `recurring_mode = merchant_token`;
 - `rectoken` у `subscriptions`;
 - `status = active`, `auto_renewal = true`, `expires_at <= tomorrow`.
 
