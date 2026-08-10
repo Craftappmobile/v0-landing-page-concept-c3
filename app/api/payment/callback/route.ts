@@ -14,6 +14,7 @@ import { resolveHutkoCheckoutRecurringMode } from "@/lib/recurring-mode";
 import {
   extractHutkoFailureDetails,
   extractHutkoReservationCustomer,
+  isLegacyRecurringOrderId,
   parseHutkoMerchantData,
   resolveDirectPaymentAccessEmail,
   resolvePaymentAccessEmail,
@@ -448,6 +449,54 @@ export async function POST(request: NextRequest) {
     );
     const paidCurrency = getString(restParams.actual_currency) || getString(restParams.currency) || null;
     const failureDetails = extractHutkoFailureDetails(body);
+    const isIncompleteLegacyRecurringCallback = isLegacyRecurringOrderId(order_id)
+      && (!isRenewal || !parentOrder);
+
+    if (isIncompleteLegacyRecurringCallback) {
+      const payloadSummary = {
+        hasMerchantData: Boolean(rawMerchantData),
+        hasAdditionalInfo: Boolean(rawAdditionalInfo),
+        merchantDataKeys: Object.keys(parsedMerchantData),
+        callbackFieldKeys: Object.keys(parsedCallbackFields),
+        additionalInfoKeys: Object.keys(parsedAdditionalInfo),
+        hasRenewal: isRenewal,
+        hasParentOrder: Boolean(parentOrder),
+      };
+      const recorded = await recordPaymentCallbackEvent(supabase, {
+        eventType: "recurring_callback_manual_review",
+        reason: "legacy_recurring_order_missing_renewal_metadata",
+        orderId: order_id,
+        merchantOrderId,
+        paymentId: payment_id || null,
+        checkoutCorrelationId,
+        orderStatus: order_status,
+        payerEmail: payerEmailFromMerchant || null,
+        accessEmail: merchantAccessEmail || null,
+        customerName: customerNameFromMerchant || null,
+        planCode: parsedMerchantData.plan_code || parsedCallbackFields.plan_code || parsedAdditionalInfo.plan_code || null,
+        plan: plan || null,
+        paidAmount,
+        paidCurrency,
+        failureCode: failureDetails.code,
+        failureMessage: failureDetails.message,
+        failureDetails: failureDetails.details,
+        payloadSummary,
+      });
+
+      if (!recorded) {
+        return NextResponse.json({ error: "Failed to record manual review event" }, { status: 500 });
+      }
+
+      console.warn(
+        "[Hutko Callback] Ignored incomplete legacy recurring callback:",
+        order_id,
+        order_status,
+      );
+      return NextResponse.json({
+        status: "manual_review",
+        reason: "legacy_recurring_order_missing_renewal_metadata",
+      });
+    }
 
     if (order_status === "approved") {
       const initialDurationDays = isPlanId(plan) ? getPlanInitialAccessDays(plan) : 90;

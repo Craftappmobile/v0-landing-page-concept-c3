@@ -9,6 +9,7 @@ import {
   extractCheckoutCorrelationIdFromValue,
   extractOrderIdFromValue,
   getInitialPaymentView,
+  isLegacyRecurringOrderId,
   normalizeHutkoEmail,
   normalizeCheckoutStatus,
   normalizeSubscriptionStatus,
@@ -167,6 +168,14 @@ test("direct payment plan codes map to internal plans", () => {
   assert.equal(resolveDirectPaymentPlanId("12"), "year")
   assert.equal(resolveDirectPaymentPlanId("9999"), "forever")
   assert.equal(resolveDirectPaymentPlanId("227480"), null)
+})
+
+test("legacy recurring order ids are isolated from direct payment callbacks", () => {
+  assert.equal(isLegacyRecurringOrderId("recurring__old-order"), true)
+  assert.equal(isLegacyRecurringOrderId(" RECURRING__OLD-ORDER "), true)
+  assert.equal(isLegacyRecurringOrderId("renew_2026_08_10"), false)
+  assert.equal(isLegacyRecurringOrderId("order_123"), false)
+  assert.equal(isLegacyRecurringOrderId(null), false)
 })
 
 test("getPlanRenewalAmount returns full recurring price without affecting lifetime plan", () => {
@@ -400,6 +409,14 @@ test("callback route protects active subscriptions from correlation-only failed 
 
   assert.equal(source.includes("shouldPreservePaidAccessOnFailedCallback"), true)
   assert.equal(source.includes("matchSource: \"checkout_correlation_id\""), true)
+})
+
+test("legacy recurring callbacks are quarantined before direct payment processing", () => {
+  const source = readFileSync(new URL("../app/api/payment/callback/route.ts", import.meta.url), "utf8")
+
+  assert.equal(source.includes("isIncompleteLegacyRecurringCallback"), true)
+  assert.equal(source.includes('eventType: "recurring_callback_manual_review"'), true)
+  assert.equal(source.includes('reason: "legacy_recurring_order_missing_renewal_metadata"'), true)
 })
 
 test("app recurring cron charges only explicitly merchant-managed token subscriptions", () => {

@@ -207,6 +207,11 @@ export function resolveDirectPaymentPlanId(planCode: unknown): DirectPaymentPlan
   return normalizedPlanCode ? DIRECT_PAYMENT_PLAN_CODE_TO_PLAN_ID[normalizedPlanCode] ?? null : null
 }
 
+export function isLegacyRecurringOrderId(orderId: unknown): boolean {
+  const normalizedOrderId = stringValue(orderId)
+  return normalizedOrderId?.toLowerCase().startsWith("recurring__") ?? false
+}
+
 function assignMerchantField(target: HutkoMerchantData, fieldName: unknown, fieldValue: unknown) {
   const name = stringValue(fieldName)
   const value = stringValue(fieldValue)
