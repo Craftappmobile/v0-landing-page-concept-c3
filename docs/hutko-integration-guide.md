@@ -146,17 +146,31 @@ Endpoint:
 
 ## Cancellation
 
-`POST /api/cancel`:
+`POST /api/cancel` працює у fail-closed порядку:
 
-- знаходить активні recurring subscriptions за email;
-- ставить `auto_renewal = false`;
-- проставляє `cancelled_at` і `updated_at`;
-- відправляє cancellation email.
+1. знаходить активні або legacy `failed` recurring subscriptions за email;
+2. визначає driver через `recurring_mode`;
+3. для `hutko_schedule` викликає Hutko `POST /api/subscription/` з `action: stop`;
+4. якщо Hutko не підтвердив **усі** schedule, локальна БД не змінюється і повертається `502`;
+5. лише після успішних provider-side відповідей вимикає локальне `auto_renewal`, ставить `recurring_mode = none`, `cancelled_at` і `updated_at`;
+6. відправляє cancellation email.
 
-Поточний оплачений період при цьому зберігається.
+Для `merchant_token` provider-side виклик не потрібен: наступні списання виконує застосунок через cron, тому достатньо локально вимкнути `auto_renewal`. Режими `none` і ручний `lifetime` не мають recurring schedule.
 
-Важливо: локальне вимкнення `auto_renewal` саме по собі ще не підтверджує,
-що календар Hutko зупинено. Provider-side cancellation буде окремим етапом інтеграції.
+Поточний оплачений період при цьому зберігається — скасування забороняє майбутні списання, але не обриває доступ до `expires_at`.
+
+### Ручний lifetime-доступ
+
+Для адміністративного безлімітного доступу використовується окремий запис `subscriptions`:
+
+- `plan_type = lifetime`;
+- `status = active`;
+- `payment_provider = manual`;
+- `auto_renewal = false`;
+- `recurring_mode = none`;
+- `expires_at` встановлюється на довгий строк (у поточному support flow — 100 років).
+
+Такий запис не повинен запускати Hutko або `/api/payment/recurring`.
 
 ## Incident checklist
 

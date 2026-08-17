@@ -187,6 +187,31 @@ https://vjazhi.com.ua/api/payment/callback
 
 Якщо `email_status` не `sent`, спочатку виконай reconciliation/retry, а потім повідом клієнта про результат.
 
+## 7. Скасування автопродовження
+
+Endpoint:
+
+```http
+POST https://vjazhi.com.ua/api/cancel
+Content-Type: application/json
+
+{"email":"customer@example.com"}
+```
+
+Для `hutko_schedule` endpoint спочатку викликає Hutko `action: stop` і лише після успішного підтвердження оновлює локальну БД. Якщо Hutko повертає помилку, endpoint відповідає `502`, а локальний запис не змінюється.
+
+Для `merchant_token` достатньо локального вимкнення `auto_renewal`, оскільки майбутнє списання виконує cron застосунку.
+
+Нормальний результат:
+
+- `status = cancelled` для попереднього recurring-запису;
+- `auto_renewal = false`;
+- `recurring_mode = none`;
+- `cancelled_at` заповнений;
+- оплачений доступ зберігається до `expires_at`.
+
+Якщо потрібен ручний безлімітний доступ, створюється окремий `lifetime` subscription з `payment_provider = manual`, `auto_renewal = false` і `recurring_mode = none`. Такий доступ не має автосписань Hutko.
+
 ## Повʼязані документи
 
 - `docs/payment-reconciliation.md`

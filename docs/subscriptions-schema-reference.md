@@ -101,6 +101,9 @@
 5. Вимкнення автопродовження не повинно обривати вже оплачений доступ; орієнтиром лишається `expires_at`.
 6. `hutko_schedule` означає, що календарем керує Hutko; `/api/payment/recurring` не має списувати таку підписку.
 7. `unknown` є quarantine-режимом для історичних записів і також не допускається до app-initiated списань.
+8. Для `hutko_schedule` скасування має спочатку підтвердити Hutko `action: stop`, і лише потім локально встановлювати `auto_renewal = false` та `recurring_mode = none`.
+9. Ручний адміністративний безлімітний доступ зберігається як `plan_type = lifetime`, `status = active`, `payment_provider = manual`, `auto_renewal = false`, `recurring_mode = none`; його доступ визначається `expires_at`.
+10. `lifetime` не повинен мати Hutko schedule або потрапляти до app-initiated recurring списань.
 
 ## Пов'язані файли
 

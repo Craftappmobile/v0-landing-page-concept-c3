@@ -28,7 +28,7 @@
 | `app/api/payment/callback/route.ts` | callback, активація підписки, `after()`-задачі |
 | `app/api/payment/status/route.ts` | статус для polling після оплати |
 | `app/api/payment/recurring/route.ts` | автосписання через Vercel Cron |
-| `app/api/cancel/route.ts` | вимкнення автопродовження |
+| `app/api/cancel/route.ts` | fail-closed скасування автопродовження: спочатку Hutko `action: stop`, потім локальна зміна |
 | `lib/plans.ts` | канонічний список планів і сум у minor units |
 | `lib/payment-flow.ts` | нормалізація payment-статусів |
 | `lib/email.ts` | welcome / cancellation emails |
@@ -67,7 +67,7 @@
 5. `GET /api/payment/status` використовується checkout-сторінкою для polling після redirect.
 6. Hutko payment-link buttons керують provider-side календарем для `hutko_schedule` підписок.
    `GET /api/payment/recurring` ініціює списання лише для явно класифікованих `merchant_token` підписок.
-7. `POST /api/cancel` вимикає `auto_renewal`, але зберігає доступ до кінця оплаченого періоду.
+7. `POST /api/cancel` спочатку зупиняє provider-side Hutko schedule через `action: stop`, а після успішного підтвердження вимикає локальне `auto_renewal`. Оплачений доступ зберігається до кінця періоду.
 
 ## Env-змінні
 
