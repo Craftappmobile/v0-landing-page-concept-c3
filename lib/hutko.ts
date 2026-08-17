@@ -2,6 +2,18 @@ import crypto from "crypto"
 
 export type HutkoRequestParams = Record<string, string | number>
 
+type HutkoSubscriptionAction = "start" | "stop"
+
+type HutkoSubscriptionActionResponse = {
+  response?: {
+    response_status?: string
+    status?: string
+    error_code?: string | number
+  }
+}
+
+const HUTKO_SUBSCRIPTION_URL = "https://pay.hutko.org/api/subscription/"
+
 export type HutkoButtonCheckoutParams = {
   button: string
   order_id?: string
@@ -50,6 +62,56 @@ export function generateHutkoSignature(password: string, params: HutkoRequestPar
   const signString = [password, ...values].join("|")
 
   return crypto.createHash("sha1").update(signString, "utf8").digest("hex")
+}
+
+export async function stopHutkoSubscription(args: {
+  orderId: string
+  merchantId: string
+  password: string
+  fetchImpl?: typeof fetch
+}): Promise<{ status: string }> {
+  const orderId = args.orderId.trim()
+  const merchantId = Number(args.merchantId)
+
+  if (!orderId) throw new Error("Hutko subscription order_id is required")
+  if (!Number.isSafeInteger(merchantId) || merchantId <= 0) {
+    throw new Error("HUTKO_MERCHANT_ID is invalid")
+  }
+  if (!args.password) throw new Error("HUTKO_MERCHANT_PASSWORD is not set")
+
+  const action: HutkoSubscriptionAction = "stop"
+  const params: HutkoRequestParams = {
+    merchant_id: merchantId,
+    order_id: orderId,
+    action,
+  }
+  const request = {
+    ...params,
+    signature: generateHutkoSignature(args.password, params),
+  }
+  const fetchImpl = args.fetchImpl ?? fetch
+  const response = await fetchImpl(HUTKO_SUBSCRIPTION_URL, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ request }),
+    signal: AbortSignal.timeout(15_000),
+  })
+
+  let payload: HutkoSubscriptionActionResponse | null = null
+  try {
+    payload = await response.json() as HutkoSubscriptionActionResponse
+  } catch {
+    throw new Error(`Hutko subscription API returned invalid JSON (${response.status})`)
+  }
+
+  if (!response.ok || payload.response?.response_status !== "success") {
+    const errorCode = payload.response?.error_code
+    throw new Error(
+      `Hutko subscription stop failed (${response.status}${errorCode ? `, code ${errorCode}` : ""})`,
+    )
+  }
+
+  return { status: payload.response.status || "success" }
 }
 
 export function buildHutkoButtonWidgetConfig(args: {

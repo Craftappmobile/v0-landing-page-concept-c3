@@ -1,12 +1,18 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createAdminClient } from "@/lib/supabase";
 import { sendCancellationEmail } from "@/lib/email";
+import { stopHutkoSubscription } from "@/lib/hutko";
 import {
   CANCELLABLE_SUBSCRIPTION_STATUSES,
   CANCELLATION_SUBSCRIPTION_SELECT,
   getCancellationEmailPattern,
+  getHutkoScheduleOrderIds,
   normalizeCancellationEmail,
 } from "@/lib/cancel-subscription";
+import type { CancellableSubscription } from "@/lib/cancel-subscription";
+
+const MERCHANT_ID = process.env.HUTKO_MERCHANT_ID || "";
+const MERCHANT_PASSWORD = process.env.HUTKO_MERCHANT_PASSWORD || "";
 
 /**
  * Disable subscription auto-renewal by email.
@@ -45,25 +51,54 @@ export async function POST(request: NextRequest) {
       }, { status: 404 });
     }
 
-    // Disable auto-renewal for matching subscriptions without removing current access.
+    const subscriptions = subs as CancellableSubscription[];
+    let hutkoOrderIds: string[];
+
+    try {
+      hutkoOrderIds = getHutkoScheduleOrderIds(subscriptions);
+    } catch (error) {
+      console.error("[Cancel] Subscription cannot be cancelled safely:", error);
+      return NextResponse.json({ error: "Не вдалося визначити платіжну підписку" }, { status: 409 });
+    }
+
+    // Stop every Hutko-managed schedule before changing local state. If Hutko rejects
+    // any request, keep the DB unchanged so the customer never receives false confirmation.
+    try {
+      await Promise.all(hutkoOrderIds.map((orderId) => stopHutkoSubscription({
+        orderId,
+        merchantId: MERCHANT_ID,
+        password: MERCHANT_PASSWORD,
+      })));
+    } catch (error) {
+      console.error("[Cancel] Hutko schedule stop failed:", error);
+      return NextResponse.json({
+        error: "Hutko не підтвердив скасування. Спробуйте пізніше або зверніться в підтримку",
+      }, { status: 502 });
+    }
+
+    // Disable local renewal only after Hutko confirmed all schedule stops.
     const now = new Date().toISOString();
+    const subscriptionIds = subscriptions.map((subscription) => subscription.id);
     const { error: updateError } = await supabase
       .from("subscriptions")
       .update({
         auto_renewal: false,
+        recurring_mode: "none",
         cancelled_at: now,
         updated_at: now,
       })
-      .ilike("email", emailPattern)
-      .in("status", CANCELLABLE_SUBSCRIPTION_STATUSES)
-      .eq("auto_renewal", true);
+      .in("id", subscriptionIds);
 
     if (updateError) {
-      console.error("[Cancel] Update error:", updateError);
-      return NextResponse.json({ error: "Помилка скасування" }, { status: 500 });
+      console.error("[Cancel] Update error after Hutko stop:", updateError);
+      return NextResponse.json({
+        error: "Платіж зупинено, але не вдалося оновити статус. Зверніться в підтримку",
+      }, { status: 500 });
     }
 
-    console.log(`[Cancel] Disabled auto-renewal for ${subs.length} subscription(s) for ${normalizedEmail}`);
+    console.log(
+      `[Cancel] Stopped ${hutkoOrderIds.length} Hutko schedule(s) and disabled auto-renewal for ${subscriptions.length} subscription(s)`,
+    );
 
     // Send cancellation confirmation email
     const firstSub = subs[0];
@@ -73,7 +108,8 @@ export async function POST(request: NextRequest) {
 
     return NextResponse.json({
       message: "Автопродовження вимкнено",
-      updated: subs.length,
+      updated: subscriptions.length,
+      hutko_schedules_stopped: hutkoOrderIds.length,
     });
   } catch {
     return NextResponse.json({ error: "Внутрішня помилка сервера" }, { status: 500 });
