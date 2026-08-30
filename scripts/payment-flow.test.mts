@@ -7,8 +7,10 @@ import {
   extractHutkoReservationCustomer,
   extractHutkoFailureDetails,
   extractCheckoutCorrelationIdFromValue,
+  extractLegacyRecurringParentOrder,
   extractOrderIdFromValue,
   getInitialPaymentView,
+  isLegacyRecurringOrderId,
   normalizeHutkoEmail,
   normalizeCheckoutStatus,
   normalizeSubscriptionStatus,
@@ -167,6 +169,13 @@ test("direct payment plan codes map to internal plans", () => {
   assert.equal(resolveDirectPaymentPlanId("12"), "year")
   assert.equal(resolveDirectPaymentPlanId("9999"), "forever")
   assert.equal(resolveDirectPaymentPlanId("227480"), null)
+})
+
+test("legacy recurring order ids resolve an exact parent", () => {
+  assert.equal(isLegacyRecurringOrderId("recurring__123__Order_parent_1"), true)
+  assert.equal(extractLegacyRecurringParentOrder("recurring__123__Order_parent_1"), "Order_parent_1")
+  assert.equal(extractLegacyRecurringParentOrder("recurring__missing-parent"), null)
+  assert.equal(isLegacyRecurringOrderId("order_123"), false)
 })
 
 test("getPlanRenewalAmount returns full recurring price without affecting lifetime plan", () => {
@@ -416,4 +425,15 @@ test("Hutko checkout persistence classifies provider-managed schedules", () => {
 
   assert.equal(createSource.includes("recurring_mode: resolveHutkoCheckoutRecurringMode(isRecurring)"), true)
   assert.equal(callbackSource.includes("recurring_mode: resolveHutkoCheckoutRecurringMode(planConfig.isRecurring)"), true)
+})
+
+test("renewal callback uses atomic dedupe before direct-payment flow", () => {
+  const source = readFileSync(new URL("../app/api/payment/callback/route.ts", import.meta.url), "utf8")
+  const legacyIndex = source.indexOf("extractLegacyRecurringParentOrder(order_id)")
+  const directPaymentIndex = source.indexOf("const directSubscription = await createDirectPaymentSubscription")
+
+  assert.notEqual(legacyIndex, -1)
+  assert.notEqual(directPaymentIndex, -1)
+  assert.ok(legacyIndex < directPaymentIndex)
+  assert.equal(source.includes('supabase.rpc("apply_hutko_renewal"'), true)
 })

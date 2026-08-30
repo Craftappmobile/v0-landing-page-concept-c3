@@ -38,6 +38,12 @@
 | `email_status` | migration + code | стан післяплатіжного email workflow |
 | `email_error` | migration + code | остання помилка email workflow |
 | `cancelled_at` | migration + code | момент вимкнення автопродовження |
+| `cancellation_state` | migration + code | `none`, `requested`, `provider_stopped`, `completed`, `needs_review`, `provider_failed` |
+| `cancellation_request_id` | migration + code | idempotency key поточного запиту |
+| `cancellation_requested_at` | migration + code | момент прийняття запиту |
+| `cancellation_completed_at` | migration + code | момент підтвердженого завершення |
+| `cancellation_email_sent_at` | migration + code | CAS-маркер одноразового листа |
+| `recurring_mode_source` | migration + code | походження класифікації recurring driver |
 | `updated_at` | code | технічна мітка останнього оновлення |
 
 ## Що явно підтверджено міграцією
@@ -104,6 +110,9 @@
 8. Для `hutko_schedule` скасування має спочатку підтвердити Hutko `action: stop`, і лише потім локально встановлювати `auto_renewal = false` та `recurring_mode = none`.
 9. Ручний адміністративний безлімітний доступ зберігається як `plan_type = lifetime`, `status = active`, `payment_provider = manual`, `auto_renewal = false`, `recurring_mode = none`; його доступ визначається `expires_at`.
 10. `lifetime` не повинен мати Hutko schedule або потрапляти до app-initiated recurring списань.
+11. `pending` cancellation вимикає локальне renewal, а після approved callback Hutko schedule зупиняється до переходу в `completed`.
+12. `recurring__<attempt>__<parent>` завжди обробляється як renewal; parent шукається точним унікальним `order_id`.
+13. `subscription_cancellation_events` є приватним service-role audit trail без client RLS policies.
 
 ## Пов'язані файли
 
