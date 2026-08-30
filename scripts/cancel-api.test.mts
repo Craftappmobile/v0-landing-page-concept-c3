@@ -7,6 +7,7 @@ import {
   escapePostgrestLikePattern,
   getCancellationEmailPattern,
   getHutkoScheduleOrderIds,
+  getSubscriptionCancellationAction,
   normalizeCancellationEmail,
 } from "../lib/cancel-subscription.ts";
 import { generateHutkoSignature, stopHutkoSubscription } from "../lib/hutko.ts";
@@ -26,7 +27,7 @@ test("/api/cancel uses the escaped normalized email as the auto-renewal lookup p
 });
 
 test("/api/cancel supports legacy failed subscriptions that still have auto-renewal enabled", () => {
-  assert.deepEqual(CANCELLABLE_SUBSCRIPTION_STATUSES, ["active", "failed"]);
+  assert.deepEqual(CANCELLABLE_SUBSCRIPTION_STATUSES, ["pending", "active", "failed"]);
 });
 
 test("getHutkoScheduleOrderIds selects Hutko schedules and skips merchant-token renewal", () => {
@@ -38,6 +39,8 @@ test("getHutkoScheduleOrderIds selects Hutko schedules and skips merchant-token 
       customer_name: "Customer",
       payment_provider: "hutko",
       recurring_mode: "hutko_schedule",
+      status: "active", auto_renewal: true,
+      cancellation_state: "none", cancellation_request_id: null,
     },
     {
       id: "token-1",
@@ -46,6 +49,8 @@ test("getHutkoScheduleOrderIds selects Hutko schedules and skips merchant-token 
       customer_name: "Customer",
       payment_provider: "hutko",
       recurring_mode: "merchant_token",
+      status: "active", auto_renewal: true,
+      cancellation_state: "none", cancellation_request_id: null,
     },
   ]), ["order-1"]);
 });
@@ -58,6 +63,8 @@ test("getHutkoScheduleOrderIds rejects an unsafe subscription instead of confirm
     customer_name: "Customer",
     payment_provider: "hutko",
     recurring_mode: "hutko_schedule",
+    status: "active", auto_renewal: true,
+    cancellation_state: "none", cancellation_request_id: null,
   }]), /Missing Hutko order_id/);
 });
 
@@ -69,6 +76,8 @@ test("getHutkoScheduleOrderIds rejects an unclassified legacy recurring mode", (
     customer_name: "Customer",
     payment_provider: "hutko",
     recurring_mode: "unknown",
+    status: "active", auto_renewal: true,
+    cancellation_state: "none", cancellation_request_id: null,
   }]), /Unknown recurring mode/);
 });
 
@@ -117,13 +126,31 @@ test("stopHutkoSubscription rejects a Hutko failure response", async () => {
   }), /Hutko subscription stop failed/);
 });
 
-test("/api/cancel stops Hutko before updating local subscription state", () => {
+test("/api/cancel uses the per-subscription state machine and idempotency key", () => {
   const source = readFileSync(new URL("../app/api/cancel/route.ts", import.meta.url), "utf8");
-  const hutkoStopIndex = source.indexOf("await Promise.all(hutkoOrderIds.map");
-  const databaseUpdateIndex = source.indexOf('.from("subscriptions")\n      .update');
+  assert.equal(source.includes("idempotency-key"), true);
+  assert.equal(source.includes("cancelOneSubscription"), true);
+  assert.equal(source.includes("for (const subscription of subscriptions)"), true);
+  assert.equal(source.includes("cancelOrphanHutkoSchedules"), true);
+});
 
-  assert.notEqual(hutkoStopIndex, -1);
-  assert.notEqual(databaseUpdateIndex, -1);
-  assert.equal(hutkoStopIndex < databaseUpdateIndex, true);
-  assert.equal(source.includes('.in("id", subscriptionIds)\n      .eq("auto_renewal", true)'), false);
+test("unknown modes remain in manual review", () => {
+  assert.equal(getSubscriptionCancellationAction({
+    id: "unknown", order_id: "order", plan: "quarter", customer_name: null,
+    payment_provider: "hutko", recurring_mode: "unknown", status: "active",
+    auto_renewal: true, cancellation_state: "none", cancellation_request_id: null,
+  }), "manual_review");
+});
+
+test("legacy recurring attempts do not block their parent schedule", () => {
+  assert.equal(getSubscriptionCancellationAction({
+    id: "attempt", order_id: "recurring__1__parent", plan: "quarter", customer_name: null,
+    payment_provider: "hutko", recurring_mode: "unknown", status: "failed",
+    auto_renewal: true, cancellation_state: "none", cancellation_request_id: null,
+  }), "local_only");
+  assert.equal(getSubscriptionCancellationAction({
+    id: "parent", order_id: "parent", plan: "quarter", customer_name: null,
+    payment_provider: "hutko", recurring_mode: "hutko_schedule", status: "active",
+    auto_renewal: true, cancellation_state: "none", cancellation_request_id: null,
+  }), "provider_stop");
 });

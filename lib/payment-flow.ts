@@ -207,6 +207,20 @@ export function resolveDirectPaymentPlanId(planCode: unknown): DirectPaymentPlan
   return normalizedPlanCode ? DIRECT_PAYMENT_PLAN_CODE_TO_PLAN_ID[normalizedPlanCode] ?? null : null
 }
 
+export function isLegacyRecurringOrderId(orderId: unknown): boolean {
+  const normalizedOrderId = stringValue(orderId)
+  return normalizedOrderId?.toLowerCase().startsWith("recurring__") ?? false
+}
+
+export function extractLegacyRecurringParentOrder(orderId: unknown): string | null {
+  const normalizedOrderId = stringValue(orderId)
+  if (!normalizedOrderId || !isLegacyRecurringOrderId(normalizedOrderId)) return null
+
+  const parts = normalizedOrderId.split("__")
+  const parentOrder = parts.slice(2).join("__").trim()
+  return parentOrder || null
+}
+
 function assignMerchantField(target: HutkoMerchantData, fieldName: unknown, fieldValue: unknown) {
   const name = stringValue(fieldName)
   const value = stringValue(fieldValue)

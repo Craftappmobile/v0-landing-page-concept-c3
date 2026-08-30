@@ -88,7 +88,8 @@ Route:
 
 Для renewal callback код:
 
-- шукає батьківський запис за `parent_order`;
+- шукає батьківський запис за явним `parent_order` або точним parent із `recurring__<attempt>__<parent>`;
+- атомарно дедуплікує approved callback через `apply_hutko_renewal`;
 - пересуває `expires_at` вперед від більш пізньої з дат `now` / поточний `expires_at`;
 - оновлює `status`, `updated_at`, `hutko_payment_id`, `rectoken`.
 
@@ -146,14 +147,18 @@ Endpoint:
 
 ## Cancellation
 
-`POST /api/cancel` працює у fail-closed порядку:
+`POST /api/cancel` приймає UUID `Idempotency-Key` і працює поштучно:
 
-1. знаходить активні або legacy `failed` recurring subscriptions за email;
-2. визначає driver через `recurring_mode`;
-3. для `hutko_schedule` викликає Hutko `POST /api/subscription/` з `action: stop`;
-4. якщо Hutko не підтвердив **усі** schedule, локальна БД не змінюється і повертається `502`;
-5. лише після успішних provider-side відповідей вимикає локальне `auto_renewal`, ставить `recurring_mode = none`, `cancelled_at` і `updated_at`;
-6. відправляє cancellation email.
+1. знаходить `pending`, `active` або legacy `failed` subscriptions за email;
+2. фіксує intent та audit event;
+3. для `hutko_schedule` викликає Hutko `action: stop` перед локальним `completed`;
+4. частковий успіх зберігається по кожній підписці та безпечно продовжується при retry;
+5. `unknown` повертає `409/manual_review`, не показуючи хибний success;
+6. `pending` повертає `202`, блокує локальне renewal і завершує provider stop після callback;
+7. orphan approved `recurring__` callback без parent subscription також може бути зупинений за точним parent order;
+8. лист надсилається один раз після повного `completed`.
+
+UI розрізняє `completed`, `pending` і `manual_review`. `502` означає, що Hutko не підтвердив stop і потрібен retry/support review.
 
 Для `merchant_token` provider-side виклик не потрібен: наступні списання виконує застосунок через cron, тому достатньо локально вимкнути `auto_renewal`. Режими `none` і ручний `lifetime` не мають recurring schedule.
 

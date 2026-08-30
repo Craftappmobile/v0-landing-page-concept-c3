@@ -3,12 +3,13 @@
 import { useState } from "react"
 import Link from "next/link"
 import Image from "next/image"
-import { ArrowLeft, CheckCircle2, Loader2 } from "lucide-react"
+import { ArrowLeft, CheckCircle2, CircleAlert, Clock3, Loader2 } from "lucide-react"
 import { Button } from "@/components/ui/button"
 
 export default function CancelPage() {
   const [email, setEmail] = useState("")
-  const [submitted, setSubmitted] = useState(false)
+  const [resultStatus, setResultStatus] = useState<"idle" | "completed" | "pending" | "manual_review">("idle")
+  const [requestId, setRequestId] = useState("")
   const [loading, setLoading] = useState(false)
 
   const [errorMsg, setErrorMsg] = useState("")
@@ -17,14 +18,32 @@ export default function CancelPage() {
     e.preventDefault()
     setLoading(true)
     setErrorMsg("")
+    const currentRequestId = requestId || crypto.randomUUID()
+    if (!requestId) setRequestId(currentRequestId)
 
     try {
       const res = await fetch("/api/cancel", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email }),
+        headers: {
+          "Content-Type": "application/json",
+          "Idempotency-Key": currentRequestId,
+        },
+        body: JSON.stringify({ email, request_id: currentRequestId }),
       })
       const data = await res.json()
+      if (typeof data.request_id === "string") setRequestId(data.request_id)
+
+      if (res.status === 202 || data.status === "pending") {
+        setResultStatus("pending")
+        setLoading(false)
+        return
+      }
+
+      if (res.status === 409 || data.status === "manual_review") {
+        setResultStatus("manual_review")
+        setLoading(false)
+        return
+      }
 
       if (!res.ok) {
         setErrorMsg(data.error || "Помилка скасування")
@@ -32,7 +51,7 @@ export default function CancelPage() {
         return
       }
 
-      setSubmitted(true)
+      setResultStatus("completed")
     } catch {
       setErrorMsg("Помилка з'єднання. Спробуйте пізніше.")
     }
@@ -75,7 +94,7 @@ export default function CancelPage() {
           {"Щоб вимкнути автопродовження підписки, заповніть форму нижче. Автопродовження буде вимкнено одразу після підтвердження запиту."}
         </p>
 
-        {submitted ? (
+        {resultStatus === "completed" ? (
           <div className="mt-8 rounded-xl border border-green-500/30 bg-green-500/5 p-6 text-center">
             <CheckCircle2 className="mx-auto h-12 w-12 text-green-500" />
             <h2 className="mt-4 text-lg font-semibold text-foreground">
@@ -86,6 +105,32 @@ export default function CancelPage() {
             </p>
             <Button asChild className="mt-6">
               <Link href="/">{"На головну"}</Link>
+            </Button>
+          </div>
+        ) : resultStatus === "pending" ? (
+          <div className="mt-8 rounded-xl border border-amber-500/30 bg-amber-500/5 p-6 text-center">
+            <Clock3 className="mx-auto h-12 w-12 text-amber-500" />
+            <h2 className="mt-4 text-lg font-semibold text-foreground">
+              {"Запит очікує підтвердження"}
+            </h2>
+            <p className="mt-2 text-sm text-muted-foreground">
+              {"Ми зафіксували скасування. Після завершення обробки поточного платежу автопродовження не буде активовано."}
+            </p>
+            <Button asChild className="mt-6">
+              <Link href="/">{"На головну"}</Link>
+            </Button>
+          </div>
+        ) : resultStatus === "manual_review" ? (
+          <div className="mt-8 rounded-xl border border-orange-500/30 bg-orange-500/5 p-6 text-center">
+            <CircleAlert className="mx-auto h-12 w-12 text-orange-500" />
+            <h2 className="mt-4 text-lg font-semibold text-foreground">
+              {"Потрібна ручна перевірка"}
+            </h2>
+            <p className="mt-2 text-sm text-muted-foreground">
+              {"Ми отримали запит, але ще не можемо підтвердити зупинку майбутніх списань. Підтримка перевірить платіжну підписку."}
+            </p>
+            <Button asChild className="mt-6">
+              <a href="mailto:craftappmobile@gmail.com">{"Написати в підтримку"}</a>
             </Button>
           </div>
         ) : (
@@ -99,7 +144,11 @@ export default function CancelPage() {
                 id="email"
                 required
                 value={email}
-                onChange={(e) => setEmail(e.target.value)}
+                onChange={(e) => {
+                  setEmail(e.target.value)
+                  setRequestId("")
+                  setErrorMsg("")
+                }}
                 placeholder="your@email.com"
                 className="mt-2 w-full rounded-lg border border-border bg-background px-4 py-3 text-sm text-foreground placeholder:text-muted-foreground focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/20"
               />

@@ -11,9 +11,12 @@ import {
 } from "@/lib/plans";
 import type { PlanId } from "@/lib/plans";
 import { resolveHutkoCheckoutRecurringMode } from "@/lib/recurring-mode";
+import { stopHutkoSubscription } from "@/lib/hutko";
 import {
+  extractLegacyRecurringParentOrder,
   extractHutkoFailureDetails,
   extractHutkoReservationCustomer,
+  isLegacyRecurringOrderId,
   parseHutkoMerchantData,
   resolveDirectPaymentAccessEmail,
   resolvePaymentAccessEmail,
@@ -23,6 +26,7 @@ import {
 } from "@/lib/payment-flow";
 
 const MERCHANT_PASSWORD = process.env.HUTKO_MERCHANT_PASSWORD || "";
+const MERCHANT_ID = process.env.HUTKO_MERCHANT_ID || "";
 
 type HutkoCallbackBody = Record<string, unknown>;
 
@@ -36,6 +40,10 @@ type InitialSubscriptionMatch = {
   status: string | null;
   email_status: string | null;
   expires_at: string | null;
+  auto_renewal: boolean | null;
+  recurring_mode: string | null;
+  cancellation_state: string | null;
+  cancellation_request_id: string | null;
   matchSource: "order_id" | "merchant_order_id" | "checkout_correlation_id";
 };
 
@@ -188,6 +196,65 @@ async function recordPaymentCallbackEvent(
   return true;
 }
 
+async function finalizeRequestedProviderCancellation(args: {
+  supabase: ReturnType<typeof createAdminClient>;
+  subscriptionId: string;
+  requestId: string;
+  orderId: string;
+  now: string;
+}): Promise<boolean> {
+  try {
+    await stopHutkoSubscription({
+      orderId: args.orderId,
+      merchantId: MERCHANT_ID,
+      password: MERCHANT_PASSWORD,
+    });
+  } catch {
+    await args.supabase.from("subscriptions").update({
+      auto_renewal: false,
+      recurring_mode: "hutko_schedule",
+      recurring_mode_source: "cancelled_hutko_schedule",
+      cancellation_state: "provider_failed",
+      cancellation_last_error_code: "hutko_stop_failed_after_activation",
+      updated_at: args.now,
+    }).eq("id", args.subscriptionId);
+    await args.supabase.from("subscription_cancellation_events").upsert({
+      event_key: `${args.requestId}:${args.subscriptionId}:provider_stop:failed_after_activation`,
+      request_id: args.requestId,
+      subscription_id: args.subscriptionId,
+      phase: "provider_stop",
+      outcome: "failed_after_activation",
+      provider: "hutko",
+      recurring_mode: "hutko_schedule",
+      error_code: "hutko_stop_failed_after_activation",
+    }, { onConflict: "event_key", ignoreDuplicates: true });
+    return false;
+  }
+
+  const { error } = await args.supabase.from("subscriptions").update({
+    auto_renewal: false,
+    recurring_mode: "none",
+    recurring_mode_source: "cancelled_hutko_schedule",
+    cancellation_state: "completed",
+    cancellation_completed_at: args.now,
+    cancelled_at: args.now,
+    cancellation_last_error_code: null,
+    updated_at: args.now,
+  }).eq("id", args.subscriptionId);
+
+  if (error) throw error;
+  await args.supabase.from("subscription_cancellation_events").upsert({
+    event_key: `${args.requestId}:${args.subscriptionId}:provider_stop:succeeded_after_activation`,
+    request_id: args.requestId,
+    subscription_id: args.subscriptionId,
+    phase: "provider_stop",
+    outcome: "succeeded_after_activation",
+    provider: "hutko",
+    recurring_mode: "hutko_schedule",
+  }, { onConflict: "event_key", ignoreDuplicates: true });
+  return true;
+}
+
 async function findInitialSubscription(
   supabase: ReturnType<typeof createAdminClient>,
   args: { orderId: string; merchantOrderId?: string; correlationId: string },
@@ -197,7 +264,7 @@ async function findInitialSubscription(
 
     const result = await supabase
       .from("subscriptions")
-      .select("id, order_id, email, customer_name, plan, plan_type, status, email_status, expires_at")
+      .select("id, order_id, email, customer_name, plan, plan_type, status, email_status, expires_at, auto_renewal, recurring_mode, cancellation_state, cancellation_request_id")
       .eq("order_id", orderId)
       .maybeSingle();
 
@@ -226,7 +293,7 @@ async function findInitialSubscription(
 
   const byCorrelation = await supabase
     .from("subscriptions")
-    .select("id, order_id, email, customer_name, plan, plan_type, status, email_status, expires_at")
+    .select("id, order_id, email, customer_name, plan, plan_type, status, email_status, expires_at, auto_renewal, recurring_mode, cancellation_state, cancellation_request_id")
     .eq("checkout_correlation_id", args.correlationId)
     .maybeSingle();
 
@@ -436,18 +503,39 @@ export async function POST(request: NextRequest) {
       || parsedCallbackFields.checkout_correlation_id
       || parsedAdditionalInfo.checkout_correlation_id
       || "";
-    const isRenewal = parsedMerchantData.renewal === true
+    const explicitRenewal = parsedMerchantData.renewal === true
       || parsedCallbackFields.renewal === true
       || parsedAdditionalInfo.renewal === true;
-    const parentOrder = parsedMerchantData.parent_order
+    const explicitParentOrder = parsedMerchantData.parent_order
       || parsedCallbackFields.parent_order
       || parsedAdditionalInfo.parent_order
       || "";
+    const legacyRecurring = isLegacyRecurringOrderId(order_id);
+    const legacyParentOrder = extractLegacyRecurringParentOrder(order_id);
+    const parentOrder = explicitParentOrder || legacyParentOrder || "";
+    const isRenewal = explicitRenewal || Boolean(legacyParentOrder);
     const paidAmount = parseOptionalAmount(
       getString(restParams.actual_amount) || getString(restParams.amount) || undefined,
     );
     const paidCurrency = getString(restParams.actual_currency) || getString(restParams.currency) || null;
     const failureDetails = extractHutkoFailureDetails(body);
+
+    if (legacyRecurring && !parentOrder) {
+      const recorded = await recordPaymentCallbackEvent(supabase, {
+        eventType: "recurring_callback_manual_review",
+        reason: "legacy_recurring_order_missing_parent",
+        orderId: order_id,
+        paymentId: payment_id || null,
+        orderStatus: order_status,
+        paidAmount,
+        paidCurrency,
+        payloadSummary: { hasExplicitRenewal: explicitRenewal, hasParentOrder: false },
+      });
+      if (!recorded) {
+        return NextResponse.json({ error: "Failed to record manual review event" }, { status: 500 });
+      }
+      return NextResponse.json({ status: "manual_review", reason: "legacy_recurring_order_missing_parent" });
+    }
 
     if (order_status === "approved") {
       const initialDurationDays = isPlanId(plan) ? getPlanInitialAccessDays(plan) : 90;
@@ -461,42 +549,66 @@ export async function POST(request: NextRequest) {
           return NextResponse.json({ error: "Missing parent order for renewal" }, { status: 400 });
         }
 
-        const { data: existingSub, error: existingSubError } = await supabase
-          .from("subscriptions")
-          .select("order_id, expires_at")
-          .eq("order_id", parentOrder)
-          .maybeSingle();
+        const { data: renewalRows, error: renewalError } = await supabase.rpc("apply_hutko_renewal", {
+          p_callback_order_id: order_id,
+          p_parent_order_id: parentOrder,
+          p_duration_days: renewalDurationDays,
+          p_now: nowIso,
+          p_payment_id: payment_id || null,
+          p_paid_amount: paidAmount,
+          p_paid_currency: paidCurrency,
+          p_rectoken: rectoken || null,
+        });
 
-        if (existingSubError || !existingSub) {
-          console.error("[Hutko Callback] Renewal parent subscription not found:", parentOrder, existingSubError);
-          return NextResponse.json({ error: "Parent subscription not found" }, { status: 500 });
+        if (renewalError) {
+          console.error("[Hutko Callback] Failed to apply renewal:", renewalError.message);
+          return NextResponse.json({ error: "Failed to apply renewal" }, { status: 500 });
         }
 
-        const updateData: Record<string, string | number | null | Record<string, string>> = {
-          status: "active",
-          hutko_payment_id: payment_id || null,
-          expires_at: addDaysToLatestDate(existingSub.expires_at, renewalDurationDays, now),
-          updated_at: nowIso,
-          paid_currency: paidCurrency,
-          payment_failure_code: null,
-          payment_failure_message: null,
-          payment_failure_details: {},
-        };
-
-        if (paidAmount !== null) {
-          updateData.paid_amount = paidAmount;
+        const renewalResult = renewalRows?.[0];
+        if (!renewalResult || renewalResult.result === "parent_not_found") {
+          await recordPaymentCallbackEvent(supabase, {
+            eventType: "recurring_callback_manual_review",
+            reason: "renewal_parent_not_found",
+            orderId: order_id,
+            merchantOrderId: parentOrder,
+            paymentId: payment_id || null,
+            orderStatus: order_status,
+            paidAmount,
+            paidCurrency,
+          });
+          return NextResponse.json({ status: "manual_review", reason: "renewal_parent_not_found" });
         }
 
-        if (rectoken) {
-          updateData.rectoken = rectoken;
+        const providerManagedCancellation = renewalResult.recurring_mode === "hutko_schedule"
+          || renewalResult.recurring_mode_source === "cancelled_hutko_schedule";
+        if ((renewalResult.cancellation_state === "requested"
+            || renewalResult.cancellation_state === "provider_failed"
+            || renewalResult.cancellation_state === "completed")
+            && renewalResult.cancellation_request_id
+            && providerManagedCancellation) {
+          if (renewalResult.cancellation_state === "completed") {
+            await supabase.from("subscription_cancellation_events").upsert({
+              event_key: `${renewalResult.cancellation_request_id}:${renewalResult.subscription_id}:provider_stop:late_renewal`,
+              request_id: renewalResult.cancellation_request_id,
+              subscription_id: renewalResult.subscription_id,
+              phase: "provider_stop",
+              outcome: "late_renewal_after_cancellation",
+              provider: "hutko",
+              recurring_mode: "hutko_schedule",
+              error_code: "late_renewal_after_cancellation",
+            }, { onConflict: "event_key", ignoreDuplicates: true });
+          }
+          await finalizeRequestedProviderCancellation({
+            supabase,
+            subscriptionId: renewalResult.subscription_id,
+            requestId: renewalResult.cancellation_request_id,
+            orderId: parentOrder,
+            now: nowIso,
+          });
         }
 
-        await supabase
-          .from("subscriptions")
-          .update(updateData)
-          .eq("order_id", parentOrder);
-
-        console.log("[Hutko Callback] Subscription renewed:", parentOrder, "via", order_id);
+        console.log("[Hutko Callback] Renewal callback result:", renewalResult.result, order_id);
       } else {
         const targetSubscription = await findInitialSubscription(supabase, {
           orderId: order_id,
@@ -624,9 +736,19 @@ export async function POST(request: NextRequest) {
             payerEmail: payerEmailFromMerchant,
           });
 
+          const cancellationPending = targetSubscription.cancellation_state === "requested"
+            || targetSubscription.cancellation_state === "provider_failed"
+            || targetSubscription.cancellation_state === "needs_review";
+          const cancellationCompleted = targetSubscription.cancellation_state === "completed";
+          const checkoutRecurringMode = resolveHutkoCheckoutRecurringMode(
+            PLAN_CONFIG[subscriptionPlan].isRecurring,
+          );
           const updateData: Record<string, string | boolean | null | number | Record<string, string>> = {
             status: "active",
-            recurring_mode: resolveHutkoCheckoutRecurringMode(PLAN_CONFIG[subscriptionPlan].isRecurring),
+            auto_renewal: cancellationPending || cancellationCompleted
+              ? false
+              : PLAN_CONFIG[subscriptionPlan].isRecurring,
+            recurring_mode: cancellationCompleted ? "none" : checkoutRecurringMode,
             hutko_payment_id: payment_id || null,
             started_at: nowIso,
             expires_at: addDaysToLatestDate(null, initialDurationDays, now),
@@ -649,10 +771,26 @@ export async function POST(request: NextRequest) {
             updateData.rectoken = rectoken;
           }
 
-          await supabase
+          const { error: activationError } = await supabase
             .from("subscriptions")
             .update(updateData)
             .eq("id", targetSubscription.id);
+
+          if (activationError) {
+            console.error("[Hutko Callback] Subscription activation failed:", activationError.message);
+            return NextResponse.json({ error: "Subscription activation failed" }, { status: 500 });
+          }
+
+          if (cancellationPending && PLAN_CONFIG[subscriptionPlan].isRecurring
+              && targetSubscription.cancellation_request_id) {
+            await finalizeRequestedProviderCancellation({
+              supabase,
+              subscriptionId: targetSubscription.id,
+              requestId: targetSubscription.cancellation_request_id,
+              orderId: targetSubscription.order_id || merchantOrderId || order_id,
+              now: nowIso,
+            });
+          }
 
           console.log("[Hutko Callback] Subscription activated:", order_id, targetSubscription.id);
 
