@@ -186,4 +186,114 @@ body {
   .blog-content .blog-diagram--missing p {
     @apply m-0;
   }
+
+  .blog-content .blog-pinterest-embed {
+    @apply my-8 flex flex-col items-center justify-center;
+  }
+
+  .blog-content .blog-pinterest-embed .pinterest-pin-wrapper {
+    @apply max-w-full overflow-hidden rounded-2xl border border-border bg-card p-2 shadow-sm;
+  }
+
+  .blog-content .blog-pinterest-embed figcaption {
+    @apply mt-3 max-w-md text-center text-sm leading-6 text-muted-foreground;
+  }
+
+  /* Pinterest Visual Card with Interactive Effects */
+  .blog-content .blog-pinterest-card {
+    @apply my-10 flex flex-col items-center justify-center w-full;
+  }
+
+  .pinterest-card-inner {
+    translate: 0px;
+    rotate: 0deg;
+    scale: 1;
+    transition: translate 0.4s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.4s ease, border-color 0.4s ease;
+  }
+
+  .pinterest-card-inner:hover {
+    translate: 0 -4px;
+    border-color: hsl(var(--primary) / 0.35);
+  }
+
+  .pinterest-card-img {
+    translate: 0px;
+    rotate: 0deg;
+    scale: 1;
+    transition: scale 0.7s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  .pinterest-card-inner:hover .pinterest-card-img {
+    scale: 1.05;
+  }
+
+  /* CTA buttons inside blog content: enforce crisp white text and no underline */
+  .blog-cta-primary-btn {
+    color: #ffffff !important;
+    text-decoration: none !important;
+  }
+
+  .blog-cta-primary-btn span,
+  .blog-cta-primary-btn svg {
+    color: #ffffff !important;
+    stroke: #ffffff !important;
+  }
+
+  .blog-content .blog-app-cta a {
+    text-decoration: none;
+  }
+
+  /* YouTube Lite Embed with Interactive Effects */
+  .blog-content .blog-youtube-embed {
+    @apply my-10 flex flex-col items-center justify-center w-full;
+  }
+
+  .youtube-facade {
+    translate: 0px;
+    rotate: 0deg;
+    scale: 1;
+    transition: translate 0.4s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.4s ease, border-color 0.4s ease;
+  }
+
+  .youtube-facade:hover {
+    translate: 0 -4px;
+    border-color: hsl(var(--primary) / 0.35);
+  }
+
+  .youtube-thumb {
+    translate: 0px;
+    rotate: 0deg;
+    scale: 1;
+    transition: scale 0.7s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  .youtube-facade:hover .youtube-thumb {
+    scale: 1.05;
+  }
+
+  .youtube-play-btn {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    translate: -50% -50%;
+    width: 68px;
+    height: 48px;
+    background-color: #FF0000;
+    border-radius: 14px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #ffffff;
+    box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.5), 0 8px 10px -6px rgba(0, 0, 0, 0.5);
+    z-index: 20;
+    transition: scale 0.3s cubic-bezier(0.16, 1, 0.3, 1), background-color 0.2s ease;
+    scale: 1;
+    cursor: pointer;
+  }
+
+  .youtube-facade:hover .youtube-play-btn {
+    scale: 1.15;
+    background-color: #CC0000;
+  }
 }
+

@@ -49,7 +49,7 @@ export const metadata: Metadata = {
     apple: '/images/logo.jpg',
   },
   verification: {
-    google: 'd3xZlCeJeVKfbnGBagIp2kmZUQIbeJrWwMSrAlGpUeE',
+    google: 'eVRlAl_Z_sfg0u2ekhg6kfcbsRTqHGiCE0JPmh5kYpU',
     other: {
       'msvalidate.01': '3C24BE13D7527F19D8FA8E15439B41E5',
     },

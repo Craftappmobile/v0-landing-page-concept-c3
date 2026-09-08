@@ -34,10 +34,10 @@ const prioritySlugs = new Set(["shchilnist", "vytrata", "rahlan", "shapka", "shk
 
 const calculatorGroups = [
   { title: "Базові розрахунки", description: "Почніть із щільності, петель, рядів, витрати пряжі та адаптації опису.", slugs: ["shchilnist", "petli", "dovzhyna", "vytrata", "skladannya", "adaptatsiya", "rozmiry"] },
-  { title: "Одяг", description: "Светри, кардигани, жакети, жилети та дитячі вироби з потрібною свободою облягання.", slugs: ["svetr", "dzhemper-kruhlyy", "kardyhan", "kardygan", "zhaket", "zhilet", "dytyachyy", "oversayz"] },
+  { title: "Одяг", description: "Светри, кардигани, жакети, жилети та дитячі вироби з потрібною свободою облягання.", slugs: ["svetr", "dzhemper-kruhlyy", "kardyhan", "zhaket", "zhilet", "dytyachyy", "oversayz"] },
   { title: "Конструкція виробу", description: "Реглан, кокетка, горловина, виріз, рукав, плечі й убавки для посадки без перекосів.", slugs: ["rahlan", "koketka", "horlovyna", "vyriz", "rukav", "pleche", "letucha-mysha", "ubavky"] },
   { title: "Аксесуари", description: "Швидкі розрахунки для шапок, шкарпеток і шарфів за реальними мірками.", slugs: ["shapka", "shkarpetky", "sharf"] },
-  { title: "Візерунки, пряжа і техніки", description: "Рапорти, арани, ажур, гумка, кругове в'язання, мохер і секційна пряжа.", slugs: ["azhur", "arany", "vizerunky", "humka", "krugove", "kruhove", "mokher", "sektsiyna"] },
+  { title: "Візерунки, пряжа і техніки", description: "Рапорти, арани, ажур, гумка, кругове в'язання, мохер і секційна пряжа.", slugs: ["azhur", "arany", "vizerunky", "humka", "kruhove", "mokher", "sektsiyna"] },
 ]
 
 const faq = [

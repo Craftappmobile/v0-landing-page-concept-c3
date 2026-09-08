@@ -48,14 +48,12 @@ export async function GET(request: NextRequest) {
       .maybeSingle()
 
     if (error) {
-      console.error("[Blog Share] Failed to load count:", error)
-      return NextResponse.json({ error: "Failed to load share count" }, { status: 500 })
+      return countResponse(null, slug)
     }
 
     return countResponse(data, slug)
-  } catch (error) {
-    console.error("[Blog Share] Unexpected GET error:", error)
-    return NextResponse.json({ error: "Internal server error" }, { status: 500 })
+  } catch {
+    return countResponse(null, slug)
   }
 }
 

@@ -1,0 +1,73 @@
+<svg viewBox="0 0 680 320" xmlns="http://www.w3.org/2000/svg" font-family="sans-serif" role="img" aria-labelledby="diagram-raglan-unwrapped-title diagram-raglan-unwrapped-desc">
+  <title id="diagram-raglan-unwrapped-title">Розгортка реглану зверху по ряду</title>
+  <desc id="diagram-raglan-unwrapped-desc">Ряд на 76 петель: ½ спинки, регланна лінія, рукав, регланна лінія, перед, регланна лінія, рукав, регланна лінія, ½ спинки. Прибавки з обох боків кожної лінії.</desc>
+  <defs>
+    <marker id="rgl-unwrapped-arrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto">
+      <path d="M2 1L8 5L2 9" fill="none" stroke="#5F5E5A" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+    </marker>
+  </defs>
+
+  <!-- Напрямок в'язання -->
+  <text x="340" y="30" text-anchor="middle" font-size="12" fill="#5F5E5A">Напрямок в'язання ряду</text>
+  <line x1="36" y1="48" x2="644" y2="48" stroke="#5F5E5A" stroke-width="1" marker-end="url(#rgl-unwrapped-arrow)"/>
+
+  <!-- Сектор 1: ½ спинки, 11 п. -->
+  <rect x="36" y="90" width="88" height="100" fill="#F1EFE8" stroke="#5F5E5A" stroke-width="1"/>
+  <text x="80" y="132" text-anchor="middle" font-size="12" font-weight="600" fill="#2C2C2A">½ спинки</text>
+  <text x="80" y="152" text-anchor="middle" font-size="12" fill="#5F5E5A">11 п.</text>
+
+  <!-- РЛ 1 -->
+  <rect x="124" y="90" width="16" height="100" fill="#D85A30"/>
+  <text x="132" y="78" text-anchor="middle" font-size="12" fill="#993C1D">РЛ 1</text>
+  <text x="117" y="210" text-anchor="middle" font-size="14" font-weight="700" fill="#993C1D">+</text>
+  <text x="147" y="210" text-anchor="middle" font-size="14" font-weight="700" fill="#993C1D">+</text>
+
+  <!-- Сектор 2: правий рукав, 11 п. -->
+  <rect x="140" y="90" width="88" height="100" fill="#F1EFE8" stroke="#5F5E5A" stroke-width="1"/>
+  <text x="184" y="132" text-anchor="middle" font-size="12" font-weight="600" fill="#2C2C2A">рукав</text>
+  <text x="184" y="152" text-anchor="middle" font-size="12" fill="#5F5E5A">11 п.</text>
+
+  <!-- РЛ 2 -->
+  <rect x="228" y="90" width="16" height="100" fill="#D85A30"/>
+  <text x="236" y="78" text-anchor="middle" font-size="12" fill="#993C1D">РЛ 2</text>
+  <text x="221" y="210" text-anchor="middle" font-size="14" font-weight="700" fill="#993C1D">+</text>
+  <text x="251" y="210" text-anchor="middle" font-size="14" font-weight="700" fill="#993C1D">+</text>
+
+  <!-- Сектор 3: перед, 23 п. -->
+  <rect x="244" y="90" width="184" height="100" fill="#F1EFE8" stroke="#5F5E5A" stroke-width="1"/>
+  <text x="336" y="132" text-anchor="middle" font-size="12" font-weight="600" fill="#2C2C2A">перед</text>
+  <text x="336" y="152" text-anchor="middle" font-size="12" fill="#5F5E5A">23 п.</text>
+
+  <!-- РЛ 3 -->
+  <rect x="428" y="90" width="16" height="100" fill="#D85A30"/>
+  <text x="436" y="78" text-anchor="middle" font-size="12" fill="#993C1D">РЛ 3</text>
+  <text x="421" y="210" text-anchor="middle" font-size="14" font-weight="700" fill="#993C1D">+</text>
+  <text x="451" y="210" text-anchor="middle" font-size="14" font-weight="700" fill="#993C1D">+</text>
+
+  <!-- Сектор 4: лівий рукав, 11 п. -->
+  <rect x="444" y="90" width="88" height="100" fill="#F1EFE8" stroke="#5F5E5A" stroke-width="1"/>
+  <text x="488" y="132" text-anchor="middle" font-size="12" font-weight="600" fill="#2C2C2A">рукав</text>
+  <text x="488" y="152" text-anchor="middle" font-size="12" fill="#5F5E5A">11 п.</text>
+
+  <!-- РЛ 4 -->
+  <rect x="532" y="90" width="16" height="100" fill="#D85A30"/>
+  <text x="540" y="78" text-anchor="middle" font-size="12" fill="#993C1D">РЛ 4</text>
+  <text x="525" y="210" text-anchor="middle" font-size="14" font-weight="700" fill="#993C1D">+</text>
+  <text x="555" y="210" text-anchor="middle" font-size="14" font-weight="700" fill="#993C1D">+</text>
+
+  <!-- Сектор 5: ½ спинки, 12 п. -->
+  <rect x="548" y="90" width="96" height="100" fill="#F1EFE8" stroke="#5F5E5A" stroke-width="1"/>
+  <text x="596" y="132" text-anchor="middle" font-size="12" font-weight="600" fill="#2C2C2A">½ спинки</text>
+  <text x="596" y="152" text-anchor="middle" font-size="12" fill="#5F5E5A">12 п.</text>
+
+  <!-- Маркер початку ряду -->
+  <circle cx="36" cy="90" r="5" fill="#0F6E56"/>
+  <line x1="36" y1="95" x2="36" y2="232" stroke="#0F6E56" stroke-width="1" stroke-dasharray="3 3"/>
+  <text x="44" y="240" font-size="12" fill="#0F6E56">Початок кругового ряду (маркер)</text>
+
+  <!-- Легенда -->
+  <rect x="36" y="268" width="16" height="12" fill="#D85A30"/>
+  <text x="60" y="278" font-size="12" fill="#5F5E5A">РЛ — регланна лінія (по 2 п.)</text>
+  <text x="36" y="302" font-size="14" font-weight="700" fill="#993C1D">+</text>
+  <text x="50" y="302" font-size="12" fill="#5F5E5A">прибавка з обох боків лінії (8 п. за ряд) · разом 76 п.</text>
+</svg>

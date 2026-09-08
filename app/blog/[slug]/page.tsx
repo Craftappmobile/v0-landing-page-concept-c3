@@ -3,13 +3,16 @@ import Link from "next/link"
 import { notFound } from "next/navigation"
 import { ArrowLeft, ArrowRight } from "lucide-react"
 
+import { BlogCalculatorWidget } from "@/components/blog/blog-calculator-widget"
 import { BlogComments } from "@/components/blog/blog-comments"
+import { PinterestEmbedLoader } from "@/components/blog/pinterest-embed-loader"
+import { YouTubeEmbedLoader } from "@/components/blog/youtube-embed-loader"
 import { ShareButtons } from "@/components/blog/share-buttons"
 import { Footer } from "@/components/landing/footer"
 import { Header } from "@/components/landing/header"
-import { formatPostDate, getAllPosts, getPostBySlug, getRelatedPosts, markdownToHtml } from "@/lib/blog"
+import { extractHowToSteps, formatPostDate, getAllPosts, getPostBySlug, getRelatedPosts, markdownToHtml } from "@/lib/blog"
 import { getAllBlogCategories, getBlogCategoryBySlug, getPostsForBlogCategory, type BlogCategory } from "@/lib/blog-categories"
-import { getCalculatorBySlug, type CalculatorDefinition } from "@/lib/calculators"
+import { getCalculatorBySlug, getCalculatorForPost, type CalculatorDefinition } from "@/lib/calculators"
 
 const siteUrl = process.env.NEXT_PUBLIC_SITE_URL?.trim() || "https://vjazhi.com.ua"
 const fallbackImage = "/opengraph-image"
@@ -231,6 +234,8 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
   const html = await markdownToHtml(post.content)
   const relatedPosts = getRelatedPosts(post.slug)
   const editorialQuestions = getEditorialQuestions(post.title)
+  const calculator = getCalculatorForPost(post.slug)
+  const howToSteps = extractHowToSteps(post.content)
   const articleUrl = `${siteUrl}/blog/${post.slug}`
   const imageUrl = `${siteUrl}${post.image || fallbackImage}`
   const jsonLd = {
@@ -267,6 +272,22 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
       },
     })),
   }
+  const howToJsonLd =
+    howToSteps.length >= 2
+      ? {
+          "@context": "https://schema.org",
+          "@type": "HowTo",
+          name: post.title,
+          description: post.description,
+          image: imageUrl,
+          step: howToSteps.map((step, index) => ({
+            "@type": "HowToStep",
+            position: index + 1,
+            name: step.name,
+            text: step.text || step.name,
+          })),
+        }
+      : null
 
   return (
     <div className="flex min-h-screen flex-col">
@@ -274,6 +295,9 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
       <main className="flex-1">
         <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
         <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(faqJsonLd) }} />
+        {howToJsonLd ? (
+          <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(howToJsonLd) }} />
+        ) : null}
 
         <div className="mx-auto grid max-w-5xl grid-cols-1 gap-8 px-4 py-10 lg:grid-cols-[5rem_minmax(0,48rem)] lg:px-8 lg:py-14">
           <div className="hidden lg:block">
@@ -303,6 +327,10 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
             </header>
 
             <div className="blog-content mt-10" dangerouslySetInnerHTML={{ __html: html }} />
+            <PinterestEmbedLoader />
+            <YouTubeEmbedLoader />
+
+            {calculator ? <BlogCalculatorWidget calculator={calculator} variant="inline" articleSlug={post.slug} /> : null}
 
             <section className="mt-12 border-t border-border pt-10" aria-labelledby="faq-heading">
               <p className="text-sm font-semibold uppercase tracking-[0.18em] text-primary">Корисні уточнення</p>

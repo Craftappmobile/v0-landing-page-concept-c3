@@ -70,7 +70,7 @@ function createSeoCalculator(input: SeoCalculatorInput): CalculatorDefinition {
           "Округлюйте з урахуванням рапорту візерунка, симетрії та конструкції. Для гумки, аранів, ажуру або секційного візерунка важливо зберегти кратність петель.",
       },
     ],
-    relatedPosts: ["yak-rozrahuvaty-shchilnist-vyazannya", "yak-rozrahuvaty-vytratu-pryazhi", "mk-vyazhemo-svetr-vid-a-do-ya"],
+    relatedPosts: ["yak-rozrahuvaty-shchilnist-vyazannya", "yak-rozrahuvaty-vytratu-pryazhi-na-svetr", "mk-vyazhemo-svetr-vid-a-do-ya"],
   }
 }
 
@@ -79,8 +79,7 @@ const seoCalculatorPages: CalculatorDefinition[] = [
   createSeoCalculator({ slug: "rukav", shortTitle: "Калькулятор рукава", topic: "розрахунок рукава", formula: "Прибавки = (петлі біля пройми − петлі манжети) / 2", example: "Манжета 44 п, верх рукава 76 п: потрібно додати 32 п, тобто 16 прибавок з кожного боку по довжині рукава.", checklist: ["Виміряйте зап'ястя, передпліччя й верх руки.", "Переведіть ширини в петлі.", "Розподіліть прибавки рівномірно по рядах."], keywords: ["калькулятор рукава", "розрахунок рукава", "прибавки рукава"], relatedCalculatorSlug: "shchilnist", relatedCalculatorLabel: "Калькулятор щільності" }),
   createSeoCalculator({ slug: "shapka", shortTitle: "Калькулятор шапки", topic: "розрахунок шапки", formula: "Петлі набору = обхват голови × петлі в 1 см − 5–12% на розтяг", example: "Для обхвату 56 см і щільності 2 п/см базово 112 п. Для еластичної шапки можна взяти 100–106 п залежно від гумки.", checklist: ["Виміряйте обхват голови.", "Врахуйте еластичність гумки.", "Перевірте кратність маківки."], keywords: ["калькулятор шапки", "розрахунок шапки", "петлі для шапки"], relatedCalculatorSlug: "shchilnist", relatedCalculatorLabel: "Калькулятор щільності" }),
   createSeoCalculator({ slug: "shkarpetky", shortTitle: "Калькулятор шкарпеток", topic: "розрахунок шкарпеток", formula: "Петлі стопи = обхват стопи × петлі в 1 см", example: "Якщо обхват стопи 22 см, а щільність 3 п/см, стартова кількість — 66 п. Для 4 спиць зручно округлити до 64 або 68 п.", checklist: ["Виміряйте обхват стопи в найширшому місці.", "Перевірте кратність для розподілу на спиці.", "Окремо розрахуйте п'ятку й мисок."], keywords: ["калькулятор шкарпеток", "розрахунок шкарпеток", "петлі для шкарпеток"], relatedCalculatorSlug: "shchilnist", relatedCalculatorLabel: "Калькулятор щільності" }),
-  createSeoCalculator({ slug: "kardyhan", shortTitle: "Калькулятор кардигана", topic: "розрахунок кардигана", formula: "Петлі ширини = потрібна ширина деталі × петлі в 1 см", example: "Для полички 24 см при щільності 2,1 п/см потрібно приблизно 50 петель плюс петлі планки.", checklist: ["Окремо порахуйте спинку, полички й планки.", "Додайте свободу облягання.", "Врахуйте застібку та ширину борта."], keywords: ["калькулятор кардигана", "розрахунок кардигана", "кардиган спицями"], relatedCalculatorSlug: "vytrata", relatedCalculatorLabel: "Калькулятор витрати пряжі" }),
-  createSeoCalculator({ slug: "kardygan", shortTitle: "Калькулятор кардигану", topic: "розрахунок кардигану", formula: "Загальна ширина = спинка + 2 полички + планки", example: "Якщо спинка 48 см, полички по 24 см, а планки по 3 см, загальна ширина деталей до зшивання — близько 102 см.", checklist: ["Порахуйте кожну деталь окремо.", "Не забудьте планки й припуски.", "Звірте витрату з довжиною виробу."], keywords: ["калькулятор кардигану", "кардиган розрахунок", "кардиган спицями"], relatedCalculatorSlug: "vytrata", relatedCalculatorLabel: "Калькулятор витрати пряжі" }),
+  createSeoCalculator({ slug: "kardyhan", shortTitle: "Калькулятор кардигана", topic: "розрахунок кардигана", formula: "Петлі ширини = потрібна ширина деталі × петлі в 1 см", example: "Для полички 24 см при щільності 2,1 п/см потрібно приблизно 50 петель плюс петлі планки.", checklist: ["Окремо порахуйте спинку, полички й планки.", "Додайте свободу облягання.", "Врахуйте застібку та ширину борта."], keywords: ["калькулятор кардигана", "калькулятор кардигану", "розрахунок кардигана", "кардиган розрахунок", "кардиган спицями"], relatedCalculatorSlug: "vytrata", relatedCalculatorLabel: "Калькулятор витрати пряжі" }),
   createSeoCalculator({ slug: "dytyachyy", shortTitle: "Калькулятор дитячого виробу", topic: "розрахунок дитячого виробу", formula: "Петлі = мірка дитини × щільність; витрата = базова витрата + 10% запас", example: "Для обхвату грудей 56 см і щільності 2 п/см потрібно близько 112 петель на повний обхват, якщо конструкція в'яжеться по колу.", checklist: ["Орієнтуйтесь на реальні мірки, а не тільки вік.", "Додавайте запас на ріст.", "Обирайте м'яку пряжу й просту посадку."], keywords: ["дитячий калькулятор в'язання", "дитячий светр розрахунок", "розміри дітей"], relatedCalculatorSlug: "vytrata", relatedCalculatorLabel: "Калькулятор витрати пряжі" }),
   createSeoCalculator({ slug: "sharf", shortTitle: "Калькулятор шарфа", topic: "розрахунок шарфа", formula: "Петлі ширини = ширина шарфа × петлі в 1 см", example: "Для шарфа 28 см при щільності 1,8 п/см потрібно 50 петель. Для резинки 2×2 краще округлити до кратності 4.", checklist: ["Оберіть ширину й довжину шарфа.", "Перевірте кратність візерунка.", "Розрахуйте витрату за метражем пряжі."], keywords: ["калькулятор шарфа", "розрахунок шарфа", "скільки петель на шарф"], relatedCalculatorSlug: "skladannya", relatedCalculatorLabel: "Калькулятор складання пряжі" }),
   createSeoCalculator({ slug: "zhilet", shortTitle: "Калькулятор жилета", topic: "розрахунок жилета", formula: "Петлі корпусу = обхват грудей × щільність + свобода", example: "Для ОГ 92 см, свободи 8 см і щільності 2 п/см потрібно близько 200 петель по колу.", checklist: ["Порахуйте корпус без рукавів.", "Окремо розрахуйте пройму й горловину.", "Додайте обв'язку країв."], keywords: ["калькулятор жилета", "розрахунок жилета", "жилет спицями"], relatedCalculatorSlug: "shchilnist", relatedCalculatorLabel: "Калькулятор щільності" }),
@@ -93,8 +92,7 @@ const seoCalculatorPages: CalculatorDefinition[] = [
   createSeoCalculator({ slug: "vizerunky", shortTitle: "Калькулятор візерунків", topic: "розрахунок рапорту візерунка", formula: "Петлі = рапорт × повтори + петлі симетрії", example: "Рапорт 8 п, 11 повторів і 2 п симетрії: 8 × 11 + 2 = 90 петель плюс крайові.", checklist: ["Знайдіть рапорт у схемі.", "Визначте потрібну ширину.", "Округліть кількість повторів без перекосу малюнка."], keywords: ["калькулятор візерунків", "рапорт візерунка", "візерунки спицями"], relatedCalculatorSlug: "petli", relatedCalculatorLabel: "Калькулятор петель" }),
   createSeoCalculator({ slug: "arany", shortTitle: "Калькулятор аранів", topic: "розрахунок аранів і кіс", formula: "Петлі полотна = базова ширина × щільність + запас на стягування", example: "Якщо коси стягують полотно на 15%, для ширини 50 см варто закласти не 100 п, а приблизно 115 п при щільності 2 п/см.", checklist: ["Зв'яжіть зразок саме з аранами.", "Порівняйте ширину до й після ВТО.", "Додайте петлі на стягування кіс."], keywords: ["калькулятор аранів", "розрахунок кіс", "арани спицями"], relatedCalculatorSlug: "shchilnist", relatedCalculatorLabel: "Калькулятор щільності" }),
   createSeoCalculator({ slug: "humka", shortTitle: "Калькулятор гумки", topic: "розрахунок гумки", formula: "Петлі гумки = потрібна ширина × щільність гумки з урахуванням розтягу", example: "Для манжети 20 см і гумки 2×2 з щільністю 2,4 п/см потрібно 48 петель, що вже кратно 4.", checklist: ["Міряйте щільність саме в гумці.", "Перевіряйте кратність 1×1, 2×2 або 3×3.", "Враховуйте еластичність і посадку."], keywords: ["калькулятор гумки", "гумка 2х2", "розрахунок гумки"], relatedCalculatorSlug: "shchilnist", relatedCalculatorLabel: "Калькулятор щільності" }),
-  createSeoCalculator({ slug: "krugove", shortTitle: "Калькулятор кругового в'язання", topic: "розрахунок кругового в'язання", formula: "Петлі по колу = обхват × петлі в 1 см", example: "Для корпусу 104 см і щільності 2 п/см потрібно 208 петель по колу.", checklist: ["Перевірте, чи немає швів у конструкції.", "Додайте свободу облягання.", "Округліть під рапорт візерунка."], keywords: ["кругове в'язання", "калькулятор кругового в'язання", "петлі по колу"], relatedCalculatorSlug: "petli", relatedCalculatorLabel: "Калькулятор петель" }),
-  createSeoCalculator({ slug: "kruhove", shortTitle: "Калькулятор кругового вʼязання", topic: "кругове в'язання без швів", formula: "Петлі = обхват виробу × щільність", example: "Шапка 54 см при 2,1 п/см: 113 п, краще округлити до 112 або 116 залежно від маківки.", checklist: ["Зніміть мірку по колу.", "Врахуйте розтяг полотна.", "Перевірте кратність убавок."], keywords: ["кругове вязання", "калькулятор по колу", "в'язання без швів"], relatedCalculatorSlug: "shapka", relatedCalculatorLabel: "Калькулятор шапки" }),
+  createSeoCalculator({ slug: "kruhove", shortTitle: "Калькулятор кругового вʼязання", topic: "кругове в'язання без швів", formula: "Петлі = обхват виробу × щільність", example: "Шапка 54 см при 2,1 п/см: 113 п, краще округлити до 112 або 116 залежно від маківки.", checklist: ["Зніміть мірку по колу.", "Врахуйте розтяг полотна.", "Перевірте кратність убавок."], keywords: ["кругове в'язання", "калькулятор кругового в'язання", "петлі по колу", "кругове вязання", "калькулятор по колу", "в'язання без швів"], relatedCalculatorSlug: "shapka", relatedCalculatorLabel: "Калькулятор шапки" }),
   createSeoCalculator({ slug: "letucha-mysha", shortTitle: "Калькулятор рукава летюча миша", topic: "розрахунок летючої миші", formula: "Ширина полотна = півобхват корпусу + довжина рукава", example: "Півобхват 52 см і рукав 38 см дають 90 см ширини деталі перед перерахунком у петлі.", checklist: ["Визначте бажану ширину від центру до манжети.", "Перевірте драпірування полотна.", "Не робіть манжету занадто широкою."], keywords: ["летюча миша спицями", "калькулятор рукава летюча миша", "розрахунок летюча миша"], relatedCalculatorSlug: "rukav", relatedCalculatorLabel: "Калькулятор рукава" }),
   createSeoCalculator({ slug: "mokher", shortTitle: "Калькулятор мохеру", topic: "розрахунок мохеру", formula: "Вага = потрібний метраж / метраж у 100 г × 100", example: "Якщо потрібно 900 м, а мохер має 420 м/50 г, це 840 м/100 г: 900 / 840 × 100 ≈ 107 г.", checklist: ["Переведіть етикетку в м/100 г.", "Додайте запас на пух і зразок.", "Для подвійної нитки перерахуйте метраж складання."], keywords: ["калькулятор мохеру", "мохер витрата", "розрахунок мохеру"], relatedCalculatorSlug: "skladannya", relatedCalculatorLabel: "Калькулятор складання пряжі" }),
   createSeoCalculator({ slug: "oversayz", shortTitle: "Калькулятор оверсайз", topic: "розрахунок оверсайз виробу", formula: "Робочий обхват = обхват тіла + свобода оверсайз", example: "ОГ 92 см і свобода 24 см: робочий обхват 116 см. При 1,8 п/см це близько 209 петель по колу.", checklist: ["Оберіть бажану свободу 15–30 см.", "Перевірте спущене плече або реглан.", "Пам'ятайте, що витрата пряжі зросте."], keywords: ["калькулятор оверсайз", "оверсайз светр", "свобода облягання"], relatedCalculatorSlug: "vytrata", relatedCalculatorLabel: "Калькулятор витрати пряжі" }),
@@ -138,7 +136,7 @@ export const calculators: CalculatorDefinition[] = [
           "Оберіть більший діапазон, особливо якщо плануєте вільну посадку, складний візерунок або хочете мати запас на зразок і зшивання.",
       },
     ],
-    relatedPosts: ["yak-rozrahuvaty-vytratu-pryazhi", "top-kalkuliatoriv-vytraty-pryazhi", "mk-vyazhemo-svetr-vid-a-do-ya"],
+    relatedPosts: ["yak-rozrahuvaty-vytratu-pryazhi-na-svetr", "top-5-sposobiv-rozrahuvaty-vytratu-pryazhi", "mk-vyazhemo-svetr-vid-a-do-ya"],
   },
   {
     slug: "skladannya",
@@ -171,7 +169,7 @@ export const calculators: CalculatorDefinition[] = [
           "Для різних ниток використовуйте суму обернених значень: 1/Lзаг = 1/L1 + 1/L2 + ... + 1/Ln. Так отримуємо умовну товщину об'єднаної нитки.",
       },
     ],
-    relatedPosts: ["yak-rozrahuvaty-vytratu-pryazhi", "yak-rozrahuvaty-shchilnist-vyazannya", "mk-vyazhemo-svetr-vid-a-do-ya"],
+    relatedPosts: ["yak-rozrahuvaty-vytratu-pryazhi-na-svetr", "yak-rozrahuvaty-shchilnist-vyazannya", "mk-vyazhemo-svetr-vid-a-do-ya"],
   },
   {
     slug: "shchilnist",
@@ -237,7 +235,7 @@ export const calculators: CalculatorDefinition[] = [
           "Загальна витрата в метрах допомагає підібрати іншу пряжу. Якщо ваша пряжа має інший метраж, переведіть ці метри в грами через калькулятор складання пряжі.",
       },
     ],
-    relatedPosts: ["adaptuvala-radyanskyy-opys", "yak-rozrahuvaty-shchilnist-vyazannya", "yak-rozrahuvaty-vytratu-pryazhi"],
+    relatedPosts: ["adaptuvala-radyanskyy-opys", "yak-rozrahuvaty-shchilnist-vyazannya", "yak-rozrahuvaty-vytratu-pryazhi-na-svetr"],
   },
   {
     slug: "rahlan",
@@ -287,4 +285,38 @@ export function getAllCalculators() {
 
 export function getYarnConsumptionGroups() {
   return yarnConsumptionGroups
+}
+
+export function getCalculatorForPost(postSlug: string): CalculatorDefinition | null {
+  const directMatch = calculators.find((c) => c.relatedPosts && c.relatedPosts.includes(postSlug))
+  if (directMatch) return directMatch
+
+  const slugLower = postSlug.toLowerCase()
+  if (slugLower.includes("rahlan")) return getCalculatorBySlug("rahlan")
+  if (slugLower.includes("shchilnist")) return getCalculatorBySlug("shchilnist")
+  if (slugLower.includes("vytrata") || slugLower.includes("skilky")) return getCalculatorBySlug("vytrata")
+  if (slugLower.includes("shapka") || slugLower.includes("bini")) return getCalculatorBySlug("shapka")
+  if (slugLower.includes("shkarpetky")) return getCalculatorBySlug("shkarpetky")
+  if (slugLower.includes("horlovyna")) return getCalculatorBySlug("horlovyna")
+  if (slugLower.includes("rukav")) return getCalculatorBySlug("rukav")
+  if (slugLower.includes("kardygan") || slugLower.includes("kardyhan")) return getCalculatorBySlug("kardyhan")
+  if (slugLower.includes("adaptatsiya") || slugLower.includes("radyanskyy")) return getCalculatorBySlug("adaptatsiya")
+  if (slugLower.includes("mokher")) return getCalculatorBySlug("mokher")
+  if (slugLower.includes("arany") || slugLower.includes("kosy")) return getCalculatorBySlug("arany")
+  if (slugLower.includes("azhur")) return getCalculatorBySlug("azhur")
+  if (slugLower.includes("humka")) return getCalculatorBySlug("humka")
+  if (slugLower.includes("letucha-mysha")) return getCalculatorBySlug("letucha-mysha")
+  if (slugLower.includes("oversayz")) return getCalculatorBySlug("oversayz")
+  if (slugLower.includes("kruhove") || slugLower.includes("krugove")) return getCalculatorBySlug("krugove")
+  if (slugLower.includes("sektsiyna")) return getCalculatorBySlug("sektsiyna")
+  if (slugLower.includes("ubavky") || slugLower.includes("dobavky")) return getCalculatorBySlug("ubavky")
+  if (slugLower.includes("vyriz")) return getCalculatorBySlug("vyriz")
+  if (slugLower.includes("svetr") || slugLower.includes("dzhemper")) return getCalculatorBySlug("svetr") || getCalculatorBySlug("rahlan")
+  if (slugLower.includes("zhaket")) return getCalculatorBySlug("zhaket")
+  if (slugLower.includes("zhilet")) return getCalculatorBySlug("zhilet")
+  if (slugLower.includes("sharf") || slugLower.includes("snud")) return getCalculatorBySlug("sharf")
+  if (slugLower.includes("dytyachyy") || slugLower.includes("kombinezon")) return getCalculatorBySlug("dytyachyy")
+  if (slugLower.includes("skladannya")) return getCalculatorBySlug("skladannya")
+
+  return getCalculatorBySlug("shchilnist")
 }

@@ -8,8 +8,10 @@ import remarkRehype from "remark-rehype"
 import rehypeSlug from "rehype-slug"
 import rehypeAutolinkHeadings from "rehype-autolink-headings"
 import rehypeStringify from "rehype-stringify"
-
 import { renderBlogDiagram } from "./blog-diagrams"
+import { renderPinterestVisualCard } from "./blog-pinterest"
+import { renderYouTubeEmbed } from "./blog-youtube"
+import { renderBlogAppCta } from "./blog-app-cta"
 
 const POSTS_DIRECTORY = path.join(process.cwd(), "content", "posts")
 const WORDS_PER_MINUTE = 180
@@ -113,13 +115,23 @@ function removeDuplicateTitle(content: string) {
   return lines.join("\n").trim()
 }
 
-function renderDiagramShortcode(shortcode: string, diagramId: string) {
-  return renderBlogDiagram(diagramId) || shortcode
+function renderDiagramShortcode(shortcode: string, diagramId: string, paramsStr?: string) {
+  return renderBlogDiagram(diagramId, paramsStr) || shortcode
 }
 
 function replaceBlogDiagramShortcodes(html: string) {
-  return html.replace(/<p>\s*\{\{diagram:([a-zA-Z0-9-]+)\}\}\s*<\/p>/g, (_match, diagramId: string) => {
-    return renderDiagramShortcode(_match, diagramId)
+  return html.replace(/<p>\s*\{\{diagram:([a-zA-Z0-9_-]+)(?::([^}]+))?\}\}\s*<\/p>/g, (_match, diagramId: string, paramsStr?: string) => {
+    return renderDiagramShortcode(_match, diagramId, paramsStr)
+  })
+}
+
+function renderPinterestShortcode(url: string, caption?: string) {
+  return renderPinterestVisualCard(url, caption)
+}
+
+function replaceBlogPinterestShortcodes(html: string) {
+  return html.replace(/<p>\s*\{\{pinterest:\s*([^\s|}]+)(?:\|([^}]+))?\}\}\s*<\/p>/g, (_match, url: string, caption?: string) => {
+    return renderPinterestShortcode(url, caption)
   })
 }
 
@@ -177,6 +189,37 @@ export function getRelatedPosts(currentSlug: string, limit = 3) {
 }
 
 export async function markdownToHtml(markdown: string) {
+  const pinEmbeds: string[] = []
+  const ytEmbeds: string[] = []
+  const appCtaEmbeds: string[] = []
+
+  let preparedMarkdown = markdown.replace(
+    /\{\{pinterest:\s*([^\s|}]+)(?:\s*\|\s*([^}]+))?\}\}/g,
+    (_match, url: string, caption?: string) => {
+      const slot = `PINTEREST_EMBED_SLOT_${pinEmbeds.length}`
+      pinEmbeds.push(renderPinterestShortcode(url, caption))
+      return slot
+    }
+  )
+
+  preparedMarkdown = preparedMarkdown.replace(
+    /\{\{youtube:\s*([^\s|}]+)(?:\s*\|\s*([^}]+))?\}\}/g,
+    (_match, videoId: string, caption?: string) => {
+      const slot = `YOUTUBE_EMBED_SLOT_${ytEmbeds.length}`
+      ytEmbeds.push(renderYouTubeEmbed(videoId, caption))
+      return slot
+    }
+  )
+
+  preparedMarkdown = preparedMarkdown.replace(
+    /\{\{app-cta(?::([^|}]+)(?:\|([^}]+))?)?\}\}/g,
+    (_match, title?: string, desc?: string) => {
+      const slot = `APP_CTA_SLOT_${appCtaEmbeds.length}`
+      appCtaEmbeds.push(renderBlogAppCta(title ? { title: title.trim(), description: desc?.trim() } : undefined))
+      return slot
+    }
+  )
+
   const processed = await unified()
     .use(remarkParse)
     .use(remarkGfm)
@@ -184,9 +227,26 @@ export async function markdownToHtml(markdown: string) {
     .use(rehypeSlug)
     .use(rehypeAutolinkHeadings, { behavior: "wrap" })
     .use(rehypeStringify)
-    .process(markdown)
+    .process(preparedMarkdown)
 
-  return replaceBlogDiagramShortcodes(processed.toString())
+  let html = replaceBlogDiagramShortcodes(processed.toString())
+
+  pinEmbeds.forEach((embedHtml, idx) => {
+    const slot = `PINTEREST_EMBED_SLOT_${idx}`
+    html = html.replace(`<p>${slot}</p>`, embedHtml).replace(slot, embedHtml)
+  })
+
+  ytEmbeds.forEach((embedHtml, idx) => {
+    const slot = `YOUTUBE_EMBED_SLOT_${idx}`
+    html = html.replace(`<p>${slot}</p>`, embedHtml).replace(slot, embedHtml)
+  })
+
+  appCtaEmbeds.forEach((embedHtml, idx) => {
+    const slot = `APP_CTA_SLOT_${idx}`
+    html = html.replace(`<p>${slot}</p>`, embedHtml).replace(slot, embedHtml)
+  })
+
+  return replaceBlogPinterestShortcodes(html)
 }
 
 export function formatPostDate(date: string) {
@@ -195,4 +255,37 @@ export function formatPostDate(date: string) {
     month: "long",
     year: "numeric",
   }).format(new Date(date))
+}
+
+export function extractHowToSteps(content: string) {
+  const lines = content.split("\n")
+  const steps: Array<{ name: string; text: string }> = []
+  let currentStep: { name: string; text: string } | null = null
+
+  for (const line of lines) {
+    const trimmed = line.trim()
+    const match = trimmed.match(/^##\s+(Етап\s+\d+|Крок\s+\d+|Частина\s+\d+)(?::\s*|\s+–\s*|\s+-\s*|\s+)(.+)$/i)
+    if (match) {
+      if (currentStep) {
+        steps.push(currentStep)
+      }
+      currentStep = {
+        name: `${match[1]}: ${match[2]}`,
+        text: "",
+      }
+    } else if (currentStep && trimmed.startsWith("## ")) {
+      steps.push(currentStep)
+      currentStep = null
+    } else if (currentStep && trimmed && !trimmed.startsWith("#") && !trimmed.startsWith("{{") && !trimmed.startsWith("<")) {
+      if (!currentStep.text) {
+        currentStep.text = trimmed.replace(/[*_`]/g, "").slice(0, 300)
+      }
+    }
+  }
+
+  if (currentStep) {
+    steps.push(currentStep)
+  }
+
+  return steps
 }

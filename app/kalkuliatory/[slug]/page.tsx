@@ -12,6 +12,7 @@ import { YarnFoldingCalculator } from "@/components/calculators/yarn-folding-cal
 import { YarnConsumptionCalculator } from "@/components/calculators/yarn-consumption-calculator"
 import { Footer } from "@/components/landing/footer"
 import { Header } from "@/components/landing/header"
+import { getPostBySlug } from "@/lib/blog"
 import { getAllCalculators, getCalculatorBySlug, type CalculatorDefinition } from "@/lib/calculators"
 
 const siteUrl = process.env.NEXT_PUBLIC_SITE_URL?.trim() || "https://vjazhi.com.ua"
@@ -94,6 +95,10 @@ export default async function CalculatorPage({ params }: CalculatorPageProps) {
     })),
   }
 
+  const relatedPostsData = (calculator.relatedPosts || [])
+    .map((postSlug) => getPostBySlug(postSlug))
+    .filter((post): post is NonNullable<typeof post> => Boolean(post))
+
   return (
     <div className="flex min-h-screen flex-col">
       <Header />
@@ -147,6 +152,58 @@ export default async function CalculatorPage({ params }: CalculatorPageProps) {
               ))}
             </div>
           </section>
+
+          {relatedPostsData.length > 0 ? (
+            <section className="mt-12 border-t border-border pt-10" aria-labelledby="related-posts-heading">
+              <div className="flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between">
+                <div>
+                  <p className="text-xs font-semibold uppercase tracking-[0.18em] text-primary">База знань</p>
+                  <h2 id="related-posts-heading" className="mt-2 text-2xl font-serif text-foreground md:text-3xl">
+                    Пов'язані статті та майстер-класи
+                  </h2>
+                </div>
+                <Link
+                  href="/blog"
+                  className="inline-flex items-center gap-2 text-sm font-semibold text-primary hover:text-primary/80 transition-colors"
+                >
+                  Усі статті блогу <ArrowRight className="h-4 w-4" />
+                </Link>
+              </div>
+
+              <div className="mt-6 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+                {relatedPostsData.map((post) => (
+                  <article
+                    key={post.slug}
+                    className="flex flex-col justify-between rounded-3xl border border-border bg-card/60 p-6 transition-all hover:border-primary/40 hover:shadow-md"
+                  >
+                    <div>
+                      <div className="flex items-center gap-2 text-xs font-semibold uppercase tracking-wider text-primary">
+                        <span>{post.category || "Гайд"}</span>
+                        <span>•</span>
+                        <span className="text-muted-foreground">{post.readingTime} хв читання</span>
+                      </div>
+                      <h3 className="mt-3 text-lg font-serif font-semibold leading-snug text-foreground">
+                        <Link href={`/blog/${post.slug}`} className="hover:text-primary transition-colors">
+                          {post.title}
+                        </Link>
+                      </h3>
+                      <p className="mt-2 line-clamp-3 text-sm leading-relaxed text-muted-foreground">
+                        {post.description}
+                      </p>
+                    </div>
+                    <div className="mt-5 border-t border-border/60 pt-4">
+                      <Link
+                        href={`/blog/${post.slug}`}
+                        className="inline-flex items-center gap-2 text-sm font-semibold text-primary hover:text-primary/80 transition-colors"
+                      >
+                        Читати інструкцію <ArrowRight className="h-4 w-4" />
+                      </Link>
+                    </div>
+                  </article>
+                ))}
+              </div>
+            </section>
+          ) : null}
         </section>
       </main>
       <Footer />
