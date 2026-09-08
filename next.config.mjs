@@ -25,6 +25,16 @@ const nextConfig = {
         destination: "/blog/yak-rozrahuvaty-vytratu-pryazhi-na-svetr",
         permanent: true,
       },
+      {
+        source: "/blog/yak-rozrahuvaty-kardyhan",
+        destination: "/blog/yak-rozrahuvaty-kardygan-spytsyamy",
+        permanent: true,
+      },
+      {
+        source: "/blog/yak-rozrahuvaty-vyazannya-po-kolu",
+        destination: "/blog/yak-rozrahuvaty-krugove-vyazannya",
+        permanent: true,
+      },
     ]
   },
 }
