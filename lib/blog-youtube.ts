@@ -30,6 +30,12 @@ export const KNOWN_VIDEOS: Record<string, YouTubeVideoData> = {
     channel: "Svitlana. Knitting with me",
     image: "/images/videos/yt-l2BSsUbSH8k.jpg",
   },
+  "n4Vp971M3-A": {
+    id: "n4Vp971M3-A",
+    title: "З’єднання кругового вʼязання спицями: Вʼязання по колу без перекручування",
+    channel: "Royalknits",
+    image: "/images/videos/yt-n4Vp971M3-A.jpg",
+  },
 }
 
 function escapeHtml(str: string) {

@@ -99,6 +99,42 @@ export const KNOWN_PINS: Record<string, PinterestPinData> = {
     image: "/images/pins/pin-410883166029988769.jpg",
     fallbackImage: "https://i.pinimg.com/736x/0e/24/da/0e24da5c53425a4b4840acb00f9f514e.jpg",
   },
+  "1688918598440517": {
+    id: "1688918598440517",
+    url: "https://www.pinterest.com/pin/1688918598440517/",
+    title: "Ідеальна посадка безшовного пуловера по колу: баланс полотна без швів та перекосів",
+    author: "Bernardita Gutiérrez",
+    authorUrl: "https://www.pinterest.com/bernarditagutir/",
+    image: "/images/pins/pin-1688918598440517.jpg",
+    fallbackImage: "https://i.pinimg.com/736x/ad/1a/38/ad1a38d21d195cb90f20d81157ac0813.jpg",
+  },
+  "556124253978657250": {
+    id: "556124253978657250",
+    url: "https://www.pinterest.com/pin/556124253978657250/",
+    title: "Техніка бездоганного замикання петель у коло без дірочки та перекручування",
+    author: "Monique D'hooge",
+    authorUrl: "https://www.pinterest.com/dhoogemonique/",
+    image: "/images/pins/pin-556124253978657250.jpg",
+    fallbackImage: "https://i.pinimg.com/736x/d5/3a/20/d53a20329561f69255470cba39dbd0ea.jpg",
+  },
+  "270004940155647626": {
+    id: "270004940155647626",
+    url: "https://www.pinterest.com/pin/270004940155647626/",
+    title: "Усунення сходинки на стику рядів по колу (jogless stripes) та робота з маркерами",
+    author: "Yarn.com by WEBS",
+    authorUrl: "https://www.pinterest.com/websyarn/",
+    image: "/images/pins/pin-270004940155647626.jpg",
+    fallbackImage: "https://i.pinimg.com/736x/7e/31/35/7e3135edd243b653dbaad2aff312d0e3.jpg",
+  },
+  "3448137204814822": {
+    id: "3448137204814822",
+    url: "https://www.pinterest.com/pin/3448137204814822/",
+    title: "Гайд з вибору кругових спиць: довжина волосіні та калібр під проєкт",
+    author: "Bonnie Voth",
+    authorUrl: "https://www.pinterest.com/home2349/",
+    image: "/images/pins/pin-3448137204814822.jpg",
+    fallbackImage: "https://i.pinimg.com/736x/67/eb/55/67eb551020349ce3f9aefcea79eeb37a.jpg",
+  },
 }
 
 function escapeHtml(str: string) {

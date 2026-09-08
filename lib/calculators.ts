@@ -307,7 +307,7 @@ export function getCalculatorForPost(postSlug: string): CalculatorDefinition | n
   if (slugLower.includes("humka")) return getCalculatorBySlug("humka")
   if (slugLower.includes("letucha-mysha")) return getCalculatorBySlug("letucha-mysha")
   if (slugLower.includes("oversayz")) return getCalculatorBySlug("oversayz")
-  if (slugLower.includes("kruhove") || slugLower.includes("krugove")) return getCalculatorBySlug("krugove")
+  if (slugLower.includes("kruhove") || slugLower.includes("krugove")) return getCalculatorBySlug("kruhove") || getCalculatorBySlug("krugove")
   if (slugLower.includes("sektsiyna")) return getCalculatorBySlug("sektsiyna")
   if (slugLower.includes("ubavky") || slugLower.includes("dobavky")) return getCalculatorBySlug("ubavky")
   if (slugLower.includes("vyriz")) return getCalculatorBySlug("vyriz")
