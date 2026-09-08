@@ -117,20 +117,59 @@ const BLOG_DIAGRAMS: Record<string, BlogDiagramDefinition> = {
   },
   "round-yoke": {
     title: "Схема круглої кокетки",
-    caption: "Схема круглої кокетки: зона прибавок, висота кокетки, корпус і рукави після розподілу.",
-    svg: `<svg viewBox="0 0 640 420" role="img" aria-labelledby="diagram-round-yoke-title" xmlns="http://www.w3.org/2000/svg">
+    caption: "Схема круглої кокетки: горловина, ряди прибавок, висота кокетки, корпус і рукави після розподілу, підрізи.",
+    svg: `<svg width="100%" viewBox="0 0 680 430" xmlns="http://www.w3.org/2000/svg" font-family="sans-serif" role="img" aria-labelledby="diagram-round-yoke-title diagram-round-yoke-desc">
   <title id="diagram-round-yoke-title">Схема круглої кокетки</title>
-  <path d="M190 172 Q320 52 450 172 L410 342 H230Z" fill="#f7efe7" stroke="#2e9e3e" stroke-width="5" stroke-linejoin="round"/>
-  <path d="M238 150 Q320 92 402 150" fill="none" stroke="#d97060" stroke-width="5" stroke-linecap="round"/>
-  <path d="M210 195 Q320 114 430 195" fill="none" stroke="#d97060" stroke-width="4" stroke-linecap="round" stroke-dasharray="10 10"/>
-  <path d="M198 238 Q320 160 442 238" fill="none" stroke="#d97060" stroke-width="4" stroke-linecap="round" stroke-dasharray="10 10"/>
-  <path d="M190 172 L122 244 L160 306 L218 246" fill="#f7efe7" stroke="#2e9e3e" stroke-width="5" stroke-linejoin="round"/>
-  <path d="M450 172 L518 244 L480 306 L422 246" fill="#f7efe7" stroke="#2e9e3e" stroke-width="5" stroke-linejoin="round"/>
-  <text x="320" y="132" text-anchor="middle" font-size="22" fill="#2f3430">кокетка</text>
-  <text x="320" y="224" text-anchor="middle" font-size="20" fill="#2f3430">лінії прибавок</text>
-  <line x1="470" y1="118" x2="470" y2="248" stroke="#2f3430" stroke-width="2"/>
-  <path d="M462 118 H478 M462 248 H478" stroke="#2f3430" stroke-width="2"/>
-  <text x="492" y="190" font-size="20" fill="#2f3430">висота</text>
+  <desc id="diagram-round-yoke-desc">Горловина зверху, від неї кокетка розширюється дугами з рядами прибавок до нижнього краю; після розподілу корпус посередині та два рукави з боків звисають донизу, між ними підрізи.</desc>
+
+  <!-- Кокетка: кільце між горловиною (r=50) і нижнім краєм (r=170), центр (340,60) -->
+  <path d="M170 60 A170 170 0 0 0 510 60 L390 60 A50 50 0 0 1 290 60 Z"
+        fill="#F1EFE8" stroke="#5F5E5A" stroke-width="1.2"/>
+
+  <!-- Горловина -->
+  <path d="M290 60 A50 20 0 0 1 390 60" fill="none" stroke="#0F6E56" stroke-width="1.2" stroke-dasharray="4 3"/>
+  <path d="M290 60 A50 50 0 0 0 390 60" fill="none" stroke="#0F6E56" stroke-width="1.6"/>
+  <text x="340" y="38" text-anchor="middle" font-size="12" fill="#0F6E56">горловина</text>
+
+  <!-- Ряди прибавок (концентричні дуги) -->
+  <g fill="none" stroke="#D85A30" stroke-width="1.6" stroke-dasharray="6 4">
+    <path d="M255 60 A85 85 0 0 0 425 60"/>
+    <path d="M220 60 A120 120 0 0 0 460 60"/>
+    <path d="M185 60 A155 155 0 0 0 495 60"/>
+  </g>
+  <text x="340" y="127" text-anchor="middle" font-size="13" font-weight="500" fill="#2C2C2A">кокетка</text>
+  <text x="340" y="164" text-anchor="middle" font-size="11" fill="#993C1D">ряди прибавок</text>
+
+  <!-- Корпус -->
+  <path d="M250 204 A170 170 0 0 0 430 204 L436 380 L244 380 Z"
+        fill="#F1EFE8" stroke="#5F5E5A" stroke-width="1.2"/>
+  <text x="340" y="300" text-anchor="middle" font-size="13" font-weight="500" fill="#2C2C2A">корпус</text>
+
+  <!-- Рукави -->
+  <path d="M180 117 A170 170 0 0 0 235 194 L205 340 L130 320 Z"
+        fill="#F1EFE8" stroke="#5F5E5A" stroke-width="1.2"/>
+  <text x="185" y="265" text-anchor="middle" font-size="13" font-weight="500" fill="#2C2C2A">рукав</text>
+  <path d="M500 117 A170 170 0 0 1 445 194 L475 340 L550 320 Z"
+        fill="#F1EFE8" stroke="#5F5E5A" stroke-width="1.2"/>
+  <text x="495" y="265" text-anchor="middle" font-size="13" font-weight="500" fill="#2C2C2A">рукав</text>
+
+  <!-- Підрізи (пахва) -->
+  <g stroke="#0F6E56" stroke-width="2" stroke-linecap="round">
+    <line x1="235" y1="200" x2="250" y2="207"/>
+    <line x1="445" y1="200" x2="430" y2="207"/>
+  </g>
+  <line x1="242" y1="204" x2="242" y2="395" stroke="#0F6E56" stroke-width="1" stroke-dasharray="3 3"/>
+  <line x1="438" y1="204" x2="438" y2="395" stroke="#0F6E56" stroke-width="1" stroke-dasharray="3 3"/>
+  <text x="340" y="412" text-anchor="middle" font-size="12" fill="#0F6E56">підрізи — петлі під пахвою між корпусом і рукавом</text>
+
+  <!-- Висота кокетки: від горловини до нижнього краю -->
+  <line x1="580" y1="60" x2="580" y2="230" stroke="#5F5E5A" stroke-width="1"/>
+  <line x1="573" y1="60" x2="587" y2="60" stroke="#5F5E5A" stroke-width="1"/>
+  <line x1="573" y1="230" x2="587" y2="230" stroke="#5F5E5A" stroke-width="1"/>
+  <line x1="510" y1="60" x2="573" y2="60" stroke="#5F5E5A" stroke-width="0.8" stroke-dasharray="3 3"/>
+  <line x1="510" y1="230" x2="573" y2="230" stroke="#5F5E5A" stroke-width="0.8" stroke-dasharray="3 3"/>
+  <text x="592" y="140" font-size="12" fill="#5F5E5A">висота</text>
+  <text x="592" y="156" font-size="12" fill="#5F5E5A">кокетки</text>
 </svg>`,
   },
   "sleeve-shaping": {
