@@ -18,6 +18,18 @@ export const KNOWN_VIDEOS: Record<string, YouTubeVideoData> = {
     channel: "dr.Konovalova. Про в'язання українською",
     image: "https://i.ytimg.com/vi/_Tuu1MsSOVM/hqdefault.jpg",
   },
+  "Y48eZB-7QXc": {
+    id: "Y48eZB-7QXc",
+    title: "Ідеальна планка для кардигана спицями: не стягує полотно, легкий спосіб",
+    channel: "ostrikjulia",
+    image: "/images/videos/yt-Y48eZB-7QXc.jpg",
+  },
+  "l2BSsUbSH8k": {
+    id: "l2BSsUbSH8k",
+    title: "Майстер-клас: В’яжемо стильний кардиган спицями | Покроковий розрахунок",
+    channel: "Svitlana. Knitting with me",
+    image: "/images/videos/yt-l2BSsUbSH8k.jpg",
+  },
 }
 
 function escapeHtml(str: string) {

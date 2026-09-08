@@ -63,6 +63,42 @@ export const KNOWN_PINS: Record<string, PinterestPinData> = {
     image: "/images/pins/pin-692147036525527742.jpg",
     fallbackImage: "https://i.pinimg.com/736x/a5/cd/95/a5cd95d38f40fa4bfc1d2e8ab7a8c89e.jpg",
   },
+  "1129348044087391672": {
+    id: "1129348044087391672",
+    url: "https://www.pinterest.com/pin/1129348044087391672/",
+    title: "Об'ємний оверсайз кардиган спицями з широкою планкою та ґудзиками",
+    author: "crochetfashion",
+    authorUrl: "https://www.pinterest.com/gangarai1114/",
+    image: "/images/pins/pin-1129348044087391672.jpg",
+    fallbackImage: "https://i.pinimg.com/736x/fb/f0/43/fbf04330acc58515fb9125e754c9c08a.jpg",
+  },
+  "1759287349038160": {
+    id: "1759287349038160",
+    url: "https://www.pinterest.com/pin/1759287349038160/",
+    title: "Французький шик: суцільнов'язана планка кардигана та акуратні петлі для ґудзиків",
+    author: "sofie schäfer",
+    authorUrl: "https://www.pinterest.com/wuschso/",
+    image: "/images/pins/pin-1759287349038160.jpg",
+    fallbackImage: "https://i.pinimg.com/736x/78/2a/96/782a9648aa0a90191ccfda01460cf6ce.jpg",
+  },
+  "623185667232303080": {
+    id: "623185667232303080",
+    url: "https://www.pinterest.com/pin/623185667232303080/",
+    title: "Ніжний V-подібний виріз кардигана з ідеальною симетрією поличок",
+    author: "Camille",
+    authorUrl: "https://www.pinterest.com/camillegubbinss/",
+    image: "/images/pins/pin-623185667232303080.jpg",
+    fallbackImage: "https://i.pinimg.com/736x/04/24/8b/04248b40a0f17253bd3e3d3398f699f5.jpg",
+  },
+  "410883166029988769": {
+    id: "410883166029988769",
+    url: "https://www.pinterest.com/pin/410883166029988769/",
+    title: "Класичний кардиган на ґудзиках: баланс ширини спинки та поличок",
+    author: "Ann Brasher",
+    authorUrl: "https://www.pinterest.com/abrasher0115/",
+    image: "/images/pins/pin-410883166029988769.jpg",
+    fallbackImage: "https://i.pinimg.com/736x/0e/24/da/0e24da5c53425a4b4840acb00f9f514e.jpg",
+  },
 }
 
 function escapeHtml(str: string) {

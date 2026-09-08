@@ -27,6 +27,7 @@ export type BlogPostSummary = {
   image?: string
   imageAlt?: string
   readingTime: number
+  editorialQuestions?: Array<{ question: string; answer: string }>
 }
 
 export type BlogPost = BlogPostSummary & {
@@ -46,6 +47,7 @@ type Frontmatter = {
   image?: string
   imageAlt?: string
   image_alt?: string
+  editorialQuestions?: Array<{ question: string; answer: string }>
 }
 
 function parseLooseValue(value: string) {
@@ -157,6 +159,7 @@ function createSummary(fileName: string): BlogPostSummary {
     image: frontmatter.image,
     imageAlt: frontmatter.imageAlt || frontmatter.image_alt,
     readingTime: Math.max(1, Math.ceil(wordCount / WORDS_PER_MINUTE)),
+    editorialQuestions: Array.isArray(frontmatter.editorialQuestions) ? frontmatter.editorialQuestions : undefined,
   }
 }
 

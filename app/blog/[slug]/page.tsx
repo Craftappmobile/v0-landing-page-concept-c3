@@ -233,7 +233,10 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
 
   const html = await markdownToHtml(post.content)
   const relatedPosts = getRelatedPosts(post.slug)
-  const editorialQuestions = getEditorialQuestions(post.title)
+  const editorialQuestions =
+    post.editorialQuestions && post.editorialQuestions.length > 0
+      ? post.editorialQuestions
+      : getEditorialQuestions(post.title)
   const calculator = getCalculatorForPost(post.slug)
   const howToSteps = extractHowToSteps(post.content)
   const articleUrl = `${siteUrl}/blog/${post.slug}`
