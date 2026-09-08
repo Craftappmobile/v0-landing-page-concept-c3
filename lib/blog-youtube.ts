@@ -16,7 +16,7 @@ export const KNOWN_VIDEOS: Record<string, YouTubeVideoData> = {
     id: "_Tuu1MsSOVM",
     title: "Реглан зверху: Розрахунки на будь-який розмір і пряжу",
     channel: "dr.Konovalova. Про в'язання українською",
-    image: "https://i.ytimg.com/vi/_Tuu1MsSOVM/hqdefault.jpg",
+    image: "/images/videos/yt-_Tuu1MsSOVM.jpg",
   },
   "Y48eZB-7QXc": {
     id: "Y48eZB-7QXc",
