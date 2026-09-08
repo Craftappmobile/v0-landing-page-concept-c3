@@ -292,6 +292,7 @@ export function getCalculatorForPost(postSlug: string): CalculatorDefinition | n
   if (directMatch) return directMatch
 
   const slugLower = postSlug.toLowerCase()
+  if (slugLower.includes("koketka")) return getCalculatorBySlug("koketka")
   if (slugLower.includes("rahlan")) return getCalculatorBySlug("rahlan")
   if (slugLower.includes("shchilnist")) return getCalculatorBySlug("shchilnist")
   if (slugLower.includes("vytrata") || slugLower.includes("skilky")) return getCalculatorBySlug("vytrata")

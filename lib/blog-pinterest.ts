@@ -135,6 +135,14 @@ export const KNOWN_PINS: Record<string, PinterestPinData> = {
     image: "/images/pins/pin-3448137204814822.jpg",
     fallbackImage: "https://i.pinimg.com/736x/67/eb/55/67eb551020349ce3f9aefcea79eeb37a.jpg",
   },
+  "924103857102948271": {
+    id: "924103857102948271",
+    url: "https://www.pinterest.com/pin/924103857102948271/",
+    title: "Жакардова кругла кокетка: концентричні яруси та симетричні мотиви",
+    author: "Knitting Heritage",
+    authorUrl: "https://www.pinterest.com/knittingheritage/",
+    image: "/images/pins/pin-924103857102948271.jpg",
+  },
 }
 
 function escapeHtml(str: string) {

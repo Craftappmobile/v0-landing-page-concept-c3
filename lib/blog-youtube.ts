@@ -36,6 +36,18 @@ export const KNOWN_VIDEOS: Record<string, YouTubeVideoData> = {
     channel: "Royalknits",
     image: "/images/videos/yt-n4Vp971M3-A.jpg",
   },
+  "hdtPCfTnE-Q": {
+    id: "hdtPCfTnE-Q",
+    title: "Кругла кокетка спицями. Як розрахувати, як зв'язати. В'язальна арифметика.",
+    channel: "Натка в'яже",
+    image: "/images/videos/yt-hdtPCfTnE-Q.jpg",
+  },
+  "AIRcUlzE-fM": {
+    id: "AIRcUlzE-fM",
+    title: "МК Кругла кокетка: Розрахунок висоти кокетки, тіло та рукава светра",
+    channel: "Ksenia Klimenko",
+    image: "/images/videos/yt-AIRcUlzE-fM.jpg",
+  },
 }
 
 function escapeHtml(str: string) {
