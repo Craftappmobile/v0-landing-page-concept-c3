@@ -48,6 +48,18 @@ export const KNOWN_VIDEOS: Record<string, YouTubeVideoData> = {
     channel: "Ksenia Klimenko",
     image: "/images/videos/yt-AIRcUlzE-fM.jpg",
   },
+  "q8zuTIC7XxE": {
+    id: "q8zuTIC7XxE",
+    title: "Майстер-клас: Светр-павутинка з кід мохеру на шовку спицями",
+    channel: "Bonitka",
+    image: "/images/videos/yt-q8zuTIC7XxE.jpg",
+  },
+  "Di3oUr1qOWk": {
+    id: "Di3oUr1qOWk",
+    title: "Інструкція та розрахунок джемпера-павутинки з мохеру (розмір 42-46)",
+    channel: "Оксана Недошитко",
+    image: "/images/videos/yt-Di3oUr1qOWk.jpg",
+  },
 }
 
 function escapeHtml(str: string) {

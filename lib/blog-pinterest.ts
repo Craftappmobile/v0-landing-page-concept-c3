@@ -143,6 +143,22 @@ export const KNOWN_PINS: Record<string, PinterestPinData> = {
     authorUrl: "https://www.pinterest.com/knittingheritage/",
     image: "/images/pins/pin-924103857102948271.jpg",
   },
+  "832462312019482103": {
+    id: "832462312019482103",
+    url: "https://www.pinterest.com/pin/832462312019482103/",
+    title: "Легкість та прозорість мохерової павутинки: посадка виробу на фігурі",
+    author: "Mohair Knit Studio",
+    authorUrl: "https://www.pinterest.com/pin/832462312019482103/",
+    image: "/images/pins/pin-832462312019482103.jpg",
+  },
+  "579486714529381742": {
+    id: "579486714529381742",
+    url: "https://www.pinterest.com/pin/579486714529381742/",
+    title: "Порівняння зразків: чистий кід-мохер на шовку проти міксу мохеру з тонким мериносом",
+    author: "Yarn Lab Crafts",
+    authorUrl: "https://www.pinterest.com/pin/579486714529381742/",
+    image: "/images/pins/pin-579486714529381742.jpg",
+  },
 }
 
 function escapeHtml(str: string) {
