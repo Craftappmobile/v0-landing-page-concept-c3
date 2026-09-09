@@ -40,7 +40,7 @@
     <g transform="translate(0, 115)">
       <!-- Box 1: Accidental ugly spots -->
       <rect width="205" height="155" rx="8" fill="#FFF1F2" stroke="#FDA4AF" stroke-width="1.5"/>
-      <text x="102" y="24" fill="#9F1239" font-size="9.5" font-weight="700" text-anchor="middle">ХАОТИЧНІ ПЛЯМИ (БЕЗ РОЗРАХУНКУ)</text>
+      <text x="102" y="24" fill="#9F1239" font-size="9" font-weight="700" text-anchor="middle">ХАОТИЧНІ ПЛЯМИ (БЕЗ РОЗРАХУНКУ)</text>
       
       <!-- Random color blob visuals -->
       <ellipse cx="60" cy="65" rx="35" ry="18" fill="#FB7185" opacity="0.7"/>
@@ -52,7 +52,7 @@
 
       <!-- Box 2: Controlled Gradient / Alternating skeins -->
       <rect x="215" width="205" height="155" rx="8" fill="#F0FDF4" stroke="#86EFAC" stroke-width="1.5"/>
-      <text x="317" y="24" fill="#166534" font-size="9.5" font-weight="700" text-anchor="middle">РІВНИЙ ГРАДІЄНТ (З РОЗРАХУНКОМ)</text>
+      <text x="317" y="24" fill="#166534" font-size="9" font-weight="700" text-anchor="middle">РІВНИЙ ГРАДІЄНТ (З РОЗРАХУНКОМ)</text>
       
       <!-- Clean parallel striping / helix -->
       <rect x="232" y="45" width="170" height="14" rx="3" fill="#FB7185"/>
@@ -82,7 +82,7 @@
     <text x="12" y="51" fill="#6B21A8" font-size="10" font-weight="700">1. ЧЕРГУВАННЯ МОТКІВ (2 РЯДИ / 2 РЯДИ)</text>
     <text x="12" y="74" fill="#334155" font-size="9.5">• Розбиває непередбачувані колірні плями.</text>
     <text x="12" y="91" fill="#334155" font-size="9.5">• Згладжує різницю відтінків між партіями.</text>
-    <text x="12" y="108" fill="#059669" font-size="9" font-weight="600">✓ Створює м'який акварельний меланж</text>
+    <text x="12" y="108" fill="#059669" font-size="9.5" font-weight="600">✓ Створює м'який акварельний меланж</text>
 
     <!-- Rule 2: Hand-dyed sleeves matching -->
     <rect y="135" width="290" height="88" rx="10" fill="#FFFFFF" stroke="#E2E8F0" stroke-width="1.5" filter="url(#syShadow)"/>
@@ -90,7 +90,7 @@
     <text x="12" y="151" fill="#92400E" font-size="10" font-weight="700">2. СИНХРОНІЗАЦІЯ РУКАВІВ ТА ПЕРЕДУ</text>
     <text x="12" y="174" fill="#334155" font-size="9.5">• Відмотуйте моток до тієї самої контрольної точки.</text>
     <text x="12" y="191" fill="#334155" font-size="9.5">• Починайте обидва рукави з одного кольору секції.</text>
-    <text x="12" y="208" fill="#D97706" font-size="9" font-weight="600">✓ Однаковий малюнок на лівому та правому рукаві</text>
+    <text x="12" y="208" fill="#D97706" font-size="9.5" font-weight="600">✓ Однаковий малюнок на лівому та правому рукаві</text>
 
     <!-- Rule 3: Stitch Patterns selection -->
     <rect y="235" width="290" height="85" rx="10" fill="#FFFFFF" stroke="#E2E8F0" stroke-width="1.5" filter="url(#syShadow)"/>
@@ -98,11 +98,11 @@
     <text x="12" y="251" fill="#0369A1" font-size="10" font-weight="700">3. ПІДБІР ПРАВИЛЬНОГО ВІЗЕРУНКА</text>
     <text x="12" y="274" fill="#334155" font-size="9.5">• Ідеально: Лицьова гладь, платочна в'язка, мохер.</text>
     <text x="12" y="291" fill="#334155" font-size="9.5">• Уникати: Складні дрібні коси (малюнок губиться).</text>
-    <text x="12" y="307" fill="#0284C7" font-size="9" font-weight="600">✓ Хвилясті ажури (шеврони) підсилюють градієнт</text>
+    <text x="12" y="307" fill="#0284C7" font-size="9.5" font-weight="600">✓ Хвилясті ажури (шеврони) підсилюють градієнт</text>
 
     <!-- Quick Formula Card -->
     <rect y="330" width="290" height="58" rx="8" fill="#FAF5FF" stroke="#C084FC" stroke-width="1"/>
-    <text x="12" y="350" fill="#581C87" font-size="10" font-weight="700">ФОРМУЛА ВИТРАТИ МЕТРІВ НА РЯД:</text>
-    <text x="12" y="370" fill="#7E22CE" font-size="10.5" font-weight="800">L_ряду (м) = N_петель_ряду × l_петлі (см) ÷ 100</text>
+    <text x="145" y="350" fill="#581C87" font-size="10" font-weight="700" text-anchor="middle">ФОРМУЛА ВИТРАТИ МЕТРІВ НА РЯД:</text>
+    <text x="145" y="370" fill="#7E22CE" font-size="9.5" font-weight="800" text-anchor="middle">L_ряду (м) = N_петель_ряду × l_петлі (см) ÷ 100</text>
   </g>
 </svg>
