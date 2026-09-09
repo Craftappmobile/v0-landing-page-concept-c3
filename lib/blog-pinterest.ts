@@ -295,6 +295,22 @@ export const KNOWN_PINS: Record<string, PinterestPinData> = {
     authorUrl: "https://www.pinterest.com/pin/839104829104829320/",
     image: "/images/pins/pin-839104829104829320.jpg",
   },
+  "938104829104829330": {
+    id: "938104829104829330",
+    url: "https://www.pinterest.com/pin/938104829104829330/",
+    title: "Як рівномірно розрахувати убавки та добавки петель по ряду: точні математичні формули",
+    author: "Knit Shaping Lab",
+    authorUrl: "https://www.pinterest.com/pin/938104829104829330/",
+    image: "/images/pins/pin-938104829104829330.jpg",
+  },
+  "948104829104829340": {
+    id: "948104829104829340",
+    url: "https://www.pinterest.com/pin/948104829104829340/",
+    title: "Покроковий розрахунок інтервалів убавок і залишку: ідеальна симетрія без стягування",
+    author: "Knitting Math Studio",
+    authorUrl: "https://www.pinterest.com/pin/948104829104829340/",
+    image: "/images/pins/pin-948104829104829340.jpg",
+  },
 };
 
 function escapeHtml(str: string) {

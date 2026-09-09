@@ -151,18 +151,21 @@ function getCalculatorConfig(slug: string) {
 
     case "ubavky":
       return {
-        field1: { label: "Поточна кількість петель", default: "120", suffix: "петель", hint: "Скільки петель зараз на спицях" },
-        field2: { label: "Скільки петель прибрати", default: "20", suffix: "петель", hint: "Потрібна кількість убавок" },
+        field1: { label: "Початкова кількість петель", default: "120", suffix: "петель", hint: "Скільки петель зараз на спицях у ряду" },
+        field2: { label: "Кількість змін (убавок або добавок)", default: "18", suffix: "петель", hint: "Скільки петель потрібно рівномірно додати або збавити" },
         field3: null,
         calculate: (v1: number, v2: number) => {
-          const total = Math.max(1, Math.round(v1))
-          const dec = Math.max(1, Math.min(total - 1, Math.round(v2)))
-          const interval = Math.floor(total / dec)
-          const remainder = total % dec
+          const total = Math.max(2, Math.round(v1))
+          const changes = Math.max(1, Math.min(total - 1, Math.round(v2)))
+          const baseStep = Math.floor(total / changes)
+          const remainder = total % changes
+          const normalIntervals = changes - remainder
           return {
-            title: "Інтервал між убавками",
-            value: `Кожні ${interval}–${interval + 1} п.`,
-            note: `Пров'язуйте 2 разом приблизно через кожні ${interval} петель (залишок у ${remainder} п. рівномірно розподіліть на початку та в кінці ряду).`,
+            title: "Рівномірний крок убавок / добавок",
+            value: remainder === 0 ? `Рівно через кожні ${baseStep} п.` : `Через кожні ${baseStep} та ${baseStep + 1} п.`,
+            note: remainder === 0
+              ? `Виконуйте убавку/добавку рівно через кожні ${baseStep} петель (${changes} разів).`
+              : `Схема симетричного чергування: ${normalIntervals} разів по ${baseStep} п. та ${remainder} разів по ${baseStep + 1} п. (залишок у ${remainder} п. рівномірно розподілений між точками).`,
           }
         },
       }

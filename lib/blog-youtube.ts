@@ -150,6 +150,18 @@ export const KNOWN_VIDEOS: Record<string, YouTubeVideoData> = {
     channel: "Катерина Македон",
     image: "/images/videos/yt-bVP1ed-FdIM.jpg",
   },
+  "Fn2d6NR1hQ0": {
+    id: "Fn2d6NR1hQ0",
+    title: "Прибавки петель в полотні спицями: 4 способи",
+    channel: "Україночка в'яже",
+    image: "/images/videos/yt-Fn2d6NR1hQ0.jpg",
+  },
+  "XwwyT-yEv1M": {
+    id: "XwwyT-yEv1M",
+    title: "2 петлі разом лицьовою з нахилом вліво та вправо",
+    channel: "Катерина Македон",
+    image: "/images/videos/yt-XwwyT-yEv1M.jpg",
+  },
 };
 
 function escapeHtml(str: string) {
