@@ -40,7 +40,7 @@ export function BlogCalculatorWidget({
           <Link
             href={pricingHref}
             style={{ color: "#ffffff" }}
-            className="inline-flex w-full items-center justify-center gap-2 rounded-2xl bg-primary px-4 py-2.5 text-xs font-semibold !text-white text-primary-foreground shadow-sm transition-all hover:bg-primary/90"
+            className="inline-flex w-full items-center justify-center gap-2 rounded-2xl bg-gradient-to-r from-red-600 to-rose-600 px-4 py-2.5 text-xs font-semibold !text-white text-white shadow-sm shadow-red-500/20 transition-all hover:from-red-700 hover:to-rose-700"
           >
             <Crown className="h-3.5 w-3.5 text-white" /> <span className="text-white">Додаток PRO (від 100 грн)</span>
           </Link>
@@ -114,11 +114,11 @@ export function BlogCalculatorWidget({
           </div>
         </div>
 
-        {/* Tier 2: Premium PRO App Subscription (High Value / High Conversion) */}
-        <div className="relative flex flex-col justify-between h-full p-6 sm:p-8 bg-gradient-to-br from-primary/15 via-primary/5 to-background">
+        {/* Tier 2: Premium PRO App Subscription (High Value / High Conversion - Red Translucent Accent) */}
+        <div className="relative flex flex-col justify-between h-full p-6 sm:p-8 bg-gradient-to-br from-red-500/15 via-rose-500/10 to-red-500/5 backdrop-blur-sm border-t lg:border-t-0 lg:border-l-2 border-red-500/30 shadow-[0_0_35px_-5px_rgba(239,68,68,0.15)]">
           <div className="flex-1 flex flex-col justify-start space-y-3.5">
             <div className="flex flex-wrap items-center gap-2">
-              <span className="inline-flex items-center gap-1.5 rounded-full bg-primary px-3 py-1 text-xs font-semibold text-primary-foreground shadow-sm">
+              <span className="inline-flex items-center gap-1.5 rounded-full bg-gradient-to-r from-red-600 to-rose-600 px-3.5 py-1 text-xs font-semibold text-white shadow-sm">
                 <Crown className="h-3.5 w-3.5 text-white" />
                 <span className="text-white">Мобільний додаток PRO</span>
               </span>
@@ -135,16 +135,16 @@ export function BlogCalculatorWidget({
               Забудьте про папірці та розпускання. Додаток створює попетельний опис вашого виробу, веде вас по рядах інтерактивним лічильником і зберігає мірки ваших робіт.
             </p>
 
-            <ul className="space-y-2 text-xs text-foreground/85 font-medium pt-1">
-              <li className="flex items-center gap-2 text-primary">
+            <ul className="space-y-2 text-xs text-foreground/90 font-medium pt-1">
+              <li className="flex items-center gap-2 text-red-600 dark:text-red-400">
                 <CheckCircle2 className="h-3.5 w-3.5 shrink-0" />
                 <span className="text-foreground">Всі 30 калькуляторів + готові схеми</span>
               </li>
-              <li className="flex items-center gap-2 text-primary">
+              <li className="flex items-center gap-2 text-red-600 dark:text-red-400">
                 <CheckCircle2 className="h-3.5 w-3.5 shrink-0" />
                 <span className="text-foreground">Розумний лічильник рядів із підказками</span>
               </li>
-              <li className="flex items-center gap-2 text-primary">
+              <li className="flex items-center gap-2 text-red-600 dark:text-red-400">
                 <CheckCircle2 className="h-3.5 w-3.5 shrink-0" />
                 <span className="text-foreground">CRM обліку пряжі та збереження розмірів</span>
               </li>
@@ -155,7 +155,7 @@ export function BlogCalculatorWidget({
             <Link
               href={pricingHref}
               style={{ color: "#ffffff" }}
-              className="group inline-flex h-12 w-full items-center justify-center gap-2.5 rounded-2xl bg-primary px-6 text-sm font-semibold !text-white text-white shadow-md transition-all hover:bg-primary/90 hover:shadow-lg no-underline"
+              className="group inline-flex h-12 w-full items-center justify-center gap-2.5 rounded-2xl bg-gradient-to-r from-red-600 via-rose-600 to-red-600 px-6 text-sm font-semibold !text-white text-white shadow-md shadow-red-500/20 transition-all hover:from-red-700 hover:to-rose-700 hover:shadow-lg hover:shadow-red-500/30 no-underline"
             >
               <span className="text-white font-semibold">Обрати тариф підписки</span>
               <ArrowRight className="h-4 w-4 text-white transition-transform group-hover:translate-x-1" />
@@ -163,7 +163,7 @@ export function BlogCalculatorWidget({
 
             <div className="flex h-5 items-center justify-between px-1 text-xs text-muted-foreground">
               <span>Пакет «Тест» — всього 100 грн</span>
-              <Link href={testPlanHref} className="font-semibold text-primary hover:underline">
+              <Link href={testPlanHref} className="font-semibold text-red-600 dark:text-red-400 hover:text-red-700 hover:underline">
                 Спробувати за 100 грн ➔
               </Link>
             </div>
