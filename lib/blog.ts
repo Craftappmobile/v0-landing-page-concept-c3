@@ -191,12 +191,42 @@ export function getRelatedPosts(currentSlug: string, limit = 3) {
   return [...sameCategory, ...fallback].slice(0, limit)
 }
 
+function escapeHtmlAttr(str: string) {
+  return str
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+}
+
+export function renderPhotoEmbed(url: string, caption?: string) {
+  const safeUrl = escapeHtmlAttr(url.trim())
+  const safeCaption = caption ? escapeHtmlAttr(caption.trim()) : ""
+  return `
+<figure class="blog-photo not-prose my-10 flex flex-col items-center w-full">
+  <div class="overflow-hidden rounded-3xl border border-border/80 bg-card shadow-lg max-w-lg w-full transition-all duration-300 hover:shadow-xl">
+    <img src="${safeUrl}" alt="${safeCaption || "Фото виробу"}" loading="lazy" decoding="async" class="w-full h-auto object-cover" />
+  </div>
+  ${safeCaption ? `<figcaption class="mt-3.5 max-w-lg text-center text-sm leading-relaxed text-muted-foreground">${safeCaption}</figcaption>` : ""}
+</figure>`
+}
+
 export async function markdownToHtml(markdown: string) {
   const pinEmbeds: string[] = []
+  const photoEmbeds: string[] = []
   const ytEmbeds: string[] = []
   const appCtaEmbeds: string[] = []
 
   let preparedMarkdown = markdown.replace(
+    /\{\{photo:\s*([^\s|}]+)(?:\s*\|\s*([^}]+))?\}\}/g,
+    (_match, url: string, caption?: string) => {
+      const slot = `PHOTO_EMBED_SLOT_${photoEmbeds.length}`
+      photoEmbeds.push(renderPhotoEmbed(url, caption))
+      return slot
+    }
+  )
+
+  preparedMarkdown = preparedMarkdown.replace(
     /\{\{pinterest:\s*([^\s|}]+)(?:\s*\|\s*([^}]+))?\}\}/g,
     (_match, url: string, caption?: string) => {
       const slot = `PINTEREST_EMBED_SLOT_${pinEmbeds.length}`
@@ -233,6 +263,11 @@ export async function markdownToHtml(markdown: string) {
     .process(preparedMarkdown)
 
   let html = replaceBlogDiagramShortcodes(processed.toString())
+
+  photoEmbeds.forEach((embedHtml, idx) => {
+    const slot = `PHOTO_EMBED_SLOT_${idx}`
+    html = html.replace(`<p>${slot}</p>`, embedHtml).replace(slot, embedHtml)
+  })
 
   pinEmbeds.forEach((embedHtml, idx) => {
     const slot = `PINTEREST_EMBED_SLOT_${idx}`

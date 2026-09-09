@@ -187,6 +187,22 @@ body {
     @apply m-0;
   }
 
+  .blog-content img {
+    @apply my-8 mx-auto rounded-3xl max-w-lg w-full h-auto shadow-md border border-border/80 object-cover;
+  }
+
+  .blog-content .blog-photo {
+    @apply my-10 flex flex-col items-center justify-center w-full;
+  }
+
+  .blog-content .blog-photo img {
+    @apply my-0 mx-auto rounded-3xl max-w-lg w-full h-auto shadow-lg border border-border/80 object-cover transition-transform duration-500 hover:scale-[1.02];
+  }
+
+  .blog-content .blog-photo figcaption {
+    @apply mt-3 max-w-lg text-center text-sm leading-relaxed text-muted-foreground;
+  }
+
   .blog-content .blog-pinterest-embed {
     @apply my-8 flex flex-col items-center justify-center;
   }
