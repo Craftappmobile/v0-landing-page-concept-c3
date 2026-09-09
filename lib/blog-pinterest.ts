@@ -343,6 +343,22 @@ export const KNOWN_PINS: Record<string, PinterestPinData> = {
     authorUrl: "https://www.pinterest.com/pin/988104829104829380/",
     image: "/images/pins/pin-988104829104829380.jpg",
   },
+  "998104829104829390": {
+    id: "998104829104829390",
+    url: "https://www.pinterest.com/pin/998104829104829390/",
+    title: "Як адаптувати готовий опис в'язання під свою пряжу: формули коефіцієнта K",
+    author: "Pattern Adaptation Lab",
+    authorUrl: "https://www.pinterest.com/pin/998104829104829390/",
+    image: "/images/pins/pin-998104829104829390.jpg",
+  },
+  "1008104829104829400": {
+    id: "1008104829104829400",
+    url: "https://www.pinterest.com/pin/1008104829104829400/",
+    title: "Покроковий перерахунок петель та рядів майстер-класу під власну щільність",
+    author: "Knitting Gauge Studio",
+    authorUrl: "https://www.pinterest.com/pin/1008104829104829400/",
+    image: "/images/pins/pin-1008104829104829400.jpg",
+  },
 };
 
 function escapeHtml(str: string) {

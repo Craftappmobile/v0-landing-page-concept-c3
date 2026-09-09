@@ -235,7 +235,12 @@ export const calculators: CalculatorDefinition[] = [
           "Загальна витрата в метрах допомагає підібрати іншу пряжу. Якщо ваша пряжа має інший метраж, переведіть ці метри в грами через калькулятор складання пряжі.",
       },
     ],
-    relatedPosts: ["adaptuvala-radyanskyy-opys", "yak-rozrahuvaty-shchilnist-vyazannya", "yak-rozrahuvaty-vytratu-pryazhi-na-svetr"],
+    relatedPosts: [
+      "yak-adaptuvaty-opys-pid-svoyu-pryazhu",
+      "adaptuvala-radyanskyy-opys",
+      "yak-rozrahuvaty-shchilnist-vyazannya",
+      "yak-rozrahuvaty-vytratu-pryazhi-na-svetr",
+    ],
   },
   {
     slug: "rahlan",

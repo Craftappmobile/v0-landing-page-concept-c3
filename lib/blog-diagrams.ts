@@ -842,6 +842,143 @@ const BLOG_DIAGRAMS: Record<string, BlogDiagramDefinition> = {
   <text x="60" y="398" font-size="11" fill="#5F5E5A">2. Скос спущеного плеча = лише 1.5–2.5 см (для плавного драпірування без гострих кутів).</text>
 </svg>`,
   },
+  "pattern-adaptation": {
+    title: "Схема перерахунку опису під іншу пряжу",
+    caption: "Порівняння щільності в описі та вашого зразка: формули коефіцієнтів Kp, Kr, масштабування набору та збереження рапортів.",
+    svg: `<svg viewBox="0 0 680 430" role="img" aria-labelledby="diagram-pattern-adaptation-title" xmlns="http://www.w3.org/2000/svg" font-family="sans-serif">
+  <title id="diagram-pattern-adaptation-title">Схема адаптації опису в'язання: перерахунок петель та рядів через коефіцієнти Kp і Kr</title>
+  <defs>
+    <marker id="adapt-arrow" viewBox="0 0 10 10" refX="6" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M 0 1 L 8 5 L 0 9 z" fill="#0F6E56" />
+    </marker>
+    <marker id="adapt-arrow-orange" viewBox="0 0 10 10" refX="6" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M 0 1 L 8 5 L 0 9 z" fill="#D85A30" />
+    </marker>
+  </defs>
+
+  <!-- Background -->
+  <rect width="680" height="430" fill="#FCFAF7" rx="12"/>
+
+  <!-- Top Title Bar -->
+  <rect x="25" y="16" width="630" height="34" rx="6" fill="#F1EFE8" stroke="#E2DCD2" stroke-width="1"/>
+  <text x="340" y="38" text-anchor="middle" font-size="13" font-weight="700" fill="#2C2C2A">ПОРІВНЯННЯ ЩІЛЬНОСТІ: ОПИС (МАЙСТЕР-КЛАС) vs ВАША ПРЯЖА</text>
+
+  <!-- Box 1: Gauge in Pattern -->
+  <g transform="translate(35, 66)">
+    <rect width="280" height="150" rx="8" fill="#FFFFFF" stroke="#5F5E5A" stroke-width="1.2"/>
+    <rect x="0" y="0" width="280" height="28" rx="8" fill="#F4F1EA"/>
+    <text x="140" y="19" text-anchor="middle" font-size="12" font-weight="700" fill="#2C2C2A">1. Щільність в описі (МК)</text>
+
+    <!-- Swatch 10x10 representation -->
+    <rect x="25" y="42" width="70" height="70" rx="4" fill="#EAE7DC" stroke="#5F5E5A" stroke-dasharray="3 3"/>
+    <text x="60" y="80" text-anchor="middle" font-size="11" font-weight="600" fill="#5F5E5A">10×10 см</text>
+
+    <text x="110" y="58" font-size="12" font-weight="600" fill="#2C2C2A">P₁ = <tspan fill="#D85A30" font-weight="700">20 п.</tspan> (в 10 см)</text>
+    <text x="110" y="76" font-size="11" fill="#5F5E5A">Щільність петель: 2.0 п./см</text>
+    
+    <text x="110" y="100" font-size="12" font-weight="600" fill="#2C2C2A">R₁ = <tspan fill="#D85A30" font-weight="700">28 р.</tspan> (в 10 см)</text>
+    <text x="110" y="118" font-size="11" fill="#5F5E5A">Щільність рядів: 2.8 р./см</text>
+
+    <rect x="15" y="124" width="250" height="18" rx="4" fill="#F8F6F0"/>
+    <text x="140" y="137" text-anchor="middle" font-size="10" font-weight="500" fill="#5F5E5A">Приклад деталі: Набір = 100 петель</text>
+  </g>
+
+  <!-- Box 2: Knitter's Actual Gauge -->
+  <g transform="translate(365, 66)">
+    <rect width="280" height="150" rx="8" fill="#FFFFFF" stroke="#0F6E56" stroke-width="1.5"/>
+    <rect x="0" y="0" width="280" height="28" rx="8" fill="#E1F5EE"/>
+    <text x="140" y="19" text-anchor="middle" font-size="12" font-weight="700" fill="#0F6E56">2. Ваша щільність (зразок після ВТО)</text>
+
+    <!-- Swatch 10x10 representation -->
+    <rect x="25" y="42" width="70" height="70" rx="4" fill="#CEEAD6" stroke="#0F6E56" stroke-dasharray="3 3"/>
+    <text x="60" y="80" text-anchor="middle" font-size="11" font-weight="600" fill="#0F6E56">10×10 см</text>
+
+    <text x="110" y="58" font-size="12" font-weight="600" fill="#2C2C2A">P₂ = <tspan fill="#0F6E56" font-weight="700">23 п.</tspan> (в 10 см)</text>
+    <text x="110" y="76" font-size="11" fill="#5F5E5A">Щільність петель: 2.3 п./см</text>
+    
+    <text x="110" y="100" font-size="12" font-weight="600" fill="#2C2C2A">R₂ = <tspan fill="#0F6E56" font-weight="700">32 р.</tspan> (в 10 см)</text>
+    <text x="110" y="118" font-size="11" fill="#5F5E5A">Щільність рядів: 3.2 р./см</text>
+
+    <rect x="15" y="124" width="250" height="18" rx="4" fill="#E8F5E9"/>
+    <text x="140" y="137" text-anchor="middle" font-size="10" font-weight="600" fill="#0F6E56">Потрібно новий розрахунок петель!</text>
+  </g>
+
+  <!-- Central Transformation Arrow -->
+  <line x1="318" y1="140" x2="360" y2="140" stroke="#0F6E56" stroke-width="2" marker-end="url(#adapt-arrow)"/>
+
+  <!-- Coefficients & Calculation Formula Section -->
+  <g transform="translate(35, 230)">
+    <rect width="610" height="106" rx="8" fill="#F1EFE8" stroke="#D8D1C5" stroke-width="1.2"/>
+    
+    <!-- Title -->
+    <text x="305" y="24" text-anchor="middle" font-size="12" font-weight="700" fill="#2C2C2A">ЗОЛОТІ ФОРМУЛИ ПЕРЕРАХУНКУ (МАСШТАБНИЙ КОЕФІЦІЄНТ)</text>
+
+    <!-- Formula Kp -->
+    <rect x="20" y="36" width="275" height="58" rx="6" fill="#FFFFFF" stroke="#0F6E56" stroke-width="1"/>
+    <text x="35" y="58" font-size="12" font-weight="700" fill="#0F6E56">Коефіцієнт петель Kp:</text>
+    <text x="35" y="78" font-size="13" font-weight="700" fill="#2C2C2A">Kp = P₂ ÷ P₁ = 23 ÷ 20 = <tspan fill="#0F6E56">1.15</tspan></text>
+    <text x="220" y="60" font-size="10" fill="#5F5E5A">Нові петлі:</text>
+    <text x="220" y="78" font-size="11" font-weight="700" fill="#0F6E56">100 × 1.15 = 115 п.</text>
+
+    <!-- Formula Kr -->
+    <rect x="315" y="36" width="275" height="58" rx="6" fill="#FFFFFF" stroke="#D85A30" stroke-width="1"/>
+    <text x="330" y="58" font-size="12" font-weight="700" fill="#D85A30">Коефіцієнт рядів Kr:</text>
+    <text x="330" y="78" font-size="13" font-weight="700" fill="#2C2C2A">Kr = R₂ ÷ R₁ = 32 ÷ 28 = <tspan fill="#D85A30">1.143</tspan></text>
+    <text x="515" y="60" font-size="10" fill="#5F5E5A">Нові ряди:</text>
+    <text x="515" y="78" font-size="11" font-weight="700" fill="#D85A30">56 × 1.143 ≈ 64 р.</text>
+  </g>
+
+  <!-- Bottom Rules Note: 3 Key Golden Rules -->
+  <g transform="translate(35, 348)">
+    <rect width="610" height="68" rx="8" fill="#FFFFFF" stroke="#E2DCD2" stroke-width="1.2"/>
+    <circle cx="20" cy="22" r="8" fill="#0F6E56"/>
+    <text x="20" y="26" text-anchor="middle" font-size="10" font-weight="700" fill="#FFFFFF">!</text>
+    <text x="38" y="24" font-size="11" font-weight="700" fill="#2C2C2A">3 ПРАВИЛА УЗГОДЖЕННЯ НОВИХ ПЕТЕЛЬ:</text>
+    
+    <text x="38" y="42" font-size="10.5" fill="#5F5E5A">1. <tspan font-weight="600" fill="#2C2C2A">Рапорт візерунка:</tspan> округлюйте 115 п. до найближчого кратного рапорту (наприклад, 114 п. або 116 п.).</text>
+    <text x="38" y="58" font-size="10.5" fill="#5F5E5A">2. <tspan font-weight="600" fill="#2C2C2A">Симетрія убавок:</tspan> глибину пройми та вирізу контролюйте в сантиметрах, а не в абстрактних рядах опису.</text>
+  </g>
+</svg>`,
+  },
+  "adaptatsiya": {
+    title: "Схема перерахунку опису під іншу пряжу",
+    caption: "Порівняння щільності в описі та вашого зразка: формули коефіцієнтів Kp, Kr, масштабування набору та збереження рапортів.",
+    svg: `<svg viewBox="0 0 680 430" role="img" aria-labelledby="diagram-pattern-adaptation-title-alias" xmlns="http://www.w3.org/2000/svg" font-family="sans-serif">
+  <title id="diagram-pattern-adaptation-title-alias">Схема адаптації опису в'язання</title>
+  <!-- Background -->
+  <rect width="680" height="430" fill="#FCFAF7" rx="12"/>
+  <rect x="25" y="16" width="630" height="34" rx="6" fill="#F1EFE8" stroke="#E2DCD2" stroke-width="1"/>
+  <text x="340" y="38" text-anchor="middle" font-size="13" font-weight="700" fill="#2C2C2A">ПОРІВНЯННЯ ЩІЛЬНОСТІ: ОПИС (МАЙСТЕР-КЛАС) vs ВАША ПРЯЖА</text>
+  <g transform="translate(35, 66)">
+    <rect width="280" height="150" rx="8" fill="#FFFFFF" stroke="#5F5E5A" stroke-width="1.2"/>
+    <rect x="0" y="0" width="280" height="28" rx="8" fill="#F4F1EA"/>
+    <text x="140" y="19" text-anchor="middle" font-size="12" font-weight="700" fill="#2C2C2A">1. Щільність в описі (МК)</text>
+    <rect x="25" y="42" width="70" height="70" rx="4" fill="#EAE7DC" stroke="#5F5E5A" stroke-dasharray="3 3"/>
+    <text x="60" y="80" text-anchor="middle" font-size="11" font-weight="600" fill="#5F5E5A">10×10 см</text>
+    <text x="110" y="58" font-size="12" font-weight="600" fill="#2C2C2A">P₁ = 20 п. в 10 см</text>
+    <text x="110" y="100" font-size="12" font-weight="600" fill="#2C2C2A">R₁ = 28 р. в 10 см</text>
+  </g>
+  <g transform="translate(365, 66)">
+    <rect width="280" height="150" rx="8" fill="#FFFFFF" stroke="#0F6E56" stroke-width="1.5"/>
+    <rect x="0" y="0" width="280" height="28" rx="8" fill="#E1F5EE"/>
+    <text x="140" y="19" text-anchor="middle" font-size="12" font-weight="700" fill="#0F6E56">2. Ваша щільність</text>
+    <rect x="25" y="42" width="70" height="70" rx="4" fill="#CEEAD6" stroke="#0F6E56" stroke-dasharray="3 3"/>
+    <text x="60" y="80" text-anchor="middle" font-size="11" font-weight="600" fill="#0F6E56">10×10 см</text>
+    <text x="110" y="58" font-size="12" font-weight="600" fill="#2C2C2A">P₂ = 23 п. в 10 см</text>
+    <text x="110" y="100" font-size="12" font-weight="600" fill="#2C2C2A">R₂ = 32 р. в 10 см</text>
+  </g>
+  <g transform="translate(35, 230)">
+    <rect width="610" height="106" rx="8" fill="#F1EFE8" stroke="#D8D1C5" stroke-width="1.2"/>
+    <text x="305" y="24" text-anchor="middle" font-size="12" font-weight="700" fill="#2C2C2A">ЗОЛОТІ ФОРМУЛИ ПЕРЕРАХУНКУ</text>
+    <rect x="20" y="36" width="275" height="58" rx="6" fill="#FFFFFF" stroke="#0F6E56" stroke-width="1"/>
+    <text x="35" y="58" font-size="12" font-weight="700" fill="#0F6E56">Kp = P₂ ÷ P₁ = 1.15</text>
+    <text x="35" y="78" font-size="12" fill="#2C2C2A">Нові петлі = Петлі_МК × 1.15</text>
+    <rect x="315" y="36" width="275" height="58" rx="6" fill="#FFFFFF" stroke="#D85A30" stroke-width="1"/>
+    <text x="330" y="58" font-size="12" font-weight="700" fill="#D85A30">Kr = R₂ ÷ R₁ = 1.143</text>
+    <text x="330" y="78" font-size="12" fill="#2C2C2A">Нові ряди = Ряди_МК × 1.143</text>
+  </g>
+</svg>`,
+  },
 };
 
 function escapeHtml(value: string) {

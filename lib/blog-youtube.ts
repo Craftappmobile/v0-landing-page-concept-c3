@@ -186,6 +186,18 @@ export const KNOWN_VIDEOS: Record<string, YouTubeVideoData> = {
     channel: "Raisa Bere про в‘язання та шиття",
     image: "/images/videos/yt-EmeoWBwJdOA.jpg",
   },
+  "8ksGlppxNo4": {
+    id: "8ksGlppxNo4",
+    title: "Найточніший розрахунок петель: Як розрахувати петлі для в'язання спицями",
+    channel: "Вʼязання з Юлією Савлюк",
+    image: "/images/videos/yt-8ksGlppxNo4.jpg",
+  },
+  "FXkHpn9pAEA": {
+    id: "FXkHpn9pAEA",
+    title: "Джемпер спицями: МК, розрахунок петель під іншу пряжу",
+    channel: "dr.Konovalova. Про в'язання українською",
+    image: "/images/videos/yt-FXkHpn9pAEA.jpg",
+  },
 };
 
 function escapeHtml(str: string) {
