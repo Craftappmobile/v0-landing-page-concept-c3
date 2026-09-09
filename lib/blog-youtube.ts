@@ -282,6 +282,30 @@ export const KNOWN_VIDEOS: Record<string, YouTubeVideoData> = {
     channel: "Котики Вʼяжуть",
     image: "/images/videos/yt-KGUSSc8e47U.jpg",
   },
+  "swLxm-vsmR0": {
+    id: "swLxm-vsmR0",
+    title: "Кругла горловина спицями: як розрахувати, як зв'язати (в'язальна арифметика)",
+    channel: "Натка в'яже",
+    image: "/images/videos/yt-swLxm-vsmR0.jpg",
+  },
+  "AuS9q4w9xpk": {
+    id: "AuS9q4w9xpk",
+    title: "Розрахунок горловини джемпера: плавні убавки та оформлення планки",
+    channel: "Margo_knitting_ua",
+    image: "/images/videos/yt-AuS9q4w9xpk.jpg",
+  },
+  "zE3IACco80E": {
+    id: "zE3IACco80E",
+    title: "Секційна пряжа: практичні ідеї, які реально виглядають красиво",
+    channel: "Натка в'яже",
+    image: "/images/videos/yt-zE3IACco80E.jpg",
+  },
+  "iCLnEZISKNQ": {
+    id: "iCLnEZISKNQ",
+    title: "Особливості пряжі секційного фарбування: розрахунок секцій та підбір візерунка",
+    channel: "В'язання спицями",
+    image: "/images/videos/yt-iCLnEZISKNQ.jpg",
+  },
 };
 
 function escapeHtml(str: string) {

@@ -2482,6 +2482,490 @@ const BLOG_DIAGRAMS: Record<string, BlogDiagramDefinition> = {
   </g>
 </svg>`,
   },
+  "crew-neck-guide": {
+    title: "Розрахунок та геометрія круглого вирізу Crew Neck",
+    caption: "Інженерна схема розрахунку горловини crew neck: пропорції 35/18/18/30, скіс плеча укороченими рядами, правило набору планки 3:4 та еластичне закриття tubular bind-off.",
+    svg: `<svg viewBox="0 0 800 520" role="img" aria-labelledby="diagram-crew-neck-title" xmlns="http://www.w3.org/2000/svg" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif">
+  <title id="diagram-crew-neck-title">Розрахунок та геометрія круглого вирізу Crew Neck</title>
+  <defs>
+    <linearGradient id="cnBodyGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#F8FAFC" stop-opacity="0.9"/>
+      <stop offset="100%" stop-color="#F1F5F9" stop-opacity="0.8"/>
+    </linearGradient>
+    <linearGradient id="cnCurveGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#EFF6FF" stop-opacity="0.9"/>
+      <stop offset="100%" stop-color="#DBEAFE" stop-opacity="0.9"/>
+    </linearGradient>
+    <filter id="cnShadow" x="-5%" y="-5%" width="110%" height="110%">
+      <feDropShadow dx="0" dy="4" stdDeviation="6" flood-opacity="0.07"/>
+    </filter>
+  </defs>
+
+  <rect width="800" height="520" rx="16" fill="#FFFFFF"/>
+  <rect x="12" y="12" width="776" height="496" rx="12" fill="none" stroke="#E2E8F0" stroke-width="1.5"/>
+
+  <!-- Title Badge -->
+  <g transform="translate(30, 32)">
+    <rect width="360" height="30" rx="8" fill="#0F172A"/>
+    <text x="180" y="20" fill="#FFFFFF" font-size="12.5" font-weight="700" text-anchor="middle">АНАТОМІЯ ТА РОЗРАХУНОК КРУГЛОГО ВИРІЗУ (CREW NECK)</text>
+  </g>
+
+  <!-- Left: Technical Diagram of Crew Neck Geometry -->
+  <g transform="translate(40, 80)">
+    <!-- Main Sweater Chest & Neck Contour -->
+    <!-- Shoulder Left, Neck curve, Shoulder Right, Body sides -->
+    <path d="M 20,90 L 110,65 L 110,65 Q 150,65 170,105 Q 190,145 230,145 Q 270,145 290,105 Q 310,65 350,65 L 440,90 L 420,240 L 40,240 Z" fill="url(#cnBodyGrad)" stroke="#64748B" stroke-width="2" filter="url(#cnShadow)"/>
+
+    <!-- Cutout Curve for Neckline with highlight -->
+    <path d="M 110,65 Q 150,65 170,105 Q 190,145 230,145 Q 270,145 290,105 Q 310,65 350,65 Q 310,50 230,50 Q 150,50 110,65 Z" fill="url(#cnCurveGrad)" stroke="#2563EB" stroke-width="2.5"/>
+
+    <!-- Center Front Straight Segment (Закриття центру) -->
+    <path d="M 195,145 L 265,145" stroke="#DC2626" stroke-width="5" stroke-linecap="round"/>
+    <rect x="175" y="160" width="110" height="24" rx="4" fill="#FEE2E2" stroke="#EF4444" stroke-width="1"/>
+    <text x="230" y="176" fill="#991B1B" font-size="10.5" font-weight="700" text-anchor="middle">Центр: 35–40% петель</text>
+
+    <!-- Stepped Decrease Groups (Left & Right) -->
+    <!-- Right side steps: 3, 2, 1, 1, 1 -->
+    <circle cx="275" cy="138" r="4" fill="#2563EB"/>
+    <text x="290" y="142" fill="#1E40AF" font-size="9.5" font-weight="700">3 п.</text>
+    
+    <circle cx="285" cy="120" r="4" fill="#2563EB"/>
+    <text x="300" y="124" fill="#1E40AF" font-size="9.5" font-weight="700">2 п.</text>
+    
+    <circle cx="295" cy="98" r="4" fill="#2563EB"/>
+    <text x="310" y="102" fill="#1E40AF" font-size="9.5" font-weight="700">1 п. × 3</text>
+
+    <!-- Shoulder Slopes (Укорочені ряди) -->
+    <!-- Left shoulder slope -->
+    <line x1="20" y1="90" x2="110" y2="65" stroke="#059669" stroke-width="4" stroke-linecap="round"/>
+    <text x="65" y="55" fill="#047857" font-size="10.5" font-weight="700" text-anchor="middle">Скіс плеча (3–5 см)</text>
+
+    <!-- Right shoulder slope -->
+    <line x1="350" y1="65" x2="440" y2="90" stroke="#059669" stroke-width="4" stroke-linecap="round"/>
+    <text x="395" y="55" fill="#047857" font-size="10.5" font-weight="700" text-anchor="middle">Німецькі укорочені ряди</text>
+
+    <!-- Depth and Width Dimension Arrows -->
+    <!-- Depth Front (6-8 cm) -->
+    <line x1="230" y1="50" x2="230" y2="145" stroke="#EA580C" stroke-width="1.8" stroke-dasharray="3,3"/>
+    <polygon points="230,50 227,58 233,58" fill="#EA580C"/>
+    <polygon points="230,145 227,137 233,137" fill="#EA580C"/>
+    <rect x="235" y="85" width="95" height="20" rx="4" fill="#FFEDD5"/>
+    <text x="240" y="99" fill="#C2410C" font-size="10.5" font-weight="700">Глибина: 6–8 см</text>
+
+    <!-- Depth Back (2-3 cm) -->
+    <line x1="165" y1="50" x2="165" y2="65" stroke="#64748B" stroke-width="1.5"/>
+    <text x="115" y="45" fill="#475569" font-size="9.5" font-weight="600">Спинка: 2–3 см</text>
+
+    <!-- Width of Neckline (16-20 cm) -->
+    <line x1="110" y1="260" x2="350" y2="260" stroke="#2563EB" stroke-width="1.8"/>
+    <line x1="110" y1="70" x2="110" y2="265" stroke="#94A3B8" stroke-width="1" stroke-dasharray="2,2"/>
+    <line x1="350" y1="70" x2="350" y2="265" stroke="#94A3B8" stroke-width="1" stroke-dasharray="2,2"/>
+    <rect x="180" y="248" width="100" height="24" rx="4" fill="#DBEAFE"/>
+    <text x="230" y="264" fill="#1E40AF" font-size="11" font-weight="700" text-anchor="middle">Ширина: 16–20 см</text>
+
+    <!-- Bottom summary banner in left box -->
+    <rect x="20" y="295" width="420" height="95" rx="8" fill="#F8FAFC" stroke="#E2E8F0"/>
+    <text x="35" y="316" fill="#0F172A" font-size="11.5" font-weight="700">ПРАВИЛО НАБОРУ ПЕТЕЛЬ ДЛЯ ПЛАНКИ (БЕЙКИ):</text>
+    <text x="35" y="336" fill="#334155" font-size="10.5">• По вертикальних скосах: <tspan font-weight="700" fill="#2563EB">3 петлі з кожних 4 рядів (співвідношення 3:4)</tspan></text>
+    <text x="35" y="354" fill="#334155" font-size="10.5">• По горизонтальній частині: <tspan font-weight="700" fill="#059669">1 петля з 1 закритої петлі (1:1)</tspan></text>
+    <text x="35" y="372" fill="#334155" font-size="10.5">• Зменшення спиць: <tspan font-weight="700" fill="#DC2626">на 0.5–1.0 мм тонші</tspan> за основу (для пружності)</text>
+  </g>
+
+  <!-- Right Column: Formulas & Rules -->
+  <g transform="translate(510, 80)">
+    <text x="0" y="20" fill="#0F172A" font-size="13" font-weight="800">ЗОЛОТІ ПРОПОРЦІЇ CREW NECK</text>
+
+    <!-- Card 1: 35/18/18/30 Proportion -->
+    <rect y="38" width="250" height="125" rx="10" fill="#FFFFFF" stroke="#E2E8F0" stroke-width="1.5" filter="url(#cnShadow)"/>
+    <rect y="38" width="250" height="26" rx="10" fill="#EEF2FF"/>
+    <text x="12" y="55" fill="#4338CA" font-size="11" font-weight="700">РОЗПОДІЛ ПЕТЕЛЬ ГОРЛОВИНИ</text>
+    <text x="12" y="82" fill="#334155" font-size="10.5">• Спинка: <tspan font-weight="700" fill="#0F172A">35–38%</tspan> петель</text>
+    <text x="12" y="100" fill="#334155" font-size="10.5">• Перед (глибоке коло): <tspan font-weight="700" fill="#0F172A">30–35%</tspan></text>
+    <text x="12" y="118" fill="#334155" font-size="10.5">• Плечі (ліве + праве): <tspan font-weight="700" fill="#0F172A">по 15–18%</tspan></text>
+    <text x="12" y="136" fill="#64748B" font-size="9.5">Баланс: Спинка ширша за перед на 2–4 см</text>
+
+    <!-- Card 2: Rounding Stages Algorithm -->
+    <rect y="178" width="250" height="135" rx="10" fill="#FFFFFF" stroke="#E2E8F0" stroke-width="1.5" filter="url(#cnShadow)"/>
+    <rect y="178" width="250" height="26" rx="10" fill="#ECFDF5"/>
+    <text x="12" y="195" fill="#047857" font-size="11" font-weight="700">СТАДІЇ ПЛАВНОГО ЗАКРУГЛЕННЯ</text>
+    <text x="12" y="222" fill="#334155" font-size="10">• 1. Центр: закрити одразу <tspan font-weight="700" fill="#059669">40% петель</tspan></text>
+    <text x="12" y="240" fill="#334155" font-size="10">• 2. Крутий підйом: <tspan font-weight="700" fill="#059669">1×3 п., 1×2 п.</tspan></text>
+    <text x="12" y="258" fill="#334155" font-size="10">• 3. Плавна дуга: <tspan font-weight="700" fill="#059669">по 1 п. у кожному 2-му р.</tspan></text>
+    <text x="12" y="276" fill="#334155" font-size="10">• 4. Вертикаль: <tspan font-weight="700" fill="#059669">2–4 ряди прямо</tspan> до плеча</text>
+    <text x="12" y="294" fill="#059669" font-size="9.5" font-weight="600">✓ Захист від сходинок і затягування краю</text>
+
+    <!-- Card 3: Elastic Bind-off -->
+    <rect y="328" width="250" height="85" rx="10" fill="#FEF2F2" stroke="#FCA5A5" stroke-width="1"/>
+    <text x="12" y="348" fill="#991B1B" font-size="11" font-weight="700">ЕЛАСТИЧНИЙ ФАБРИЧНИЙ КРАЙ</text>
+    <text x="12" y="368" fill="#7F1D1D" font-size="10">• Метод: <tspan font-weight="700">Tubular bind-off (голкою)</tspan></text>
+    <text x="12" y="386" fill="#7F1D1D" font-size="10">• Розтяжність: комфортно проходить голова</text>
+    <text x="12" y="402" fill="#7F1D1D" font-size="9.5">Ідеально тримає круглу форму після прання</text>
+  </g>
+</svg>`,
+  },
+  "dzhemper-kruhlyy": {
+    title: "Розрахунок та геометрія круглого вирізу Crew Neck",
+    caption: "Інженерна схема розрахунку горловини crew neck: пропорції 35/18/18/30, скіс плеча укороченими рядами, правило набору планки 3:4 та еластичне закриття tubular bind-off.",
+    svg: `<svg viewBox="0 0 800 520" role="img" aria-labelledby="diagram-crew-neck-title" xmlns="http://www.w3.org/2000/svg" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif">
+  <title id="diagram-crew-neck-title">Розрахунок та геометрія круглого вирізу Crew Neck</title>
+  <defs>
+    <linearGradient id="cnBodyGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#F8FAFC" stop-opacity="0.9"/>
+      <stop offset="100%" stop-color="#F1F5F9" stop-opacity="0.8"/>
+    </linearGradient>
+    <linearGradient id="cnCurveGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#EFF6FF" stop-opacity="0.9"/>
+      <stop offset="100%" stop-color="#DBEAFE" stop-opacity="0.9"/>
+    </linearGradient>
+    <filter id="cnShadow" x="-5%" y="-5%" width="110%" height="110%">
+      <feDropShadow dx="0" dy="4" stdDeviation="6" flood-opacity="0.07"/>
+    </filter>
+  </defs>
+
+  <rect width="800" height="520" rx="16" fill="#FFFFFF"/>
+  <rect x="12" y="12" width="776" height="496" rx="12" fill="none" stroke="#E2E8F0" stroke-width="1.5"/>
+
+  <!-- Title Badge -->
+  <g transform="translate(30, 32)">
+    <rect width="360" height="30" rx="8" fill="#0F172A"/>
+    <text x="180" y="20" fill="#FFFFFF" font-size="12.5" font-weight="700" text-anchor="middle">АНАТОМІЯ ТА РОЗРАХУНОК КРУГЛОГО ВИРІЗУ (CREW NECK)</text>
+  </g>
+
+  <!-- Left: Technical Diagram of Crew Neck Geometry -->
+  <g transform="translate(40, 80)">
+    <!-- Main Sweater Chest & Neck Contour -->
+    <!-- Shoulder Left, Neck curve, Shoulder Right, Body sides -->
+    <path d="M 20,90 L 110,65 L 110,65 Q 150,65 170,105 Q 190,145 230,145 Q 270,145 290,105 Q 310,65 350,65 L 440,90 L 420,240 L 40,240 Z" fill="url(#cnBodyGrad)" stroke="#64748B" stroke-width="2" filter="url(#cnShadow)"/>
+
+    <!-- Cutout Curve for Neckline with highlight -->
+    <path d="M 110,65 Q 150,65 170,105 Q 190,145 230,145 Q 270,145 290,105 Q 310,65 350,65 Q 310,50 230,50 Q 150,50 110,65 Z" fill="url(#cnCurveGrad)" stroke="#2563EB" stroke-width="2.5"/>
+
+    <!-- Center Front Straight Segment (Закриття центру) -->
+    <path d="M 195,145 L 265,145" stroke="#DC2626" stroke-width="5" stroke-linecap="round"/>
+    <rect x="175" y="160" width="110" height="24" rx="4" fill="#FEE2E2" stroke="#EF4444" stroke-width="1"/>
+    <text x="230" y="176" fill="#991B1B" font-size="10.5" font-weight="700" text-anchor="middle">Центр: 35–40% петель</text>
+
+    <!-- Stepped Decrease Groups (Left & Right) -->
+    <!-- Right side steps: 3, 2, 1, 1, 1 -->
+    <circle cx="275" cy="138" r="4" fill="#2563EB"/>
+    <text x="290" y="142" fill="#1E40AF" font-size="9.5" font-weight="700">3 п.</text>
+    
+    <circle cx="285" cy="120" r="4" fill="#2563EB"/>
+    <text x="300" y="124" fill="#1E40AF" font-size="9.5" font-weight="700">2 п.</text>
+    
+    <circle cx="295" cy="98" r="4" fill="#2563EB"/>
+    <text x="310" y="102" fill="#1E40AF" font-size="9.5" font-weight="700">1 п. × 3</text>
+
+    <!-- Shoulder Slopes (Укорочені ряди) -->
+    <!-- Left shoulder slope -->
+    <line x1="20" y1="90" x2="110" y2="65" stroke="#059669" stroke-width="4" stroke-linecap="round"/>
+    <text x="65" y="55" fill="#047857" font-size="10.5" font-weight="700" text-anchor="middle">Скіс плеча (3–5 см)</text>
+
+    <!-- Right shoulder slope -->
+    <line x1="350" y1="65" x2="440" y2="90" stroke="#059669" stroke-width="4" stroke-linecap="round"/>
+    <text x="395" y="55" fill="#047857" font-size="10.5" font-weight="700" text-anchor="middle">Німецькі укорочені ряди</text>
+
+    <!-- Depth and Width Dimension Arrows -->
+    <!-- Depth Front (6-8 cm) -->
+    <line x1="230" y1="50" x2="230" y2="145" stroke="#EA580C" stroke-width="1.8" stroke-dasharray="3,3"/>
+    <polygon points="230,50 227,58 233,58" fill="#EA580C"/>
+    <polygon points="230,145 227,137 233,137" fill="#EA580C"/>
+    <rect x="235" y="85" width="95" height="20" rx="4" fill="#FFEDD5"/>
+    <text x="240" y="99" fill="#C2410C" font-size="10.5" font-weight="700">Глибина: 6–8 см</text>
+
+    <!-- Depth Back (2-3 cm) -->
+    <line x1="165" y1="50" x2="165" y2="65" stroke="#64748B" stroke-width="1.5"/>
+    <text x="115" y="45" fill="#475569" font-size="9.5" font-weight="600">Спинка: 2–3 см</text>
+
+    <!-- Width of Neckline (16-20 cm) -->
+    <line x1="110" y1="260" x2="350" y2="260" stroke="#2563EB" stroke-width="1.8"/>
+    <line x1="110" y1="70" x2="110" y2="265" stroke="#94A3B8" stroke-width="1" stroke-dasharray="2,2"/>
+    <line x1="350" y1="70" x2="350" y2="265" stroke="#94A3B8" stroke-width="1" stroke-dasharray="2,2"/>
+    <rect x="180" y="248" width="100" height="24" rx="4" fill="#DBEAFE"/>
+    <text x="230" y="264" fill="#1E40AF" font-size="11" font-weight="700" text-anchor="middle">Ширина: 16–20 см</text>
+
+    <!-- Bottom summary banner in left box -->
+    <rect x="20" y="295" width="420" height="95" rx="8" fill="#F8FAFC" stroke="#E2E8F0"/>
+    <text x="35" y="316" fill="#0F172A" font-size="11.5" font-weight="700">ПРАВИЛО НАБОРУ ПЕТЕЛЬ ДЛЯ ПЛАНКИ (БЕЙКИ):</text>
+    <text x="35" y="336" fill="#334155" font-size="10.5">• По вертикальних скосах: <tspan font-weight="700" fill="#2563EB">3 петлі з кожних 4 рядів (співвідношення 3:4)</tspan></text>
+    <text x="35" y="354" fill="#334155" font-size="10.5">• По горизонтальній частині: <tspan font-weight="700" fill="#059669">1 петля з 1 закритої петлі (1:1)</tspan></text>
+    <text x="35" y="372" fill="#334155" font-size="10.5">• Зменшення спиць: <tspan font-weight="700" fill="#DC2626">на 0.5–1.0 мм тонші</tspan> за основу (для пружності)</text>
+  </g>
+
+  <!-- Right Column: Formulas & Rules -->
+  <g transform="translate(510, 80)">
+    <text x="0" y="20" fill="#0F172A" font-size="13" font-weight="800">ЗОЛОТІ ПРОПОРЦІЇ CREW NECK</text>
+
+    <!-- Card 1: 35/18/18/30 Proportion -->
+    <rect y="38" width="250" height="125" rx="10" fill="#FFFFFF" stroke="#E2E8F0" stroke-width="1.5" filter="url(#cnShadow)"/>
+    <rect y="38" width="250" height="26" rx="10" fill="#EEF2FF"/>
+    <text x="12" y="55" fill="#4338CA" font-size="11" font-weight="700">РОЗПОДІЛ ПЕТЕЛЬ ГОРЛОВИНИ</text>
+    <text x="12" y="82" fill="#334155" font-size="10.5">• Спинка: <tspan font-weight="700" fill="#0F172A">35–38%</tspan> петель</text>
+    <text x="12" y="100" fill="#334155" font-size="10.5">• Перед (глибоке коло): <tspan font-weight="700" fill="#0F172A">30–35%</tspan></text>
+    <text x="12" y="118" fill="#334155" font-size="10.5">• Плечі (ліве + праве): <tspan font-weight="700" fill="#0F172A">по 15–18%</tspan></text>
+    <text x="12" y="136" fill="#64748B" font-size="9.5">Баланс: Спинка ширша за перед на 2–4 см</text>
+
+    <!-- Card 2: Rounding Stages Algorithm -->
+    <rect y="178" width="250" height="135" rx="10" fill="#FFFFFF" stroke="#E2E8F0" stroke-width="1.5" filter="url(#cnShadow)"/>
+    <rect y="178" width="250" height="26" rx="10" fill="#ECFDF5"/>
+    <text x="12" y="195" fill="#047857" font-size="11" font-weight="700">СТАДІЇ ПЛАВНОГО ЗАКРУГЛЕННЯ</text>
+    <text x="12" y="222" fill="#334155" font-size="10">• 1. Центр: закрити одразу <tspan font-weight="700" fill="#059669">40% петель</tspan></text>
+    <text x="12" y="240" fill="#334155" font-size="10">• 2. Крутий підйом: <tspan font-weight="700" fill="#059669">1×3 п., 1×2 п.</tspan></text>
+    <text x="12" y="258" fill="#334155" font-size="10">• 3. Плавна дуга: <tspan font-weight="700" fill="#059669">по 1 п. у кожному 2-му р.</tspan></text>
+    <text x="12" y="276" fill="#334155" font-size="10">• 4. Вертикаль: <tspan font-weight="700" fill="#059669">2–4 ряди прямо</tspan> до плеча</text>
+    <text x="12" y="294" fill="#059669" font-size="9.5" font-weight="600">✓ Захист від сходинок і затягування краю</text>
+
+    <!-- Card 3: Elastic Bind-off -->
+    <rect y="328" width="250" height="85" rx="10" fill="#FEF2F2" stroke="#FCA5A5" stroke-width="1"/>
+    <text x="12" y="348" fill="#991B1B" font-size="11" font-weight="700">ЕЛАСТИЧНИЙ ФАБРИЧНИЙ КРАЙ</text>
+    <text x="12" y="368" fill="#7F1D1D" font-size="10">• Метод: <tspan font-weight="700">Tubular bind-off (голкою)</tspan></text>
+    <text x="12" y="386" fill="#7F1D1D" font-size="10">• Розтяжність: комфортно проходить голова</text>
+    <text x="12" y="402" fill="#7F1D1D" font-size="9.5">Ідеально тримає круглу форму після прання</text>
+  </g>
+</svg>`,
+  },
+  "sectional-yarn-guide": {
+    title: "Розрахунок секційної пряжі: рапорт секцій, градієнт та color pooling",
+    caption: "Схема розрахунку в'язання з секційної пряжі: анатомія рапорту секції, математика запобігання випадковому пулінгу (плямам), чергування мотків 2х2 та синхронізація рукавів.",
+    svg: `<svg viewBox="0 0 800 520" role="img" aria-labelledby="diagram-sectional-yarn-title" xmlns="http://www.w3.org/2000/svg" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif">
+  <title id="diagram-sectional-yarn-title">Розрахунок в'язання з секційної пряжі та керування градієнтом</title>
+  <defs>
+    <linearGradient id="syGrad1" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#F43F5E"/>
+      <stop offset="33%" stop-color="#FB923C"/>
+      <stop offset="66%" stop-color="#FACC15"/>
+      <stop offset="100%" stop-color="#38BDF8"/>
+    </linearGradient>
+    <linearGradient id="syStripes" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#F43F5E"/>
+      <stop offset="25%" stop-color="#FB923C"/>
+      <stop offset="50%" stop-color="#FACC15"/>
+      <stop offset="75%" stop-color="#38BDF8"/>
+      <stop offset="100%" stop-color="#818CF8"/>
+    </linearGradient>
+    <filter id="syShadow" x="-5%" y="-5%" width="110%" height="110%">
+      <feDropShadow dx="0" dy="4" stdDeviation="6" flood-opacity="0.08"/>
+    </filter>
+  </defs>
+
+  <rect width="800" height="520" rx="16" fill="#FFFFFF"/>
+  <rect x="12" y="12" width="776" height="496" rx="12" fill="none" stroke="#E2E8F0" stroke-width="1.5"/>
+
+  <!-- Title Badge -->
+  <g transform="translate(30, 32)">
+    <rect width="380" height="30" rx="8" fill="#4C1D95"/>
+    <text x="190" y="20" fill="#FFFFFF" font-size="12.5" font-weight="700" text-anchor="middle">РОЗРАХУНОК СЕКЦІЙНОЇ ПРЯЖІ: COLOR POOLING ТА СИМЕТРІЯ</text>
+  </g>
+
+  <!-- Left: Color Section Repeat Diagram -->
+  <g transform="translate(40, 80)">
+    <text x="0" y="18" fill="#0F172A" font-size="13" font-weight="800">1. АНАТОМІЯ СЕКЦІЙНОГО МОТКА (РАПОРТ СЕКЦІЇ)</text>
+
+    <!-- Skein Yarn Thread with colored sections -->
+    <rect y="35" width="420" height="40" rx="20" fill="url(#syGrad1)" stroke="#4C1D95" stroke-width="1.5" filter="url(#syShadow)"/>
+    
+    <!-- Section Markers & Lengths -->
+    <line x1="140" y1="35" x2="140" y2="75" stroke="#FFFFFF" stroke-width="2" stroke-dasharray="3,3"/>
+    <line x1="280" y1="35" x2="280" y2="75" stroke="#FFFFFF" stroke-width="2" stroke-dasharray="3,3"/>
+    
+    <text x="70" y="60" fill="#FFFFFF" font-size="11" font-weight="700" text-anchor="middle">Секція А (40 см)</text>
+    <text x="210" y="60" fill="#FFFFFF" font-size="11" font-weight="700" text-anchor="middle">Секція Б (40 см)</text>
+    <text x="350" y="60" fill="#FFFFFF" font-size="11" font-weight="700" text-anchor="middle">Секція В (40 см)</text>
+
+    <text x="210" y="95" fill="#64748B" font-size="10.5" font-weight="600" text-anchor="middle">Повний кольоровий цикл (рапорт фарбування) = L_секції × Кількість_кольорів</text>
+
+    <!-- Comparison: Planned Pooling vs Accidental Pooling -->
+    <g transform="translate(0, 120)">
+      <!-- Box 1: Accidental ugly spots -->
+      <rect width="200" height="155" rx="8" fill="#FFF1F2" stroke="#FDA4AF" stroke-width="1.5"/>
+      <text x="15" y="24" fill="#9F1239" font-size="11" font-weight="700">ХАОТИЧНІ ПЛЯМИ (БЕЗ РОЗРАХУНКУ)</text>
+      
+      <!-- Random color blob visuals -->
+      <ellipse cx="60" cy="65" rx="35" ry="18" fill="#FB7185" opacity="0.7"/>
+      <ellipse cx="130" cy="90" rx="45" ry="22" fill="#FBBF24" opacity="0.7"/>
+      <ellipse cx="80" cy="115" rx="40" ry="16" fill="#38BDF8" opacity="0.7"/>
+      
+      <rect x="10" y="125" width="180" height="22" rx="4" fill="#FFE4E6"/>
+      <text x="100" y="140" fill="#BE123C" font-size="9.5" font-weight="700" text-anchor="middle">⚠ Секція збігається з довжиною ряду</text>
+
+      <!-- Box 2: Controlled Gradient / Alternating skeins -->
+      <rect x="220" width="200" height="155" rx="8" fill="#F0FDF4" stroke="#86EFAC" stroke-width="1.5"/>
+      <text x="235" y="24" fill="#166534" font-size="11" font-weight="700">ІДЕАЛЬНИЙ ГРАДІЄНТ (З РОЗРАХУНКОМ)</text>
+      
+      <!-- Clean parallel striping / helix -->
+      <rect x="235" y="45" width="170" height="14" rx="3" fill="#FB7185"/>
+      <rect x="235" y="64" width="170" height="14" rx="3" fill="#FB923C"/>
+      <rect x="235" y="83" width="170" height="14" rx="3" fill="#FBBF24"/>
+      <rect x="235" y="102" width="170" height="14" rx="3" fill="#38BDF8"/>
+      
+      <rect x="230" y="125" width="180" height="22" rx="4" fill="#DCFCE7"/>
+      <text x="320" y="140" fill="#15803D" font-size="9.5" font-weight="700" text-anchor="middle">✓ Чергування 2 мотків по 2 ряди (Helical)</text>
+    </g>
+
+    <!-- Bottom Tip Banner -->
+    <rect y="295" width="420" height="95" rx="8" fill="#F8FAFC" stroke="#E2E8F0"/>
+    <text x="20" y="318" fill="#0F172A" font-size="11.5" font-weight="700">МАТЕМАТИКА COLOR POOLING (ПЕРЕВІРКА ЗБІГУ):</text>
+    <text x="20" y="338" fill="#334155" font-size="10.5">• Витрата на 1 петлю: <tspan font-weight="700" fill="#7C3AED">l_п = Довжина_нитки_на_зразок ÷ N_петель</tspan></text>
+    <text x="20" y="356" fill="#334155" font-size="10.5">• Кількість петель з секції: <tspan font-weight="700" fill="#2563EB">N_секції = Довжина_секції ÷ l_п</tspan></text>
+    <text x="20" y="374" fill="#334155" font-size="10.5">• Щоб уникнути плям: <tspan font-weight="700" fill="#DC2626">Петлі_ряду не повинні бути кратними N_секції!</tspan></text>
+  </g>
+
+  <!-- Right: 3 Rules & Calculator Callout -->
+  <g transform="translate(490, 80)">
+    <text x="0" y="18" fill="#0F172A" font-size="13" font-weight="800">3 ГОЛОВНІ ПРИЙОМИ ДЛЯ СЕКЦІЙКИ</text>
+
+    <!-- Rule 1: Alternating 2 skeins -->
+    <rect y="35" width="270" height="90" rx="10" fill="#FFFFFF" stroke="#E2E8F0" stroke-width="1.5" filter="url(#syShadow)"/>
+    <rect y="35" width="270" height="24" rx="10" fill="#F3E8FF"/>
+    <text x="12" y="51" fill="#6B21A8" font-size="11" font-weight="700">1. ЧЕРГУВАННЯ МОТКІВ (2 РЯДИ / 2 РЯДИ)</text>
+    <text x="12" y="76" fill="#334155" font-size="10">• Розбиває непередбачувані колірні плями.</text>
+    <text x="12" y="94" fill="#334155" font-size="10">• Згладжує різницю відтінків між партіями.</text>
+    <text x="12" y="112" fill="#059669" font-size="9.5" font-weight="600">✓ Створює м'який акварельний меланж</text>
+
+    <!-- Rule 2: Hand-dyed sleeves matching -->
+    <rect y="140" width="270" height="90" rx="10" fill="#FFFFFF" stroke="#E2E8F0" stroke-width="1.5" filter="url(#syShadow)"/>
+    <rect y="140" width="270" height="24" rx="10" fill="#FEF3C7"/>
+    <text x="12" y="156" fill="#92400E" font-size="11" font-weight="700">2. СИНХРОНІЗАЦІЯ РУКАВІВ ТА ПЕРЕДУ</text>
+    <text x="12" y="181" fill="#334155" font-size="10">• Відмотуйте моток до тієї самої контрольної точки.</text>
+    <text x="12" y="199" fill="#334155" font-size="10">• Починайте обидва рукави з одного кольору секції.</text>
+    <text x="12" y="217" fill="#D97706" font-size="9.5" font-weight="600">✓ Однаковий малюнок на лівому та правому рукаві</text>
+
+    <!-- Rule 3: Stitch Patterns selection -->
+    <rect y="245" width="270" height="85" rx="10" fill="#FFFFFF" stroke="#E2E8F0" stroke-width="1.5" filter="url(#syShadow)"/>
+    <rect y="245" width="270" height="24" rx="10" fill="#E0F2FE"/>
+    <text x="12" y="261" fill="#0369A1" font-size="11" font-weight="700">3. ПІДБІР ПРАВИЛЬНОГО ВІЗЕРУНКА</text>
+    <text x="12" y="286" fill="#334155" font-size="10">• Ідеально: Лицьова гладь, платочна в'язка, мохер.</text>
+    <text x="12" y="304" fill="#334155" font-size="10">• Уникати: Складні дрібні коси (малюнок губиться).</text>
+    <text x="12" y="320" fill="#0284C7" font-size="9.5" font-weight="600">✓ Хвилясті ажури (шеврони) підсилюють градієнт</text>
+
+    <!-- Quick Formula Card -->
+    <rect y="345" width="270" height="60" rx="8" fill="#FAF5FF" stroke="#C084FC" stroke-width="1"/>
+    <text x="12" y="365" fill="#581C87" font-size="10.5" font-weight="700">ФОРМУЛА ВИТРАТИ МЕТРІВ НА РЯД:</text>
+    <text x="12" y="385" fill="#7E22CE" font-size="11" font-weight="800">L_ряду (м) = N_петель_ряду × l_петлі (см) ÷ 100</text>
+  </g>
+</svg>`,
+  },
+  "sektsiyna-pryazha": {
+    title: "Розрахунок секційної пряжі: рапорт секцій, градієнт та color pooling",
+    caption: "Схема розрахунку в'язання з секційної пряжі: анатомія рапорту секції, математика запобігання випадковому пулінгу (плямам), чергування мотків 2х2 та синхронізація рукавів.",
+    svg: `<svg viewBox="0 0 800 520" role="img" aria-labelledby="diagram-sectional-yarn-title" xmlns="http://www.w3.org/2000/svg" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif">
+  <title id="diagram-sectional-yarn-title">Розрахунок в'язання з секційної пряжі та керування градієнтом</title>
+  <defs>
+    <linearGradient id="syGrad1" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#F43F5E"/>
+      <stop offset="33%" stop-color="#FB923C"/>
+      <stop offset="66%" stop-color="#FACC15"/>
+      <stop offset="100%" stop-color="#38BDF8"/>
+    </linearGradient>
+    <linearGradient id="syStripes" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#F43F5E"/>
+      <stop offset="25%" stop-color="#FB923C"/>
+      <stop offset="50%" stop-color="#FACC15"/>
+      <stop offset="75%" stop-color="#38BDF8"/>
+      <stop offset="100%" stop-color="#818CF8"/>
+    </linearGradient>
+    <filter id="syShadow" x="-5%" y="-5%" width="110%" height="110%">
+      <feDropShadow dx="0" dy="4" stdDeviation="6" flood-opacity="0.08"/>
+    </filter>
+  </defs>
+
+  <rect width="800" height="520" rx="16" fill="#FFFFFF"/>
+  <rect x="12" y="12" width="776" height="496" rx="12" fill="none" stroke="#E2E8F0" stroke-width="1.5"/>
+
+  <!-- Title Badge -->
+  <g transform="translate(30, 32)">
+    <rect width="380" height="30" rx="8" fill="#4C1D95"/>
+    <text x="190" y="20" fill="#FFFFFF" font-size="12.5" font-weight="700" text-anchor="middle">РОЗРАХУНОК СЕКЦІЙНОЇ ПРЯЖІ: COLOR POOLING ТА СИМЕТРІЯ</text>
+  </g>
+
+  <!-- Left: Color Section Repeat Diagram -->
+  <g transform="translate(40, 80)">
+    <text x="0" y="18" fill="#0F172A" font-size="13" font-weight="800">1. АНАТОМІЯ СЕКЦІЙНОГО МОТКА (РАПОРТ СЕКЦІЇ)</text>
+
+    <!-- Skein Yarn Thread with colored sections -->
+    <rect y="35" width="420" height="40" rx="20" fill="url(#syGrad1)" stroke="#4C1D95" stroke-width="1.5" filter="url(#syShadow)"/>
+    
+    <!-- Section Markers & Lengths -->
+    <line x1="140" y1="35" x2="140" y2="75" stroke="#FFFFFF" stroke-width="2" stroke-dasharray="3,3"/>
+    <line x1="280" y1="35" x2="280" y2="75" stroke="#FFFFFF" stroke-width="2" stroke-dasharray="3,3"/>
+    
+    <text x="70" y="60" fill="#FFFFFF" font-size="11" font-weight="700" text-anchor="middle">Секція А (40 см)</text>
+    <text x="210" y="60" fill="#FFFFFF" font-size="11" font-weight="700" text-anchor="middle">Секція Б (40 см)</text>
+    <text x="350" y="60" fill="#FFFFFF" font-size="11" font-weight="700" text-anchor="middle">Секція В (40 см)</text>
+
+    <text x="210" y="95" fill="#64748B" font-size="10.5" font-weight="600" text-anchor="middle">Повний кольоровий цикл (рапорт фарбування) = L_секції × Кількість_кольорів</text>
+
+    <!-- Comparison: Planned Pooling vs Accidental Pooling -->
+    <g transform="translate(0, 120)">
+      <!-- Box 1: Accidental ugly spots -->
+      <rect width="200" height="155" rx="8" fill="#FFF1F2" stroke="#FDA4AF" stroke-width="1.5"/>
+      <text x="15" y="24" fill="#9F1239" font-size="11" font-weight="700">ХАОТИЧНІ ПЛЯМИ (БЕЗ РОЗРАХУНКУ)</text>
+      
+      <!-- Random color blob visuals -->
+      <ellipse cx="60" cy="65" rx="35" ry="18" fill="#FB7185" opacity="0.7"/>
+      <ellipse cx="130" cy="90" rx="45" ry="22" fill="#FBBF24" opacity="0.7"/>
+      <ellipse cx="80" cy="115" rx="40" ry="16" fill="#38BDF8" opacity="0.7"/>
+      
+      <rect x="10" y="125" width="180" height="22" rx="4" fill="#FFE4E6"/>
+      <text x="100" y="140" fill="#BE123C" font-size="9.5" font-weight="700" text-anchor="middle">⚠ Секція збігається з довжиною ряду</text>
+
+      <!-- Box 2: Controlled Gradient / Alternating skeins -->
+      <rect x="220" width="200" height="155" rx="8" fill="#F0FDF4" stroke="#86EFAC" stroke-width="1.5"/>
+      <text x="235" y="24" fill="#166534" font-size="11" font-weight="700">ІДЕАЛЬНИЙ ГРАДІЄНТ (З РОЗРАХУНКОМ)</text>
+      
+      <!-- Clean parallel striping / helix -->
+      <rect x="235" y="45" width="170" height="14" rx="3" fill="#FB7185"/>
+      <rect x="235" y="64" width="170" height="14" rx="3" fill="#FB923C"/>
+      <rect x="235" y="83" width="170" height="14" rx="3" fill="#FBBF24"/>
+      <rect x="235" y="102" width="170" height="14" rx="3" fill="#38BDF8"/>
+      
+      <rect x="230" y="125" width="180" height="22" rx="4" fill="#DCFCE7"/>
+      <text x="320" y="140" fill="#15803D" font-size="9.5" font-weight="700" text-anchor="middle">✓ Чергування 2 мотків по 2 ряди (Helical)</text>
+    </g>
+
+    <!-- Bottom Tip Banner -->
+    <rect y="295" width="420" height="95" rx="8" fill="#F8FAFC" stroke="#E2E8F0"/>
+    <text x="20" y="318" fill="#0F172A" font-size="11.5" font-weight="700">МАТЕМАТИКА COLOR POOLING (ПЕРЕВІРКА ЗБІГУ):</text>
+    <text x="20" y="338" fill="#334155" font-size="10.5">• Витрата на 1 петлю: <tspan font-weight="700" fill="#7C3AED">l_п = Довжина_нитки_на_зразок ÷ N_петель</tspan></text>
+    <text x="20" y="356" fill="#334155" font-size="10.5">• Кількість петель з секції: <tspan font-weight="700" fill="#2563EB">N_секції = Довжина_секції ÷ l_п</tspan></text>
+    <text x="20" y="374" fill="#334155" font-size="10.5">• Щоб уникнути плям: <tspan font-weight="700" fill="#DC2626">Петлі_ряду не повинні бути кратними N_секції!</tspan></text>
+  </g>
+
+  <!-- Right: 3 Rules & Calculator Callout -->
+  <g transform="translate(490, 80)">
+    <text x="0" y="18" fill="#0F172A" font-size="13" font-weight="800">3 ГОЛОВНІ ПРИЙОМИ ДЛЯ СЕКЦІЙКИ</text>
+
+    <!-- Rule 1: Alternating 2 skeins -->
+    <rect y="35" width="270" height="90" rx="10" fill="#FFFFFF" stroke="#E2E8F0" stroke-width="1.5" filter="url(#syShadow)"/>
+    <rect y="35" width="270" height="24" rx="10" fill="#F3E8FF"/>
+    <text x="12" y="51" fill="#6B21A8" font-size="11" font-weight="700">1. ЧЕРГУВАННЯ МОТКІВ (2 РЯДИ / 2 РЯДИ)</text>
+    <text x="12" y="76" fill="#334155" font-size="10">• Розбиває непередбачувані колірні плями.</text>
+    <text x="12" y="94" fill="#334155" font-size="10">• Згладжує різницю відтінків між партіями.</text>
+    <text x="12" y="112" fill="#059669" font-size="9.5" font-weight="600">✓ Створює м'який акварельний меланж</text>
+
+    <!-- Rule 2: Hand-dyed sleeves matching -->
+    <rect y="140" width="270" height="90" rx="10" fill="#FFFFFF" stroke="#E2E8F0" stroke-width="1.5" filter="url(#syShadow)"/>
+    <rect y="140" width="270" height="24" rx="10" fill="#FEF3C7"/>
+    <text x="12" y="156" fill="#92400E" font-size="11" font-weight="700">2. СИНХРОНІЗАЦІЯ РУКАВІВ ТА ПЕРЕДУ</text>
+    <text x="12" y="181" fill="#334155" font-size="10">• Відмотуйте моток до тієї самої контрольної точки.</text>
+    <text x="12" y="199" fill="#334155" font-size="10">• Починайте обидва рукави з одного кольору секції.</text>
+    <text x="12" y="217" fill="#D97706" font-size="9.5" font-weight="600">✓ Однаковий малюнок на лівому та правому рукаві</text>
+
+    <!-- Rule 3: Stitch Patterns selection -->
+    <rect y="245" width="270" height="85" rx="10" fill="#FFFFFF" stroke="#E2E8F0" stroke-width="1.5" filter="url(#syShadow)"/>
+    <rect y="245" width="270" height="24" rx="10" fill="#E0F2FE"/>
+    <text x="12" y="261" fill="#0369A1" font-size="11" font-weight="700">3. ПІДБІР ПРАВИЛЬНОГО ВІЗЕРУНКА</text>
+    <text x="12" y="286" fill="#334155" font-size="10">• Ідеально: Лицьова гладь, платочна в'язка, мохер.</text>
+    <text x="12" y="304" fill="#334155" font-size="10">• Уникати: Складні дрібні коси (малюнок губиться).</text>
+    <text x="12" y="320" fill="#0284C7" font-size="9.5" font-weight="600">✓ Хвилясті ажури (шеврони) підсилюють градієнт</text>
+
+    <!-- Quick Formula Card -->
+    <rect y="345" width="270" height="60" rx="8" fill="#FAF5FF" stroke="#C084FC" stroke-width="1"/>
+    <text x="12" y="365" fill="#581C87" font-size="10.5" font-weight="700">ФОРМУЛА ВИТРАТИ МЕТРІВ НА РЯД:</text>
+    <text x="12" y="385" fill="#7E22CE" font-size="11" font-weight="800">L_ряду (м) = N_петель_ряду × l_петлі (см) ÷ 100</text>
+  </g>
+</svg>`,
+  },
 };
 
 function escapeHtml(value: string) {
