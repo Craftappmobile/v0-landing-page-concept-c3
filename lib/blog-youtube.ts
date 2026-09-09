@@ -72,6 +72,18 @@ export const KNOWN_VIDEOS: Record<string, YouTubeVideoData> = {
     channel: "Natas knitting & life",
     image: "/images/videos/yt-mU6K26xXE6Q.jpg",
   },
+  "6oUAXzFkEUY": {
+    id: "6oUAXzFkEUY",
+    title: "В'язання спицями: що таке щільність в'язання і як її визначити?",
+    channel: "Олександра / Про в’язання українською",
+    image: "/images/videos/yt-6oUAXzFkEUY.jpg",
+  },
+  "DMm7GnC_Biw": {
+    id: "DMm7GnC_Biw",
+    title: "Щільність в'язання. ПРОСТІ розрахунки. Для початківців.",
+    channel: "Yuliya Kisil про в'язання",
+    image: "/images/videos/yt-DMm7GnC_Biw.jpg",
+  },
 }
 
 function escapeHtml(str: string) {

@@ -234,6 +234,23 @@ function getCalculatorConfig(slug: string) {
         },
       }
 
+    case "shchilnist":
+      return {
+        field1: { label: "Кількість петель у зразку", default: "21", suffix: "п / 10 см", hint: "Кількість цілих петель на 10 см після ВТО" },
+        field2: { label: "Кількість рядів у зразку", default: "30", suffix: "р / 10 см", hint: "Кількість рядів на 10 см після ВТО" },
+        field3: { label: "Бажана ширина деталі", default: "50", suffix: "см", hint: "Ширина переду, спинки або шарфа" },
+        calculate: (v1: number, v2: number, v3: number) => {
+          const stitches = Math.round(v3 * (v1 / 10))
+          const stitchDensity = (v1 / 10).toFixed(2)
+          const rowDensity = (v2 / 10).toFixed(2)
+          return {
+            title: "Розрахована щільність та набір петель",
+            value: `${stitches} петель (${stitchDensity} п. / 1 см)`,
+            note: `Ваша щільність: ${stitchDensity} п./см та ${rowDensity} р./см. Для деталі шириною ${v3} см наберіть ${stitches} петель (+2 крайові, якщо в'яжете поворотними рядами).`,
+          }
+        },
+      }
+
     // Default garment / sweater / cardigan / oversize / fit calculator
     default:
       return {

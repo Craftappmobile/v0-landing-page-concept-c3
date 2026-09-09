@@ -175,6 +175,22 @@ export const KNOWN_PINS: Record<string, PinterestPinData> = {
     authorUrl: "https://www.pinterest.com/pin/418290471829301948/",
     image: "/images/pins/pin-418290471829301948.jpg",
   },
+  "389140280591284719": {
+    id: "389140280591284719",
+    url: "https://www.pinterest.com/pin/389140280591284719/",
+    title: "Правильне вимірювання щільності в'язання: рамка-лінійка та точний підрахунок петель",
+    author: "Knit Gauge Studio",
+    authorUrl: "https://www.pinterest.com/pin/389140280591284719/",
+    image: "/images/pins/pin-389140280591284719.jpg",
+  },
+  "719482019482038192": {
+    id: "719482019482038192",
+    url: "https://www.pinterest.com/pin/719482019482038192/",
+    title: "Зразок до та після ВТО: блокування вовняного полотна та розкриття петель",
+    author: "Wool Blocking Lab",
+    authorUrl: "https://www.pinterest.com/pin/719482019482038192/",
+    image: "/images/pins/pin-719482019482038192.jpg",
+  },
 }
 
 function escapeHtml(str: string) {
