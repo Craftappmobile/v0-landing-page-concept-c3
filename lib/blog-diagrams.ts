@@ -5,6 +5,115 @@ type BlogDiagramDefinition = {
 }
 
 const BLOG_DIAGRAMS: Record<string, BlogDiagramDefinition> = {
+  "cardigan-panels": {
+    title: "Схема розрахунку поличок і планки кардигана з нахльостом",
+    caption: "Спинка (ширина S) та дві симетричні полички: кожна поличка ширша за половину спинки на половину планки (S/2 + ШП/2) для точного нахльосту під ґудзики.",
+    svg: `<svg viewBox="0 0 680 400" xmlns="http://www.w3.org/2000/svg" font-family="sans-serif" role="img" aria-labelledby="diagram-cardigan-panels-title diagram-cardigan-panels-desc">
+  <title id="diagram-cardigan-panels-title">Схема поличок і спинки кардигана з компенсацією нахльосту планки</title>
+  <desc id="diagram-cardigan-panels-desc">Геометрія деталей кардигана: спинка шириною 53 см і дві полички по 28.5 см з нахльостом планки 4 см по центру.</desc>
+  
+  <!-- Спинка (ліва частина діаграми) -->
+  <rect x="40" y="70" width="260" height="240" rx="8" fill="#F8F6F0" stroke="#5F5E5A" stroke-width="2"/>
+  <text x="170" y="110" text-anchor="middle" font-size="16" font-weight="700" fill="#2C2C2A">СПИНКА</text>
+  <text x="170" y="135" text-anchor="middle" font-size="13" fill="#5F5E5A">Ширина: S = 53 см (112 п.)</text>
+  <text x="170" y="155" text-anchor="middle" font-size="12" fill="#5F5E5A">Суцільне полотно</text>
+  
+  <!-- Розмірний маркер спинки -->
+  <line x1="40" y1="325" x2="300" y2="325" stroke="#5F5E5A" stroke-width="1.5"/>
+  <path d="M40 320 L40 330 M300 320 L300 330" stroke="#5F5E5A" stroke-width="1.5"/>
+  <text x="170" y="345" text-anchor="middle" font-size="13" font-weight="600" fill="#5F5E5A">Ширина спинки: (ОГ + СО) ÷ 2</text>
+  
+  <!-- Передня частина: 2 полички з нахльостом -->
+  <!-- Ліва поличка -->
+  <rect x="360" y="70" width="135" height="240" rx="6" fill="#F1EFE8" stroke="#0F6E56" stroke-width="2"/>
+  <!-- Планка лівої полички -->
+  <rect x="475" y="70" width="30" height="240" fill="#E8F4F0" stroke="#0F6E56" stroke-width="1.5" stroke-dasharray="3,3"/>
+  <text x="420" y="110" text-anchor="middle" font-size="14" font-weight="700" fill="#0F6E56">Ліва поличка</text>
+  <text x="420" y="130" text-anchor="middle" font-size="11" fill="#5F5E5A">26.5 + 2 = 28.5 см</text>
+  
+  <!-- Права поличка (перекриває нахльост) -->
+  <rect x="475" y="70" width="135" height="240" rx="6" fill="#FFF9F5" stroke="#D85A30" stroke-width="2" fill-opacity="0.85"/>
+  <!-- Планка правої полички -->
+  <rect x="475" y="70" width="30" height="240" fill="#FFEFE6" stroke="#D85A30" stroke-width="1.5"/>
+  <text x="550" y="110" text-anchor="middle" font-size="14" font-weight="700" fill="#D85A30">Права поличка</text>
+  <text x="550" y="130" text-anchor="middle" font-size="11" fill="#5F5E5A">26.5 + 2 = 28.5 см</text>
+  
+  <!-- Ґудзики по центру нахльосту -->
+  <circle cx="490" cy="110" r="5" fill="#D85A30"/>
+  <circle cx="490" cy="155" r="5" fill="#D85A30"/>
+  <circle cx="490" cy="200" r="5" fill="#D85A30"/>
+  <circle cx="490" cy="245" r="5" fill="#D85A30"/>
+  <circle cx="490" cy="290" r="5" fill="#D85A30"/>
+  
+  <!-- Позначка нахльосту -->
+  <line x1="475" y1="45" x2="505" y2="45" stroke="#993C1D" stroke-width="2"/>
+  <path d="M475 40 L475 50 M505 40 L505 50" stroke="#993C1D" stroke-width="2"/>
+  <text x="490" y="35" text-anchor="middle" font-size="12" font-weight="700" fill="#993C1D">Нахльост (ШП = 4 см)</text>
+  
+  <!-- Підпис внизу переду -->
+  <line x1="360" y1="325" x2="610" y2="325" stroke="#0F6E56" stroke-width="1.5"/>
+  <path d="M360 320 L360 330 M610 320 L610 330" stroke="#0F6E56" stroke-width="1.5"/>
+  <text x="485" y="345" text-anchor="middle" font-size="13" font-weight="600" fill="#0F6E56">Разом у застебнутому вигляді = 53 см</text>
+  
+  <!-- Легенда / підсумок -->
+  <rect x="40" y="365" width="600" height="25" rx="4" fill="#F1EFE8"/>
+  <text x="340" y="382" text-anchor="middle" font-size="12" fill="#2C2C2A">Формула полички: Ширина = (Ширина спинки ÷ 2) + (Ширина планки ÷ 2)</text>
+</svg>`,
+  },
+  "child-sweater-proportions": {
+    title: "Анатомічні пропорції дитячого светра та запас на виріст",
+    caption: "Схема дитячих пропорцій: широка еластична горловина або планка на ґудзиках під велику голівку, припуск +4–6 см на вільний рух та подовжені манжети рукавів на виріст.",
+    svg: `<svg viewBox="0 0 680 400" xmlns="http://www.w3.org/2000/svg" font-family="sans-serif" role="img" aria-labelledby="diagram-child-sweater-title diagram-child-sweater-desc">
+  <title id="diagram-child-sweater-title">Особливості пропорцій дитячого светра спицями</title>
+  <desc id="diagram-child-sweater-desc">Схема светра для дитини з акцентом на горловину з ґудзиками, свободу корпусу та відвороти манжетів на виріст.</desc>
+  
+  <!-- Силует светра -->
+  <!-- Корпус -->
+  <rect x="230" y="110" width="220" height="220" rx="14" fill="#F8F6F0" stroke="#5F5E5A" stroke-width="2"/>
+  
+  <!-- Горловина широка -->
+  <path d="M290 110 Q340 145 390 110" fill="#E8F4F0" stroke="#0F6E56" stroke-width="3"/>
+  <text x="340" y="85" text-anchor="middle" font-size="13" font-weight="700" fill="#0F6E56">Еластична горловина</text>
+  <text x="340" y="100" text-anchor="middle" font-size="11" fill="#5F5E5A">(або планка на 2 ґудзики)</text>
+  
+  <!-- Застібка на лівому плечі для малюків -->
+  <rect x="270" y="102" width="40" height="12" rx="3" fill="#FFEFE6" stroke="#D85A30" stroke-width="1.5"/>
+  <circle cx="280" cy="108" r="2.5" fill="#D85A30"/>
+  <circle cx="300" cy="108" r="2.5" fill="#D85A30"/>
+  
+  <!-- Рукави -->
+  <!-- Лівий рукав -->
+  <path d="M230 115 L120 180 L145 230 L230 185 Z" fill="#F8F6F0" stroke="#5F5E5A" stroke-width="2"/>
+  <!-- Манжет лівий з відворотом -->
+  <rect x="110" y="180" width="30" height="45" transform="rotate(-30 125 200)" fill="#E8F4F0" stroke="#0F6E56" stroke-width="2"/>
+  
+  <!-- Правий рукав -->
+  <path d="M450 115 L560 180 L535 230 L450 185 Z" fill="#F8F6F0" stroke="#5F5E5A" stroke-width="2"/>
+  <!-- Манжет правий з відворотом -->
+  <rect x="540" y="180" width="30" height="45" transform="rotate(30 555 200)" fill="#E8F4F0" stroke="#0F6E56" stroke-width="2"/>
+  
+  <!-- Підписи зон запасу -->
+  <!-- Рукави: запас на виріст -->
+  <text x="90" y="245" font-size="12" font-weight="600" fill="#0F6E56">+3–4 см манжет</text>
+  <text x="90" y="260" font-size="11" fill="#5F5E5A">(відворот на виріст)</text>
+  
+  <text x="590" y="245" font-size="12" font-weight="600" fill="#0F6E56">+3–4 см манжет</text>
+  <text x="590" y="260" font-size="11" fill="#5F5E5A">(відворот на виріст)</text>
+  
+  <!-- Корпус: свобода руху -->
+  <line x1="230" y1="220" x2="450" y2="220" stroke="#D85A30" stroke-width="1.5" stroke-dasharray="4,4"/>
+  <text x="340" y="210" text-anchor="middle" font-size="13" font-weight="700" fill="#D85A30">Обхват грудей + 4–6 см (СО)</text>
+  <text x="340" y="238" text-anchor="middle" font-size="12" fill="#5F5E5A">+ 2–4 см запас на виріст</text>
+  
+  <!-- Нижній манжет -->
+  <rect x="230" y="310" width="220" height="20" fill="#E8F4F0" stroke="#0F6E56" stroke-width="1.5"/>
+  <text x="340" y="325" text-anchor="middle" font-size="11" font-weight="600" fill="#0F6E56">М'яка нестягуюча гумка</text>
+  
+  <!-- Підсумкова легенда -->
+  <rect x="60" y="355" width="560" height="30" rx="6" fill="#F1EFE8"/>
+  <text x="340" y="375" text-anchor="middle" font-size="12" font-weight="600" fill="#2C2C2A">Ключ: велика голівка → застібка на плечі; швидкий ріст → реглан зверху + манжети з відворотом</text>
+</svg>`,
+  },
   "hat-crown-decreases": {
     title: "Схема 4-клинної маківки шапки біні",
     caption: "Розподіл петель на 4 симетричні сектори та лінії убавок: кожні 2 ряди мінус 8 петель (по 2 п. разом біля кожного маркера).",
