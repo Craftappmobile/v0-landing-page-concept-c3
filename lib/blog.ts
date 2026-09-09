@@ -371,29 +371,34 @@ export function extractHowToSteps(content: string) {
   const lines = content.split("\n")
   const steps: Array<{ name: string; text: string }> = []
   let currentStep: { name: string; text: string } | null = null
+  let expectedStepNumber = 1
 
   for (const line of lines) {
     const trimmed = line.trim()
-    // Match headers like:
-    // ## Крок 1: ...
-    // ### Крок 1. ...
-    // ## Етап 2: ...
-    // ## Частина 3: ...
-    // ## Спосіб 1: ...
-    // ## Формула 2: ...
-    // **Крок 1.** ...
+    // Strictly match H2 headers only: ## Крок 1: ..., ## Спосіб 2: ..., etc.
     const match = trimmed.match(
-      /^(?:#{2,3}\s+|\*\*)(Етап\s+\d+|Крок\s+\d+|Частина\s+\d+|Спосіб\s+\d+|Формула\s+\d+|Дія\s+\d+)(?:\.\s*|:\s*|\s+–\s*|\s+-\s*|\s+)(.+?)(?:\*\*|$)/i
+      /^##\s+(Етап|Крок|Частина|Спосіб|Формула|Дія)\s+(\d+)(?:\.\s*|:\s*|\s+–\s*|\s+-\s*|\s+)(.+)$/i
     )
+
     if (match) {
-      if (currentStep) {
+      const stepNum = parseInt(match[2], 10)
+      if (stepNum === expectedStepNumber) {
+        if (currentStep) {
+          steps.push(currentStep)
+        }
+        currentStep = {
+          name: `${match[1]} ${match[2]}: ${match[3].replace(/[*_`]/g, "").trim()}`,
+          text: "",
+        }
+        expectedStepNumber++
+      } else if (currentStep && stepNum <= steps.length) {
+        // Repeated / restarted sequence - stop parsing further steps to prevent duplicate step errors
         steps.push(currentStep)
-      }
-      currentStep = {
-        name: `${match[1]}: ${match[2].replace(/[*_`]/g, "").trim()}`,
-        text: "",
+        currentStep = null
+        break
       }
     } else if (currentStep && trimmed.startsWith("## ")) {
+      // Any other H2 finishes the current step sequence
       steps.push(currentStep)
       currentStep = null
     } else if (

@@ -2,8 +2,8 @@
 title: "Як розрахувати горловину светра: кругла, V, човник — формули та убавки"
 description: "Розрахунок горловини светра: скільки петель закривати, глибина спереду і ззаду, покроковий алгоритм убавок для круглої горловини, V-виріз, човник, квадрат. Калькулятор."
 slug: "yak-rozrahuvaty-horlovynu-svetra"
-datePublished: "2026-05-09"
-dateModified: "2026-06-09"
+datePublished: "2026-03-12"
+dateModified: "2026-05-09"
 author: "Жанна"
 readingTime: 12
 image: "/images/blog/yak-rozrahuvaty-horlovynu-svetra.jpg"

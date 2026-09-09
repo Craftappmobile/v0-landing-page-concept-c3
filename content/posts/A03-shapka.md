@@ -2,8 +2,8 @@
 title: "Скільки петель набирати на шапку: розрахунок біні, убавки маківки"
 description: "Скільки петель набрати на шапку спицями: формула за обхватом голови мінус 10 % на розтяг, таблиця для 50–60 см, висота біні та ритм убавок 4-клинної маківки."
 slug: "yak-rozrahuvaty-petli-dlya-shapky"
-datePublished: "2026-05-09"
-dateModified: "2026-06-09"
+datePublished: "2026-03-10"
+dateModified: "2026-05-09"
 author: "Жанна"
 readingTime: 8
 image: "/images/blog/yak-rozrahuvaty-petli-dlya-shapky.jpg"

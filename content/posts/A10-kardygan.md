@@ -3,8 +3,8 @@ title: "Як розрахувати кардиган спицями: полич�
 description: "Формули розрахунку кардигана спицями: спинка, ширина поличок з нахльостом планки, V-виріз, комір-шалька, інтервал ґудзиків. Приклад на 48 розмір + калькулятор."
 slug: "yak-rozrahuvaty-kardygan-spytsyamy"
 date: "2026-06-01"
-datePublished: "2026-06-01"
-dateModified: "2026-06-09"
+datePublished: "2026-03-27"
+dateModified: "2026-05-09"
 author: "Жанна"
 readingTime: 12
 category: "how-to"
