@@ -203,7 +203,7 @@ export const calculators: CalculatorDefinition[] = [
           "Можна змінити номер спиць або адаптувати опис під свою щільність за допомогою калькулятора адаптації майстер-класу.",
       },
     ],
-    relatedPosts: ["yak-rozrahuvaty-shchilnist-vyazannya", "adaptuvala-radyanskyy-opys", "mk-vyazhemo-svetr-vid-a-do-ya"],
+    relatedPosts: ["top-10-kalkuliatoriv-dlya-vyazalnyts", "yak-rozrahuvaty-shchilnist-vyazannya", "adaptuvala-radyanskyy-opys"],
   },
   {
     slug: "adaptatsiya",

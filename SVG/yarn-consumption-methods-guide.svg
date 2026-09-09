@@ -1,0 +1,87 @@
+<svg viewBox="0 0 800 520" role="img" aria-labelledby="diagram-yarn-methods-title" xmlns="http://www.w3.org/2000/svg" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif">
+  <title id="diagram-yarn-methods-title">ТОП-5 способів розрахувати витрату пряжі: порівняльний аналіз</title>
+  <defs>
+    <filter id="ymShadow" x="-4%" y="-4%" width="108%" height="108%">
+      <feDropShadow dx="0" dy="3" stdDeviation="5" flood-opacity="0.06"/>
+    </filter>
+  </defs>
+
+  <rect width="800" height="520" rx="16" fill="#FFFFFF"/>
+  <rect x="12" y="12" width="776" height="496" rx="12" fill="none" stroke="#E2E8F0" stroke-width="1.5"/>
+
+  <!-- Title Header Banner (750px full width) -->
+  <rect x="25" y="24" width="750" height="38" rx="8" fill="#065F46"/>
+  <text x="400" y="48" fill="#FFFFFF" font-size="13" font-weight="700" text-anchor="middle" letter-spacing="0.5">5 СПОСОБІВ РОЗРАХУНКУ ВИТРАТИ ПРЯЖІ: ТОЧНІСТЬ ТА ПРАКТИКА</text>
+
+  <!-- Left: Method 1 & Method 5 (Top accurate methods) -->
+  <g transform="translate(25, 78)">
+    <!-- Method 1: Swatch weighing (Golden Standard) -->
+    <rect width="365" height="165" rx="10" fill="#F0FDF4" stroke="#86EFAC" stroke-width="1.5" filter="url(#ymShadow)"/>
+    <rect width="365" height="28" rx="10" fill="#DCFCE7"/>
+    <text x="15" y="19" fill="#166534" font-size="11" font-weight="800">СПОСІБ 1: ЧЕРЕЗ ЗВАЖУВАННЯ ЗРАЗКА (ЗОЛОТИЙ СТАНДАРТ)</text>
+    
+    <text x="15" y="48" fill="#15803D" font-size="10.5" font-weight="700">Точність: 97–98% • Похибка всього 3–5%</text>
+    <text x="15" y="68" fill="#334155" font-size="10">1. В'яжемо зразок 12×12 см основним візерунком та робимо ВТО.</text>
+    <text x="15" y="86" fill="#334155" font-size="10">2. Зважуємо сухий зразок на кухонних вагах (наприклад, 8 г).</text>
+    <text x="15" y="104" fill="#334155" font-size="10">3. Визначаємо витрату: <tspan font-weight="700" fill="#166534">G_см2 = Вага_зразка ÷ Площа_зразка</tspan></text>
+    <text x="15" y="122" fill="#334155" font-size="10">4. Загальна вага: <tspan font-weight="700" fill="#047857">M = Площа_виробу × G_см2</tspan></text>
+    <rect x="15" y="133" width="335" height="22" rx="4" fill="#DCFCE7"/>
+    <text x="182" y="148" fill="#166534" font-size="9.5" font-weight="700" text-anchor="middle">✓ Найкраще для нового светра, кардигана та складної пряжі</text>
+
+    <!-- Method 5: Online Calculator (Modern best) -->
+    <g transform="translate(0, 180)">
+      <rect width="365" height="165" rx="10" fill="#EFF6FF" stroke="#93C5FD" stroke-width="1.5" filter="url(#ymShadow)"/>
+      <rect width="365" height="28" rx="10" fill="#DBEAFE"/>
+      <text x="15" y="19" fill="#1E40AF" font-size="11" font-weight="800">СПОСІБ 5: ОНЛАЙН-КАЛЬКУЛЯТОР ВИТРАТИ ПРЯЖІ</text>
+      
+      <text x="15" y="48" fill="#1D4ED8" font-size="10.5" font-weight="700">Точність: 99% • Швидкість: 10 секунд</text>
+      <text x="15" y="68" fill="#334155" font-size="10">• Враховує коефіцієнт візерунка (ажур -20%, коси +30%).</text>
+      <text x="15" y="86" fill="#334155" font-size="10">• Автоматично конвертує грами в кількість мотків.</text>
+      <text x="15" y="104" fill="#334155" font-size="10">• Застосовує розумний запас 7% на кінчики та зшивання.</text>
+      <text x="15" y="122" fill="#334155" font-size="10">• Не потребує ручних підрахунків у стовпчик.</text>
+      <rect x="15" y="133" width="335" height="22" rx="4" fill="#DBEAFE"/>
+      <text x="182" y="148" fill="#1D4ED8" font-size="9.5" font-weight="700" text-anchor="middle">✓ Ідеальний баланс абсолютної точності та зручності</text>
+    </g>
+  </g>
+
+  <!-- Right: Method 2, 3, 4 -->
+  <g transform="translate(410, 78)">
+    <!-- Method 2: By Yardage -->
+    <rect width="365" height="105" rx="10" fill="#FAF5FF" stroke="#D8B4FE" stroke-width="1.5" filter="url(#ymShadow)"/>
+    <rect width="365" height="26" rx="10" fill="#F3E8FF"/>
+    <text x="15" y="18" fill="#6B21A8" font-size="10.5" font-weight="800">СПОСІБ 2: ЗА МЕТРАЖЕМ (ШВИДКА ЗАМІНА ПРЯЖІ)</text>
+    <text x="15" y="44" fill="#7E22CE" font-size="10" font-weight="700">Точність: 85% • Не потребує зразка</text>
+    <text x="15" y="62" fill="#334155" font-size="9.5">Формула: <tspan font-weight="700">Мотки = Метраж_в_описі ÷ Метраж_вашого_мотка</tspan></text>
+    <text x="15" y="78" fill="#334155" font-size="9.5">Працює тільки при заміні пряжі аналогічного складу й товщини.</text>
+    <text x="15" y="94" fill="#9333EA" font-size="9" font-weight="700">Обов'язковий запас: +10% до результату</text>
+
+    <!-- Method 3: Comparative Project Experience -->
+    <g transform="translate(0, 118)">
+      <rect width="365" height="105" rx="10" fill="#FFFBEB" stroke="#FDE68A" stroke-width="1.5" filter="url(#ymShadow)"/>
+      <rect width="365" height="26" rx="10" fill="#FEF3C7"/>
+      <text x="15" y="18" fill="#92400E" font-size="10.5" font-weight="800">СПОСІБ 3: ПОРІВНЯЛЬНИЙ (ДОСВІДНИЙ ЗАПИСНИК)</text>
+      <text x="15" y="44" fill="#B45309" font-size="10" font-weight="700">Точність: 90% (для схожих власних робіт)</text>
+      <text x="15" y="62" fill="#334155" font-size="9.5">• Базується на особистому журналі або щоденнику проєктів.</text>
+      <text x="15" y="78" fill="#334155" font-size="9.5">• Враховує саме вашу індивідуальну манеру натягу нитки.</text>
+      <text x="15" y="94" fill="#D97706" font-size="9" font-weight="700">Швидко та надійно для майстринь з досвідом</text>
+    </g>
+
+    <!-- Method 4: Standard Reference Tables -->
+    <g transform="translate(0, 236)">
+      <rect width="365" height="108" rx="10" fill="#F8FAFC" stroke="#CBD5E1" stroke-width="1.5" filter="url(#ymShadow)"/>
+      <rect width="365" height="26" rx="10" fill="#F1F5F9"/>
+      <text x="15" y="18" fill="#334155" font-size="10.5" font-weight="800">СПОСІБ 4: ТАБЛИЧНИЙ (СЕРЕДНІ ОРІЄНТИРИ)</text>
+      <text x="15" y="44" fill="#475569" font-size="10" font-weight="700">Точність: 70–75% • Для оцінки бюджету покупки</text>
+      <text x="15" y="62" fill="#334155" font-size="9.5">• Светр гладдю 46–48 р. ≈ 450–550 г (при 400 м / 100 г)</text>
+      <text x="15" y="78" fill="#334155" font-size="9.5">• Шапка біні ≈ 80–120 г | Шарф 150×25 см ≈ 200–250 г</text>
+      <text x="15" y="96" fill="#DC2626" font-size="9" font-weight="700">⚠ Не враховує об'ємні коси та індивідуальну щільність</text>
+    </g>
+  </g>
+
+  <!-- Bottom Golden Rule Card -->
+  <g transform="translate(25, 440)">
+    <rect width="750" height="54" rx="8" fill="#FEF2F2" stroke="#F87171" stroke-width="1.5"/>
+    <text x="375" y="24" fill="#991B1B" font-size="11" font-weight="800" text-anchor="middle">ГОЛОВНЕ ПРАВИЛО: ЗАВЖДИ КУПУЙТЕ +1 МОТОК ПРО ЗАПАС</text>
+    <text x="375" y="43" fill="#B91C1C" font-size="10" font-weight="600" text-anchor="middle">Зайвий моток можна повернути або використати на шапку. Якщо нитки забракне — знайти той самий номер партії майже неможливо!</text>
+  </g>
+</svg>
