@@ -2,8 +2,8 @@
 title: "Як розрахувати круглу кокетку спицями: яруси прибавок і таблиця"
 description: "Розрахунок круглої кокетки зверху: петлі горловини, 3–4 яруси прибавок за EPS, висота в рядах, паросток і підрізи. Приклад на 48 розмір + калькулятор."
 slug: "yak-rozrahuvaty-kruhlu-koketku"
-datePublished: "2026-04-06"
-dateModified: "2026-05-09"
+datePublished: "2026-05-09"
+dateModified: "2026-09-09"
 author: "Жанна"
 readingTime: 16
 category: "how-to"

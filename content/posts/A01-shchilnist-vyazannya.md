@@ -2,8 +2,8 @@
 title: "Щільність в'язання: як розрахувати за зразком (формула + помилки)"
 description: "Як розрахувати щільність в'язання спицями: зразок 14×14 см, ВТО, формула петель і рядів на 1 см, переведення мірок у петлі. Практичний приклад на 48 розмір."
 slug: "yak-rozrahuvaty-shchilnist-vyazannya"
-datePublished: "2026-03-05"
-dateModified: "2026-05-09"
+datePublished: "2026-05-09"
+dateModified: "2026-09-09"
 author: "Жанна (Розрахуй і В'яжи)"
 readingTime: 15
 category: "how-to"

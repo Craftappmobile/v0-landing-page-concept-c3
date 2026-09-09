@@ -2,8 +2,8 @@
 title: "Дитячий светр спицями: таблиця розмірів 0–14 років і розрахунок петель"
 description: "Таблиця розмірів дитячих светрів від 0 до 14 років (ОГ, довжина, рукав), формула петель, запас на виріст, вибір пряжі та витрата. 3 приклади: 3 міс, 5 і 12 років."
 slug: "yak-rozrahuvaty-dytyachyy-svetr"
-datePublished: "2026-03-25"
-dateModified: "2026-05-09"
+datePublished: "2026-05-09"
+dateModified: "2026-09-09"
 author: "Жанна"
 readingTime: 18
 category: "how-to"

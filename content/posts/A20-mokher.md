@@ -2,8 +2,8 @@
 title: "Светр з мохеру спицями: розрахунок щільності, витрати та спиць"
 description: "Як розрахувати светр з мохеру: щільність після ВТО, коефіцієнт розтягнення, скільки мотків кід-мохеру на павутинку 42–50, спиці, поєднання з мериносом. Приклади."
 slug: "yak-rozrahuvaty-vyazannya-z-mokheru"
-datePublished: "2026-04-21"
-dateModified: "2026-05-09"
+datePublished: "2026-05-09"
+dateModified: "2026-09-09"
 author: "Жанна"
 readingTime: 18
 category: "how-to"
