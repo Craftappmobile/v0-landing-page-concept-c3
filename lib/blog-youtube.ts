@@ -282,12 +282,6 @@ export const KNOWN_VIDEOS: Record<string, YouTubeVideoData> = {
     channel: "Котики Вʼяжуть",
     image: "/images/videos/yt-KGUSSc8e47U.jpg",
   },
-  "swLxm-vsmR0": {
-    id: "swLxm-vsmR0",
-    title: "Кругла горловина спицями: як розрахувати, як зв'язати (в'язальна арифметика)",
-    channel: "Натка в'яже",
-    image: "/images/videos/yt-swLxm-vsmR0.jpg",
-  },
   "AuS9q4w9xpk": {
     id: "AuS9q4w9xpk",
     title: "Розрахунок горловини джемпера: плавні убавки та оформлення планки",

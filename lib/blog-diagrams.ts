@@ -3487,6 +3487,822 @@ const BLOG_DIAGRAMS: Record<string, BlogDiagramDefinition> = {
   </g>
 </svg>`,
   },
+  "sweater-calculators-pipeline": {
+    title: "Пайплайн розрахунку светра: 4 ключові калькулятори",
+    caption: "Комплексний процес розрахунку светра на vjazhi.com.ua: від вимірювання щільності до реглану, горловини та розрахунку кількості пряжі.",
+    svg: `<svg viewBox="0 0 800 520" role="img" aria-labelledby="diagram-calc-pipeline-title" xmlns="http://www.w3.org/2000/svg" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif">
+  <title id="diagram-calc-pipeline-title">Пайплайн розрахунку светра: 4 ключові калькулятори</title>
+  <defs>
+    <filter id="pipeShadow" x="-4%" y="-4%" width="108%" height="108%">
+      <feDropShadow dx="0" dy="3" stdDeviation="5" flood-opacity="0.06"/>
+    </filter>
+  </defs>
+
+  <rect width="800" height="520" rx="16" fill="#FFFFFF"/>
+  <rect x="12" y="12" width="776" height="496" rx="12" fill="none" stroke="#E2E8F0" stroke-width="1.5"/>
+
+  <!-- Title Header Banner (750px full width) -->
+  <rect x="25" y="24" width="750" height="38" rx="8" fill="#1E1B4B"/>
+  <text x="400" y="48" fill="#FFFFFF" font-size="13" font-weight="700" text-anchor="middle" letter-spacing="0.5">ПАЙПЛАЙН РОЗРАХУНКУ СВЕТРА: 4 КЛЮЧОВІ КАЛЬКУЛЯТОРИ</text>
+
+  <!-- Step 1: Density -->
+  <g transform="translate(25, 78)">
+    <rect width="175" height="350" rx="10" fill="#F8FAFC" stroke="#E2E8F0" stroke-width="1.5" filter="url(#pipeShadow)"/>
+    <rect width="175" height="34" rx="10" fill="#EEF2FF"/>
+    <text x="87" y="22" fill="#3730A3" font-size="10.5" font-weight="800" text-anchor="middle">КРОК 1: ЩІЛЬНІСТЬ</text>
+
+    <g transform="translate(10, 44)">
+      <rect width="155" height="70" rx="6" fill="#FFFFFF" stroke="#C7D2FE"/>
+      <text x="8" y="18" fill="#1E1B4B" font-size="10" font-weight="700">Вхідні дані:</text>
+      <text x="8" y="34" fill="#475569" font-size="9">• Зразок 12×12 см</text>
+      <text x="8" y="48" fill="#475569" font-size="9">• Прання + сушіння (ВТО)</text>
+      <text x="8" y="62" fill="#475569" font-size="9">• Точні виміри лінійкою</text>
+    </g>
+
+    <g transform="translate(10, 122)">
+      <rect width="155" height="85" rx="6" fill="#FFFFFF" stroke="#C7D2FE"/>
+      <text x="8" y="18" fill="#1E1B4B" font-size="10" font-weight="700">Калькулятор обчислює:</text>
+      <text x="8" y="34" fill="#475569" font-size="9">• Пг (петель в 1 см)</text>
+      <text x="8" y="48" fill="#475569" font-size="9">• Рв (рядів в 1 см)</text>
+      <text x="8" y="62" fill="#475569" font-size="9">• Коефіцієнт розтягу</text>
+      <text x="8" y="76" fill="#475569" font-size="9">• Точність до 0.1 петлі</text>
+    </g>
+
+    <g transform="translate(10, 215)">
+      <rect width="155" height="115" rx="6" fill="#EEF2FF"/>
+      <text x="8" y="18" fill="#312E81" font-size="9.5" font-weight="700">🎯 Чому критично:</text>
+      <text x="8" y="36" fill="#4338CA" font-size="8.5">Похибка в 1 петлю</text>
+      <text x="8" y="50" fill="#4338CA" font-size="8.5">на 10 см дає ±5 см</text>
+      <text x="8" y="64" fill="#4338CA" font-size="8.5">в обхваті грудей!</text>
+      <rect x="8" y="76" width="139" height="28" rx="4" fill="#4338CA"/>
+      <text x="77" y="94" fill="#FFFFFF" font-size="8.5" font-weight="700" text-anchor="middle">БАЗА ДЛЯ ВСЬОГО</text>
+    </g>
+  </g>
+
+  <!-- Step 2: Raglan / Pattern -->
+  <g transform="translate(215, 78)">
+    <rect width="175" height="350" rx="10" fill="#F8FAFC" stroke="#E2E8F0" stroke-width="1.5" filter="url(#pipeShadow)"/>
+    <rect width="175" height="34" rx="10" fill="#ECFDF5"/>
+    <text x="87" y="22" fill="#065F46" font-size="10.5" font-weight="800" text-anchor="middle">КРОК 2: КОНСТРУКЦІЯ</text>
+
+    <g transform="translate(10, 44)">
+      <rect width="155" height="70" rx="6" fill="#FFFFFF" stroke="#A7F3D0"/>
+      <text x="8" y="18" fill="#064E3B" font-size="10" font-weight="700">Вхідні дані:</text>
+      <text x="8" y="34" fill="#475569" font-size="9">• Обхват шиї, грудей</text>
+      <text x="8" y="48" fill="#475569" font-size="9">• Припуск на свободу</text>
+      <text x="8" y="62" fill="#475569" font-size="9">• Пг з кроку 1</text>
+    </g>
+
+    <g transform="translate(10, 122)">
+      <rect width="155" height="85" rx="6" fill="#FFFFFF" stroke="#A7F3D0"/>
+      <text x="8" y="18" fill="#064E3B" font-size="10" font-weight="700">Калькулятор реглану:</text>
+      <text x="8" y="34" fill="#475569" font-size="9">• Розподіл 45/45/10%</text>
+      <text x="8" y="48" fill="#475569" font-size="9">• Росток (спинка +3 см)</text>
+      <text x="8" y="62" fill="#475569" font-size="9">• Ритм регланних ліній</text>
+      <text x="8" y="76" fill="#475569" font-size="9">• Підрізи для рукавів</text>
+    </g>
+
+    <g transform="translate(10, 215)">
+      <rect width="155" height="115" rx="6" fill="#ECFDF5"/>
+      <text x="8" y="18" fill="#064E3B" font-size="9.5" font-weight="700">🎯 Чому критично:</text>
+      <text x="8" y="36" fill="#047857" font-size="8.5">Росток запобігає</text>
+      <text x="8" y="50" fill="#047857" font-size="8.5">сповзанню назад</text>
+      <text x="8" y="64" fill="#047857" font-size="8.5">і задушенню шиї!</text>
+      <rect x="8" y="76" width="139" height="28" rx="4" fill="#059669"/>
+      <text x="77" y="94" fill="#FFFFFF" font-size="8.5" font-weight="700" text-anchor="middle">АНАТОМІЧНА ПОСАДКА</text>
+    </g>
+  </g>
+
+  <!-- Step 3: Neckline & Sleeves -->
+  <g transform="translate(405, 78)">
+    <rect width="175" height="350" rx="10" fill="#F8FAFC" stroke="#E2E8F0" stroke-width="1.5" filter="url(#pipeShadow)"/>
+    <rect width="175" height="34" rx="10" fill="#FFFBEB"/>
+    <text x="87" y="22" fill="#92400E" font-size="10.5" font-weight="800" text-anchor="middle">КРОК 3: ГОРЛОВИНА</text>
+
+    <g transform="translate(10, 44)">
+      <rect width="155" height="70" rx="6" fill="#FFFFFF" stroke="#FDE68A"/>
+      <text x="8" y="18" fill="#78350F" font-size="10" font-weight="700">Вхідні дані:</text>
+      <text x="8" y="34" fill="#475569" font-size="9">• Глибина вирізу (см)</text>
+      <text x="8" y="48" fill="#475569" font-size="9">• Ширина плечей</text>
+      <text x="8" y="62" fill="#475569" font-size="9">• Форма (круглий/V-виріз)</text>
+    </g>
+
+    <g transform="translate(10, 122)">
+      <rect width="155" height="85" rx="6" fill="#FFFFFF" stroke="#FDE68A"/>
+      <text x="8" y="18" fill="#78350F" font-size="10" font-weight="700">Калькулятор горловини:</text>
+      <text x="8" y="34" fill="#475569" font-size="9">• Центральні закриті п.</text>
+      <text x="8" y="48" fill="#475569" font-size="9">• Плавні убавки по боках</text>
+      <text x="8" y="62" fill="#475569" font-size="9">• Набір планки (3:4)</text>
+      <text x="8" y="76" fill="#475569" font-size="9">• Без сходинок і затяжок</text>
+    </g>
+
+    <g transform="translate(10, 215)">
+      <rect width="155" height="115" rx="6" fill="#FFFBEB"/>
+      <text x="8" y="18" fill="#78350F" font-size="9.5" font-weight="700">🎯 Чому критично:</text>
+      <text x="8" y="36" fill="#B45309" font-size="8.5">Горловина — це</text>
+      <text x="8" y="50" fill="#B45309" font-size="8.5">обличчя світшота,</text>
+      <text x="8" y="64" fill="#B45309" font-size="8.5">виріз не розтягується</text>
+      <rect x="8" y="76" width="139" height="28" rx="4" fill="#D97706"/>
+      <text x="77" y="94" fill="#FFFFFF" font-size="8.5" font-weight="700" text-anchor="middle">ІДЕАЛЬНИЙ КАНТ</text>
+    </g>
+  </g>
+
+  <!-- Step 4: Yarn Consumption -->
+  <g transform="translate(595, 78)">
+    <rect width="180" height="350" rx="10" fill="#F8FAFC" stroke="#E2E8F0" stroke-width="1.5" filter="url(#pipeShadow)"/>
+    <rect width="180" height="34" rx="10" fill="#FAF5FF"/>
+    <text x="90" y="22" fill="#6B21A8" font-size="10.5" font-weight="800" text-anchor="middle">КРОК 4: ВИТРАТА ПРЯЖІ</text>
+
+    <g transform="translate(10, 44)">
+      <rect width="160" height="70" rx="6" fill="#FFFFFF" stroke="#E9D5FF"/>
+      <text x="8" y="18" fill="#581C87" font-size="10" font-weight="700">Вхідні дані:</text>
+      <text x="8" y="34" fill="#475569" font-size="9">• Площа виробу (см²)</text>
+      <text x="8" y="48" fill="#475569" font-size="9">• Вага зразка (г)</text>
+      <text x="8" y="62" fill="#475569" font-size="9">• Метраж у мотку</text>
+    </g>
+
+    <g transform="translate(10, 122)">
+      <rect width="160" height="85" rx="6" fill="#FFFFFF" stroke="#E9D5FF"/>
+      <text x="8" y="18" fill="#581C87" font-size="10" font-weight="700">Калькулятор витрати:</text>
+      <text x="8" y="34" fill="#475569" font-size="9">• Загальна вага пряжі</text>
+      <text x="8" y="48" fill="#475569" font-size="9">• Кількість мотків</text>
+      <text x="8" y="62" fill="#475569" font-size="9">• Корекція на візерунок</text>
+      <text x="8" y="76" fill="#475569" font-size="9">• +10% страховий запас</text>
+    </g>
+
+    <g transform="translate(10, 215)">
+      <rect width="160" height="115" rx="6" fill="#FAF5FF"/>
+      <text x="8" y="18" fill="#581C87" font-size="9.5" font-weight="700">🎯 Чому критично:</text>
+      <text x="8" y="36" fill="#7E22CE" font-size="8.5">Запобігає докупівлі</text>
+      <text x="8" y="50" fill="#7E22CE" font-size="8.5">з іншого Dye Lot або</text>
+      <text x="8" y="64" fill="#7E22CE" font-size="8.5">знятої пряжі!</text>
+      <rect x="8" y="76" width="144" height="28" rx="4" fill="#9333EA"/>
+      <text x="80" y="94" fill="#FFFFFF" font-size="8.5" font-weight="700" text-anchor="middle">БЕЗПЕЧНА ЗАКУПІВЛЯ</text>
+    </g>
+  </g>
+
+  <!-- Bottom Result Banner (750px full width) -->
+  <g transform="translate(25, 442)">
+    <rect width="750" height="52" rx="8" fill="#1E1B4B"/>
+    <text x="400" y="24" fill="#FBBF24" font-size="11" font-weight="800" text-anchor="middle" letter-spacing="0.5">РЕЗУЛЬТАТ СИНХРОННОЇ РОБОТИ 4 КАЛЬКУЛЯТОРІВ:</text>
+    <text x="400" y="42" fill="#FFFFFF" font-size="10.5" text-anchor="middle">Бездоганна посадка светра з 1-ї спроби • 0 зайвих перев'язувань • Точна кількість мотків без залишків</text>
+  </g>
+</svg>`,
+  },
+  "top-svetr": {
+    title: "Пайплайн розрахунку светра: 4 ключові калькулятори",
+    caption: "Комплексний процес розрахунку светра на vjazhi.com.ua: від вимірювання щільності до реглану, горловини та розрахунку кількості пряжі.",
+    svg: `<svg viewBox="0 0 800 520" role="img" aria-labelledby="diagram-calc-pipeline-title" xmlns="http://www.w3.org/2000/svg" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif">
+  <title id="diagram-calc-pipeline-title">Пайплайн розрахунку светра: 4 ключові калькулятори</title>
+  <defs>
+    <filter id="pipeShadow" x="-4%" y="-4%" width="108%" height="108%">
+      <feDropShadow dx="0" dy="3" stdDeviation="5" flood-opacity="0.06"/>
+    </filter>
+  </defs>
+
+  <rect width="800" height="520" rx="16" fill="#FFFFFF"/>
+  <rect x="12" y="12" width="776" height="496" rx="12" fill="none" stroke="#E2E8F0" stroke-width="1.5"/>
+
+  <!-- Title Header Banner (750px full width) -->
+  <rect x="25" y="24" width="750" height="38" rx="8" fill="#1E1B4B"/>
+  <text x="400" y="48" fill="#FFFFFF" font-size="13" font-weight="700" text-anchor="middle" letter-spacing="0.5">ПАЙПЛАЙН РОЗРАХУНКУ СВЕТРА: 4 КЛЮЧОВІ КАЛЬКУЛЯТОРИ</text>
+
+  <!-- Step 1: Density -->
+  <g transform="translate(25, 78)">
+    <rect width="175" height="350" rx="10" fill="#F8FAFC" stroke="#E2E8F0" stroke-width="1.5" filter="url(#pipeShadow)"/>
+    <rect width="175" height="34" rx="10" fill="#EEF2FF"/>
+    <text x="87" y="22" fill="#3730A3" font-size="10.5" font-weight="800" text-anchor="middle">КРОК 1: ЩІЛЬНІСТЬ</text>
+
+    <g transform="translate(10, 44)">
+      <rect width="155" height="70" rx="6" fill="#FFFFFF" stroke="#C7D2FE"/>
+      <text x="8" y="18" fill="#1E1B4B" font-size="10" font-weight="700">Вхідні дані:</text>
+      <text x="8" y="34" fill="#475569" font-size="9">• Зразок 12×12 см</text>
+      <text x="8" y="48" fill="#475569" font-size="9">• Прання + сушіння (ВТО)</text>
+      <text x="8" y="62" fill="#475569" font-size="9">• Точні виміри лінійкою</text>
+    </g>
+
+    <g transform="translate(10, 122)">
+      <rect width="155" height="85" rx="6" fill="#FFFFFF" stroke="#C7D2FE"/>
+      <text x="8" y="18" fill="#1E1B4B" font-size="10" font-weight="700">Калькулятор обчислює:</text>
+      <text x="8" y="34" fill="#475569" font-size="9">• Пг (петель в 1 см)</text>
+      <text x="8" y="48" fill="#475569" font-size="9">• Рв (рядів в 1 см)</text>
+      <text x="8" y="62" fill="#475569" font-size="9">• Коефіцієнт розтягу</text>
+      <text x="8" y="76" fill="#475569" font-size="9">• Точність до 0.1 петлі</text>
+    </g>
+
+    <g transform="translate(10, 215)">
+      <rect width="155" height="115" rx="6" fill="#EEF2FF"/>
+      <text x="8" y="18" fill="#312E81" font-size="9.5" font-weight="700">🎯 Чому критично:</text>
+      <text x="8" y="36" fill="#4338CA" font-size="8.5">Похибка в 1 петлю</text>
+      <text x="8" y="50" fill="#4338CA" font-size="8.5">на 10 см дає ±5 см</text>
+      <text x="8" y="64" fill="#4338CA" font-size="8.5">в обхваті грудей!</text>
+      <rect x="8" y="76" width="139" height="28" rx="4" fill="#4338CA"/>
+      <text x="77" y="94" fill="#FFFFFF" font-size="8.5" font-weight="700" text-anchor="middle">БАЗА ДЛЯ ВСЬОГО</text>
+    </g>
+  </g>
+
+  <!-- Step 2: Raglan / Pattern -->
+  <g transform="translate(215, 78)">
+    <rect width="175" height="350" rx="10" fill="#F8FAFC" stroke="#E2E8F0" stroke-width="1.5" filter="url(#pipeShadow)"/>
+    <rect width="175" height="34" rx="10" fill="#ECFDF5"/>
+    <text x="87" y="22" fill="#065F46" font-size="10.5" font-weight="800" text-anchor="middle">КРОК 2: КОНСТРУКЦІЯ</text>
+
+    <g transform="translate(10, 44)">
+      <rect width="155" height="70" rx="6" fill="#FFFFFF" stroke="#A7F3D0"/>
+      <text x="8" y="18" fill="#064E3B" font-size="10" font-weight="700">Вхідні дані:</text>
+      <text x="8" y="34" fill="#475569" font-size="9">• Обхват шиї, грудей</text>
+      <text x="8" y="48" fill="#475569" font-size="9">• Припуск на свободу</text>
+      <text x="8" y="62" fill="#475569" font-size="9">• Пг з кроку 1</text>
+    </g>
+
+    <g transform="translate(10, 122)">
+      <rect width="155" height="85" rx="6" fill="#FFFFFF" stroke="#A7F3D0"/>
+      <text x="8" y="18" fill="#064E3B" font-size="10" font-weight="700">Калькулятор реглану:</text>
+      <text x="8" y="34" fill="#475569" font-size="9">• Розподіл 45/45/10%</text>
+      <text x="8" y="48" fill="#475569" font-size="9">• Росток (спинка +3 см)</text>
+      <text x="8" y="62" fill="#475569" font-size="9">• Ритм регланних ліній</text>
+      <text x="8" y="76" fill="#475569" font-size="9">• Підрізи для рукавів</text>
+    </g>
+
+    <g transform="translate(10, 215)">
+      <rect width="155" height="115" rx="6" fill="#ECFDF5"/>
+      <text x="8" y="18" fill="#064E3B" font-size="9.5" font-weight="700">🎯 Чому критично:</text>
+      <text x="8" y="36" fill="#047857" font-size="8.5">Росток запобігає</text>
+      <text x="8" y="50" fill="#047857" font-size="8.5">сповзанню назад</text>
+      <text x="8" y="64" fill="#047857" font-size="8.5">і задушенню шиї!</text>
+      <rect x="8" y="76" width="139" height="28" rx="4" fill="#059669"/>
+      <text x="77" y="94" fill="#FFFFFF" font-size="8.5" font-weight="700" text-anchor="middle">АНАТОМІЧНА ПОСАДКА</text>
+    </g>
+  </g>
+
+  <!-- Step 3: Neckline & Sleeves -->
+  <g transform="translate(405, 78)">
+    <rect width="175" height="350" rx="10" fill="#F8FAFC" stroke="#E2E8F0" stroke-width="1.5" filter="url(#pipeShadow)"/>
+    <rect width="175" height="34" rx="10" fill="#FFFBEB"/>
+    <text x="87" y="22" fill="#92400E" font-size="10.5" font-weight="800" text-anchor="middle">КРОК 3: ГОРЛОВИНА</text>
+
+    <g transform="translate(10, 44)">
+      <rect width="155" height="70" rx="6" fill="#FFFFFF" stroke="#FDE68A"/>
+      <text x="8" y="18" fill="#78350F" font-size="10" font-weight="700">Вхідні дані:</text>
+      <text x="8" y="34" fill="#475569" font-size="9">• Глибина вирізу (см)</text>
+      <text x="8" y="48" fill="#475569" font-size="9">• Ширина плечей</text>
+      <text x="8" y="62" fill="#475569" font-size="9">• Форма (круглий/V-виріз)</text>
+    </g>
+
+    <g transform="translate(10, 122)">
+      <rect width="155" height="85" rx="6" fill="#FFFFFF" stroke="#FDE68A"/>
+      <text x="8" y="18" fill="#78350F" font-size="10" font-weight="700">Калькулятор горловини:</text>
+      <text x="8" y="34" fill="#475569" font-size="9">• Центральні закриті п.</text>
+      <text x="8" y="48" fill="#475569" font-size="9">• Плавні убавки по боках</text>
+      <text x="8" y="62" fill="#475569" font-size="9">• Набір планки (3:4)</text>
+      <text x="8" y="76" fill="#475569" font-size="9">• Без сходинок і затяжок</text>
+    </g>
+
+    <g transform="translate(10, 215)">
+      <rect width="155" height="115" rx="6" fill="#FFFBEB"/>
+      <text x="8" y="18" fill="#78350F" font-size="9.5" font-weight="700">🎯 Чому критично:</text>
+      <text x="8" y="36" fill="#B45309" font-size="8.5">Горловина — це</text>
+      <text x="8" y="50" fill="#B45309" font-size="8.5">обличчя світшота,</text>
+      <text x="8" y="64" fill="#B45309" font-size="8.5">виріз не розтягується</text>
+      <rect x="8" y="76" width="139" height="28" rx="4" fill="#D97706"/>
+      <text x="77" y="94" fill="#FFFFFF" font-size="8.5" font-weight="700" text-anchor="middle">ІДЕАЛЬНИЙ КАНТ</text>
+    </g>
+  </g>
+
+  <!-- Step 4: Yarn Consumption -->
+  <g transform="translate(595, 78)">
+    <rect width="180" height="350" rx="10" fill="#F8FAFC" stroke="#E2E8F0" stroke-width="1.5" filter="url(#pipeShadow)"/>
+    <rect width="180" height="34" rx="10" fill="#FAF5FF"/>
+    <text x="90" y="22" fill="#6B21A8" font-size="10.5" font-weight="800" text-anchor="middle">КРОК 4: ВИТРАТА ПРЯЖІ</text>
+
+    <g transform="translate(10, 44)">
+      <rect width="160" height="70" rx="6" fill="#FFFFFF" stroke="#E9D5FF"/>
+      <text x="8" y="18" fill="#581C87" font-size="10" font-weight="700">Вхідні дані:</text>
+      <text x="8" y="34" fill="#475569" font-size="9">• Площа виробу (см²)</text>
+      <text x="8" y="48" fill="#475569" font-size="9">• Вага зразка (г)</text>
+      <text x="8" y="62" fill="#475569" font-size="9">• Метраж у мотку</text>
+    </g>
+
+    <g transform="translate(10, 122)">
+      <rect width="160" height="85" rx="6" fill="#FFFFFF" stroke="#E9D5FF"/>
+      <text x="8" y="18" fill="#581C87" font-size="10" font-weight="700">Калькулятор витрати:</text>
+      <text x="8" y="34" fill="#475569" font-size="9">• Загальна вага пряжі</text>
+      <text x="8" y="48" fill="#475569" font-size="9">• Кількість мотків</text>
+      <text x="8" y="62" fill="#475569" font-size="9">• Корекція на візерунок</text>
+      <text x="8" y="76" fill="#475569" font-size="9">• +10% страховий запас</text>
+    </g>
+
+    <g transform="translate(10, 215)">
+      <rect width="160" height="115" rx="6" fill="#FAF5FF"/>
+      <text x="8" y="18" fill="#581C87" font-size="9.5" font-weight="700">🎯 Чому критично:</text>
+      <text x="8" y="36" fill="#7E22CE" font-size="8.5">Запобігає докупівлі</text>
+      <text x="8" y="50" fill="#7E22CE" font-size="8.5">з іншого Dye Lot або</text>
+      <text x="8" y="64" fill="#7E22CE" font-size="8.5">знятої пряжі!</text>
+      <rect x="8" y="76" width="144" height="28" rx="4" fill="#9333EA"/>
+      <text x="80" y="94" fill="#FFFFFF" font-size="8.5" font-weight="700" text-anchor="middle">БЕЗПЕЧНА ЗАКУПІВЛЯ</text>
+    </g>
+  </g>
+
+  <!-- Bottom Result Banner (750px full width) -->
+  <g transform="translate(25, 442)">
+    <rect width="750" height="52" rx="8" fill="#1E1B4B"/>
+    <text x="400" y="24" fill="#FBBF24" font-size="11" font-weight="800" text-anchor="middle" letter-spacing="0.5">РЕЗУЛЬТАТ СИНХРОННОЇ РОБОТИ 4 КАЛЬКУЛЯТОРІВ:</text>
+    <text x="400" y="42" fill="#FFFFFF" font-size="10.5" text-anchor="middle">Бездоганна посадка светра з 1-ї спроби • 0 зайвих перев'язувань • Точна кількість мотків без залишків</text>
+  </g>
+</svg>`,
+  },
+  "sweater-pipeline": {
+    title: "Пайплайн розрахунку светра: 4 ключові калькулятори",
+    caption: "Комплексний процес розрахунку светра на vjazhi.com.ua: від вимірювання щільності до реглану, горловини та розрахунку кількості пряжі.",
+    svg: `<svg viewBox="0 0 800 520" role="img" aria-labelledby="diagram-calc-pipeline-title" xmlns="http://www.w3.org/2000/svg" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif">
+  <title id="diagram-calc-pipeline-title">Пайплайн розрахунку светра: 4 ключові калькулятори</title>
+  <defs>
+    <filter id="pipeShadow" x="-4%" y="-4%" width="108%" height="108%">
+      <feDropShadow dx="0" dy="3" stdDeviation="5" flood-opacity="0.06"/>
+    </filter>
+  </defs>
+
+  <rect width="800" height="520" rx="16" fill="#FFFFFF"/>
+  <rect x="12" y="12" width="776" height="496" rx="12" fill="none" stroke="#E2E8F0" stroke-width="1.5"/>
+
+  <!-- Title Header Banner (750px full width) -->
+  <rect x="25" y="24" width="750" height="38" rx="8" fill="#1E1B4B"/>
+  <text x="400" y="48" fill="#FFFFFF" font-size="13" font-weight="700" text-anchor="middle" letter-spacing="0.5">ПАЙПЛАЙН РОЗРАХУНКУ СВЕТРА: 4 КЛЮЧОВІ КАЛЬКУЛЯТОРИ</text>
+
+  <!-- Step 1: Density -->
+  <g transform="translate(25, 78)">
+    <rect width="175" height="350" rx="10" fill="#F8FAFC" stroke="#E2E8F0" stroke-width="1.5" filter="url(#pipeShadow)"/>
+    <rect width="175" height="34" rx="10" fill="#EEF2FF"/>
+    <text x="87" y="22" fill="#3730A3" font-size="10.5" font-weight="800" text-anchor="middle">КРОК 1: ЩІЛЬНІСТЬ</text>
+
+    <g transform="translate(10, 44)">
+      <rect width="155" height="70" rx="6" fill="#FFFFFF" stroke="#C7D2FE"/>
+      <text x="8" y="18" fill="#1E1B4B" font-size="10" font-weight="700">Вхідні дані:</text>
+      <text x="8" y="34" fill="#475569" font-size="9">• Зразок 12×12 см</text>
+      <text x="8" y="48" fill="#475569" font-size="9">• Прання + сушіння (ВТО)</text>
+      <text x="8" y="62" fill="#475569" font-size="9">• Точні виміри лінійкою</text>
+    </g>
+
+    <g transform="translate(10, 122)">
+      <rect width="155" height="85" rx="6" fill="#FFFFFF" stroke="#C7D2FE"/>
+      <text x="8" y="18" fill="#1E1B4B" font-size="10" font-weight="700">Калькулятор обчислює:</text>
+      <text x="8" y="34" fill="#475569" font-size="9">• Пг (петель в 1 см)</text>
+      <text x="8" y="48" fill="#475569" font-size="9">• Рв (рядів в 1 см)</text>
+      <text x="8" y="62" fill="#475569" font-size="9">• Коефіцієнт розтягу</text>
+      <text x="8" y="76" fill="#475569" font-size="9">• Точність до 0.1 петлі</text>
+    </g>
+
+    <g transform="translate(10, 215)">
+      <rect width="155" height="115" rx="6" fill="#EEF2FF"/>
+      <text x="8" y="18" fill="#312E81" font-size="9.5" font-weight="700">🎯 Чому критично:</text>
+      <text x="8" y="36" fill="#4338CA" font-size="8.5">Похибка в 1 петлю</text>
+      <text x="8" y="50" fill="#4338CA" font-size="8.5">на 10 см дає ±5 см</text>
+      <text x="8" y="64" fill="#4338CA" font-size="8.5">в обхваті грудей!</text>
+      <rect x="8" y="76" width="139" height="28" rx="4" fill="#4338CA"/>
+      <text x="77" y="94" fill="#FFFFFF" font-size="8.5" font-weight="700" text-anchor="middle">БАЗА ДЛЯ ВСЬОГО</text>
+    </g>
+  </g>
+
+  <!-- Step 2: Raglan / Pattern -->
+  <g transform="translate(215, 78)">
+    <rect width="175" height="350" rx="10" fill="#F8FAFC" stroke="#E2E8F0" stroke-width="1.5" filter="url(#pipeShadow)"/>
+    <rect width="175" height="34" rx="10" fill="#ECFDF5"/>
+    <text x="87" y="22" fill="#065F46" font-size="10.5" font-weight="800" text-anchor="middle">КРОК 2: КОНСТРУКЦІЯ</text>
+
+    <g transform="translate(10, 44)">
+      <rect width="155" height="70" rx="6" fill="#FFFFFF" stroke="#A7F3D0"/>
+      <text x="8" y="18" fill="#064E3B" font-size="10" font-weight="700">Вхідні дані:</text>
+      <text x="8" y="34" fill="#475569" font-size="9">• Обхват шиї, грудей</text>
+      <text x="8" y="48" fill="#475569" font-size="9">• Припуск на свободу</text>
+      <text x="8" y="62" fill="#475569" font-size="9">• Пг з кроку 1</text>
+    </g>
+
+    <g transform="translate(10, 122)">
+      <rect width="155" height="85" rx="6" fill="#FFFFFF" stroke="#A7F3D0"/>
+      <text x="8" y="18" fill="#064E3B" font-size="10" font-weight="700">Калькулятор реглану:</text>
+      <text x="8" y="34" fill="#475569" font-size="9">• Розподіл 45/45/10%</text>
+      <text x="8" y="48" fill="#475569" font-size="9">• Росток (спинка +3 см)</text>
+      <text x="8" y="62" fill="#475569" font-size="9">• Ритм регланних ліній</text>
+      <text x="8" y="76" fill="#475569" font-size="9">• Підрізи для рукавів</text>
+    </g>
+
+    <g transform="translate(10, 215)">
+      <rect width="155" height="115" rx="6" fill="#ECFDF5"/>
+      <text x="8" y="18" fill="#064E3B" font-size="9.5" font-weight="700">🎯 Чому критично:</text>
+      <text x="8" y="36" fill="#047857" font-size="8.5">Росток запобігає</text>
+      <text x="8" y="50" fill="#047857" font-size="8.5">сповзанню назад</text>
+      <text x="8" y="64" fill="#047857" font-size="8.5">і задушенню шиї!</text>
+      <rect x="8" y="76" width="139" height="28" rx="4" fill="#059669"/>
+      <text x="77" y="94" fill="#FFFFFF" font-size="8.5" font-weight="700" text-anchor="middle">АНАТОМІЧНА ПОСАДКА</text>
+    </g>
+  </g>
+
+  <!-- Step 3: Neckline & Sleeves -->
+  <g transform="translate(405, 78)">
+    <rect width="175" height="350" rx="10" fill="#F8FAFC" stroke="#E2E8F0" stroke-width="1.5" filter="url(#pipeShadow)"/>
+    <rect width="175" height="34" rx="10" fill="#FFFBEB"/>
+    <text x="87" y="22" fill="#92400E" font-size="10.5" font-weight="800" text-anchor="middle">КРОК 3: ГОРЛОВИНА</text>
+
+    <g transform="translate(10, 44)">
+      <rect width="155" height="70" rx="6" fill="#FFFFFF" stroke="#FDE68A"/>
+      <text x="8" y="18" fill="#78350F" font-size="10" font-weight="700">Вхідні дані:</text>
+      <text x="8" y="34" fill="#475569" font-size="9">• Глибина вирізу (см)</text>
+      <text x="8" y="48" fill="#475569" font-size="9">• Ширина плечей</text>
+      <text x="8" y="62" fill="#475569" font-size="9">• Форма (круглий/V-виріз)</text>
+    </g>
+
+    <g transform="translate(10, 122)">
+      <rect width="155" height="85" rx="6" fill="#FFFFFF" stroke="#FDE68A"/>
+      <text x="8" y="18" fill="#78350F" font-size="10" font-weight="700">Калькулятор горловини:</text>
+      <text x="8" y="34" fill="#475569" font-size="9">• Центральні закриті п.</text>
+      <text x="8" y="48" fill="#475569" font-size="9">• Плавні убавки по боках</text>
+      <text x="8" y="62" fill="#475569" font-size="9">• Набір планки (3:4)</text>
+      <text x="8" y="76" fill="#475569" font-size="9">• Без сходинок і затяжок</text>
+    </g>
+
+    <g transform="translate(10, 215)">
+      <rect width="155" height="115" rx="6" fill="#FFFBEB"/>
+      <text x="8" y="18" fill="#78350F" font-size="9.5" font-weight="700">🎯 Чому критично:</text>
+      <text x="8" y="36" fill="#B45309" font-size="8.5">Горловина — це</text>
+      <text x="8" y="50" fill="#B45309" font-size="8.5">обличчя світшота,</text>
+      <text x="8" y="64" fill="#B45309" font-size="8.5">виріз не розтягується</text>
+      <rect x="8" y="76" width="139" height="28" rx="4" fill="#D97706"/>
+      <text x="77" y="94" fill="#FFFFFF" font-size="8.5" font-weight="700" text-anchor="middle">ІДЕАЛЬНИЙ КАНТ</text>
+    </g>
+  </g>
+
+  <!-- Step 4: Yarn Consumption -->
+  <g transform="translate(595, 78)">
+    <rect width="180" height="350" rx="10" fill="#F8FAFC" stroke="#E2E8F0" stroke-width="1.5" filter="url(#pipeShadow)"/>
+    <rect width="180" height="34" rx="10" fill="#FAF5FF"/>
+    <text x="90" y="22" fill="#6B21A8" font-size="10.5" font-weight="800" text-anchor="middle">КРОК 4: ВИТРАТА ПРЯЖІ</text>
+
+    <g transform="translate(10, 44)">
+      <rect width="160" height="70" rx="6" fill="#FFFFFF" stroke="#E9D5FF"/>
+      <text x="8" y="18" fill="#581C87" font-size="10" font-weight="700">Вхідні дані:</text>
+      <text x="8" y="34" fill="#475569" font-size="9">• Площа виробу (см²)</text>
+      <text x="8" y="48" fill="#475569" font-size="9">• Вага зразка (г)</text>
+      <text x="8" y="62" fill="#475569" font-size="9">• Метраж у мотку</text>
+    </g>
+
+    <g transform="translate(10, 122)">
+      <rect width="160" height="85" rx="6" fill="#FFFFFF" stroke="#E9D5FF"/>
+      <text x="8" y="18" fill="#581C87" font-size="10" font-weight="700">Калькулятор витрати:</text>
+      <text x="8" y="34" fill="#475569" font-size="9">• Загальна вага пряжі</text>
+      <text x="8" y="48" fill="#475569" font-size="9">• Кількість мотків</text>
+      <text x="8" y="62" fill="#475569" font-size="9">• Корекція на візерунок</text>
+      <text x="8" y="76" fill="#475569" font-size="9">• +10% страховий запас</text>
+    </g>
+
+    <g transform="translate(10, 215)">
+      <rect width="160" height="115" rx="6" fill="#FAF5FF"/>
+      <text x="8" y="18" fill="#581C87" font-size="9.5" font-weight="700">🎯 Чому критично:</text>
+      <text x="8" y="36" fill="#7E22CE" font-size="8.5">Запобігає докупівлі</text>
+      <text x="8" y="50" fill="#7E22CE" font-size="8.5">з іншого Dye Lot або</text>
+      <text x="8" y="64" fill="#7E22CE" font-size="8.5">знятої пряжі!</text>
+      <rect x="8" y="76" width="144" height="28" rx="4" fill="#9333EA"/>
+      <text x="80" y="94" fill="#FFFFFF" font-size="8.5" font-weight="700" text-anchor="middle">БЕЗПЕЧНА ЗАКУПІВЛЯ</text>
+    </g>
+  </g>
+
+  <!-- Bottom Result Banner (750px full width) -->
+  <g transform="translate(25, 442)">
+    <rect width="750" height="52" rx="8" fill="#1E1B4B"/>
+    <text x="400" y="24" fill="#FBBF24" font-size="11" font-weight="800" text-anchor="middle" letter-spacing="0.5">РЕЗУЛЬТАТ СИНХРОННОЇ РОБОТИ 4 КАЛЬКУЛЯТОРІВ:</text>
+    <text x="400" y="42" fill="#FFFFFF" font-size="10.5" text-anchor="middle">Бездоганна посадка светра з 1-ї спроби • 0 зайвих перев'язувань • Точна кількість мотків без залишків</text>
+  </g>
+</svg>`,
+  },
+  "manual-vs-calculator-comparison": {
+    title: "Ручний розрахунок vs Онлайн-калькулятор: порівняльний тест",
+    caption: "Порівняння ручного розрахунку в блокноті та онлайн-калькулятора за швидкістю, точністю, побудовою ростка та ризиком помилок.",
+    svg: `<svg viewBox="0 0 800 520" role="img" aria-labelledby="diagram-manual-calc-title" xmlns="http://www.w3.org/2000/svg" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif">
+  <title id="diagram-manual-calc-title">Ручний розрахунок vs Онлайн-калькулятор: детальне порівняння</title>
+  <defs>
+    <filter id="compShadow" x="-4%" y="-4%" width="108%" height="108%">
+      <feDropShadow dx="0" dy="3" stdDeviation="5" flood-opacity="0.06"/>
+    </filter>
+  </defs>
+
+  <rect width="800" height="520" rx="16" fill="#FFFFFF"/>
+  <rect x="12" y="12" width="776" height="496" rx="12" fill="none" stroke="#E2E8F0" stroke-width="1.5"/>
+
+  <!-- Title Header Banner (750px full width) -->
+  <rect x="25" y="24" width="750" height="38" rx="8" fill="#1E1B4B"/>
+  <text x="400" y="48" fill="#FFFFFF" font-size="13" font-weight="700" text-anchor="middle" letter-spacing="0.5">РУЧНИЙ РОЗРАХУНОК VS ОНЛАЙН-КАЛЬКУЛЯТОР: ПОРІВНЯЛЬНИЙ ТЕСТ</text>
+
+  <!-- Left Column: Manual Method -->
+  <g transform="translate(25, 78)">
+    <rect width="365" height="350" rx="10" fill="#FFF1F2" stroke="#FECDD3" stroke-width="1.5" filter="url(#compShadow)"/>
+    <rect width="365" height="36" rx="10" fill="#FFE4E6"/>
+    <text x="182" y="23" fill="#9F1239" font-size="11.5" font-weight="800" text-anchor="middle">РУЧНИЙ РОЗРАХУНОК (ФОРМУЛИ В БЛОКНОТІ)</text>
+
+    <!-- Item 1 -->
+    <g transform="translate(14, 48)">
+      <rect width="337" height="48" rx="6" fill="#FFFFFF" stroke="#FDA4AF"/>
+      <text x="12" y="18" fill="#881337" font-size="10" font-weight="700">⏱ Час розрахунку:</text>
+      <text x="12" y="36" fill="#475569" font-size="9.5">25–40 хвилин математики в стовпчик та перевірок</text>
+    </g>
+
+    <!-- Item 2 -->
+    <g transform="translate(14, 104)">
+      <rect width="337" height="48" rx="6" fill="#FFFFFF" stroke="#FDA4AF"/>
+      <text x="12" y="18" fill="#881337" font-size="10" font-weight="700">⚠️ Похибка округлення:</text>
+      <text x="12" y="36" fill="#475569" font-size="9.5">±5–10% (накопичення похибок на рукавах та кокетці)</text>
+    </g>
+
+    <!-- Item 3 -->
+    <g transform="translate(14, 160)">
+      <rect width="337" height="48" rx="6" fill="#FFFFFF" stroke="#FDA4AF"/>
+      <text x="12" y="18" fill="#881337" font-size="10" font-weight="700">🔄 Побудова анатомічного ростка:</text>
+      <text x="12" y="36" fill="#475569" font-size="9.5">Складний розрахунок точок розвороту вкорочених рядів</text>
+    </g>
+
+    <!-- Item 4 -->
+    <g transform="translate(14, 216)">
+      <rect width="337" height="48" rx="6" fill="#FFFFFF" stroke="#FDA4AF"/>
+      <text x="12" y="18" fill="#881337" font-size="10" font-weight="700">❌ Ризик арифметичної помилки:</text>
+      <text x="12" y="36" fill="#475569" font-size="9.5">30–40% випадків потребують розпускання деталей</text>
+    </g>
+
+    <!-- Summary Box -->
+    <g transform="translate(14, 274)">
+      <rect width="337" height="62" rx="6" fill="#FFE4E6"/>
+      <text x="168" y="22" fill="#9F1239" font-size="10" font-weight="800" text-anchor="middle">ДЕ ДОЦІЛЬНИЙ РУЧНИЙ МЕТОД:</text>
+      <text x="168" y="42" fill="#4C0519" font-size="9" text-anchor="middle">Для глибокого розуміння анатомії трикотажу та навчання</text>
+    </g>
+  </g>
+
+  <!-- Right Column: Online Calculator -->
+  <g transform="translate(410, 78)">
+    <rect width="365" height="350" rx="10" fill="#ECFDF5" stroke="#A7F3D0" stroke-width="1.5" filter="url(#compShadow)"/>
+    <rect width="365" height="36" rx="10" fill="#D1FAE5"/>
+    <text x="182" y="23" fill="#065F46" font-size="11.5" font-weight="800" text-anchor="middle">ОНЛАЙН-КАЛЬКУЛЯТОР (VJAZHI.COM.UA)</text>
+
+    <!-- Item 1 -->
+    <g transform="translate(14, 48)">
+      <rect width="337" height="48" rx="6" fill="#FFFFFF" stroke="#6EE7B7"/>
+      <text x="12" y="18" fill="#064E3B" font-size="10" font-weight="700">⚡️ Час розрахунку:</text>
+      <text x="12" y="36" fill="#475569" font-size="9.5">1–2 хвилини на повну покрокову схему светра</text>
+    </g>
+
+    <!-- Item 2 -->
+    <g transform="translate(14, 104)">
+      <rect width="337" height="48" rx="6" fill="#FFFFFF" stroke="#6EE7B7"/>
+      <text x="12" y="18" fill="#064E3B" font-size="10" font-weight="700">🎯 Точність алгоритмів:</text>
+      <text x="12" y="36" fill="#475569" font-size="9.5">±1–2% (ідеальна симетрія петель лівої та правої сторін)</text>
+    </g>
+
+    <!-- Item 3 -->
+    <g transform="translate(14, 160)">
+      <rect width="337" height="48" rx="6" fill="#FFFFFF" stroke="#6EE7B7"/>
+      <text x="12" y="18" fill="#064E3B" font-size="10" font-weight="700">📐 Автоматичний росток і виріз:</text>
+      <text x="12" y="36" fill="#475569" font-size="9.5">Готовий покроковий порядок розворотів без драбинок</text>
+    </g>
+
+    <!-- Item 4 -->
+    <g transform="translate(14, 216)">
+      <rect width="337" height="48" rx="6" fill="#FFFFFF" stroke="#6EE7B7"/>
+      <text x="12" y="18" fill="#064E3B" font-size="10" font-weight="700">🛡 Нульовий ризик перекосу:</text>
+      <text x="12" y="36" fill="#475569" font-size="9.5">Автоматична перевірка кратності рапортів візерунка</text>
+    </g>
+
+    <!-- Summary Box -->
+    <g transform="translate(14, 274)">
+      <rect width="337" height="62" rx="6" fill="#D1FAE5"/>
+      <text x="168" y="22" fill="#065F46" font-size="10" font-weight="800" text-anchor="middle">ДЕ ДОЦІЛЬНИЙ КАЛЬКУЛЯТОР:</text>
+      <text x="168" y="42" fill="#064E3B" font-size="9" text-anchor="middle">Для реальних виробів, економії часу та гарантії посадки</text>
+    </g>
+  </g>
+
+  <!-- Bottom Verdict Banner (750px full width) -->
+  <g transform="translate(25, 442)">
+    <rect width="750" height="52" rx="8" fill="#1E1B4B"/>
+    <text x="400" y="24" fill="#FBBF24" font-size="11" font-weight="800" text-anchor="middle" letter-spacing="0.5">ВЕРДИКТ ЕКСПЕРТІВ «РОЗРАХУЙ І В'ЯЖИ»:</text>
+    <text x="400" y="42" fill="#FFFFFF" font-size="10.5" text-anchor="middle">Калькулятор економить 90% часу та страхує від перев'язувань • Довіряйте рутині алгоритмам, а творчість залиште собі!</text>
+  </g>
+</svg>`,
+  },
+  "porivnyannya": {
+    title: "Ручний розрахунок vs Онлайн-калькулятор: порівняльний тест",
+    caption: "Порівняння ручного розрахунку в блокноті та онлайн-калькулятора за швидкістю, точністю, побудовою ростка та ризиком помилок.",
+    svg: `<svg viewBox="0 0 800 520" role="img" aria-labelledby="diagram-manual-calc-title" xmlns="http://www.w3.org/2000/svg" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif">
+  <title id="diagram-manual-calc-title">Ручний розрахунок vs Онлайн-калькулятор: детальне порівняння</title>
+  <defs>
+    <filter id="compShadow" x="-4%" y="-4%" width="108%" height="108%">
+      <feDropShadow dx="0" dy="3" stdDeviation="5" flood-opacity="0.06"/>
+    </filter>
+  </defs>
+
+  <rect width="800" height="520" rx="16" fill="#FFFFFF"/>
+  <rect x="12" y="12" width="776" height="496" rx="12" fill="none" stroke="#E2E8F0" stroke-width="1.5"/>
+
+  <!-- Title Header Banner (750px full width) -->
+  <rect x="25" y="24" width="750" height="38" rx="8" fill="#1E1B4B"/>
+  <text x="400" y="48" fill="#FFFFFF" font-size="13" font-weight="700" text-anchor="middle" letter-spacing="0.5">РУЧНИЙ РОЗРАХУНОК VS ОНЛАЙН-КАЛЬКУЛЯТОР: ПОРІВНЯЛЬНИЙ ТЕСТ</text>
+
+  <!-- Left Column: Manual Method -->
+  <g transform="translate(25, 78)">
+    <rect width="365" height="350" rx="10" fill="#FFF1F2" stroke="#FECDD3" stroke-width="1.5" filter="url(#compShadow)"/>
+    <rect width="365" height="36" rx="10" fill="#FFE4E6"/>
+    <text x="182" y="23" fill="#9F1239" font-size="11.5" font-weight="800" text-anchor="middle">РУЧНИЙ РОЗРАХУНОК (ФОРМУЛИ В БЛОКНОТІ)</text>
+
+    <!-- Item 1 -->
+    <g transform="translate(14, 48)">
+      <rect width="337" height="48" rx="6" fill="#FFFFFF" stroke="#FDA4AF"/>
+      <text x="12" y="18" fill="#881337" font-size="10" font-weight="700">⏱ Час розрахунку:</text>
+      <text x="12" y="36" fill="#475569" font-size="9.5">25–40 хвилин математики в стовпчик та перевірок</text>
+    </g>
+
+    <!-- Item 2 -->
+    <g transform="translate(14, 104)">
+      <rect width="337" height="48" rx="6" fill="#FFFFFF" stroke="#FDA4AF"/>
+      <text x="12" y="18" fill="#881337" font-size="10" font-weight="700">⚠️ Похибка округлення:</text>
+      <text x="12" y="36" fill="#475569" font-size="9.5">±5–10% (накопичення похибок на рукавах та кокетці)</text>
+    </g>
+
+    <!-- Item 3 -->
+    <g transform="translate(14, 160)">
+      <rect width="337" height="48" rx="6" fill="#FFFFFF" stroke="#FDA4AF"/>
+      <text x="12" y="18" fill="#881337" font-size="10" font-weight="700">🔄 Побудова анатомічного ростка:</text>
+      <text x="12" y="36" fill="#475569" font-size="9.5">Складний розрахунок точок розвороту вкорочених рядів</text>
+    </g>
+
+    <!-- Item 4 -->
+    <g transform="translate(14, 216)">
+      <rect width="337" height="48" rx="6" fill="#FFFFFF" stroke="#FDA4AF"/>
+      <text x="12" y="18" fill="#881337" font-size="10" font-weight="700">❌ Ризик арифметичної помилки:</text>
+      <text x="12" y="36" fill="#475569" font-size="9.5">30–40% випадків потребують розпускання деталей</text>
+    </g>
+
+    <!-- Summary Box -->
+    <g transform="translate(14, 274)">
+      <rect width="337" height="62" rx="6" fill="#FFE4E6"/>
+      <text x="168" y="22" fill="#9F1239" font-size="10" font-weight="800" text-anchor="middle">ДЕ ДОЦІЛЬНИЙ РУЧНИЙ МЕТОД:</text>
+      <text x="168" y="42" fill="#4C0519" font-size="9" text-anchor="middle">Для глибокого розуміння анатомії трикотажу та навчання</text>
+    </g>
+  </g>
+
+  <!-- Right Column: Online Calculator -->
+  <g transform="translate(410, 78)">
+    <rect width="365" height="350" rx="10" fill="#ECFDF5" stroke="#A7F3D0" stroke-width="1.5" filter="url(#compShadow)"/>
+    <rect width="365" height="36" rx="10" fill="#D1FAE5"/>
+    <text x="182" y="23" fill="#065F46" font-size="11.5" font-weight="800" text-anchor="middle">ОНЛАЙН-КАЛЬКУЛЯТОР (VJAZHI.COM.UA)</text>
+
+    <!-- Item 1 -->
+    <g transform="translate(14, 48)">
+      <rect width="337" height="48" rx="6" fill="#FFFFFF" stroke="#6EE7B7"/>
+      <text x="12" y="18" fill="#064E3B" font-size="10" font-weight="700">⚡️ Час розрахунку:</text>
+      <text x="12" y="36" fill="#475569" font-size="9.5">1–2 хвилини на повну покрокову схему светра</text>
+    </g>
+
+    <!-- Item 2 -->
+    <g transform="translate(14, 104)">
+      <rect width="337" height="48" rx="6" fill="#FFFFFF" stroke="#6EE7B7"/>
+      <text x="12" y="18" fill="#064E3B" font-size="10" font-weight="700">🎯 Точність алгоритмів:</text>
+      <text x="12" y="36" fill="#475569" font-size="9.5">±1–2% (ідеальна симетрія петель лівої та правої сторін)</text>
+    </g>
+
+    <!-- Item 3 -->
+    <g transform="translate(14, 160)">
+      <rect width="337" height="48" rx="6" fill="#FFFFFF" stroke="#6EE7B7"/>
+      <text x="12" y="18" fill="#064E3B" font-size="10" font-weight="700">📐 Автоматичний росток і виріз:</text>
+      <text x="12" y="36" fill="#475569" font-size="9.5">Готовий покроковий порядок розворотів без драбинок</text>
+    </g>
+
+    <!-- Item 4 -->
+    <g transform="translate(14, 216)">
+      <rect width="337" height="48" rx="6" fill="#FFFFFF" stroke="#6EE7B7"/>
+      <text x="12" y="18" fill="#064E3B" font-size="10" font-weight="700">🛡 Нульовий ризик перекосу:</text>
+      <text x="12" y="36" fill="#475569" font-size="9.5">Автоматична перевірка кратності рапортів візерунка</text>
+    </g>
+
+    <!-- Summary Box -->
+    <g transform="translate(14, 274)">
+      <rect width="337" height="62" rx="6" fill="#D1FAE5"/>
+      <text x="168" y="22" fill="#065F46" font-size="10" font-weight="800" text-anchor="middle">ДЕ ДОЦІЛЬНИЙ КАЛЬКУЛЯТОР:</text>
+      <text x="168" y="42" fill="#064E3B" font-size="9" text-anchor="middle">Для реальних виробів, економії часу та гарантії посадки</text>
+    </g>
+  </g>
+
+  <!-- Bottom Verdict Banner (750px full width) -->
+  <g transform="translate(25, 442)">
+    <rect width="750" height="52" rx="8" fill="#1E1B4B"/>
+    <text x="400" y="24" fill="#FBBF24" font-size="11" font-weight="800" text-anchor="middle" letter-spacing="0.5">ВЕРДИКТ ЕКСПЕРТІВ «РОЗРАХУЙ І В'ЯЖИ»:</text>
+    <text x="400" y="42" fill="#FFFFFF" font-size="10.5" text-anchor="middle">Калькулятор економить 90% часу та страхує від перев'язувань • Довіряйте рутині алгоритмам, а творчість залиште собі!</text>
+  </g>
+</svg>`,
+  },
+  "manual-vs-calc": {
+    title: "Ручний розрахунок vs Онлайн-калькулятор: порівняльний тест",
+    caption: "Порівняння ручного розрахунку в блокноті та онлайн-калькулятора за швидкістю, точністю, побудовою ростка та ризиком помилок.",
+    svg: `<svg viewBox="0 0 800 520" role="img" aria-labelledby="diagram-manual-calc-title" xmlns="http://www.w3.org/2000/svg" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif">
+  <title id="diagram-manual-calc-title">Ручний розрахунок vs Онлайн-калькулятор: детальне порівняння</title>
+  <defs>
+    <filter id="compShadow" x="-4%" y="-4%" width="108%" height="108%">
+      <feDropShadow dx="0" dy="3" stdDeviation="5" flood-opacity="0.06"/>
+    </filter>
+  </defs>
+
+  <rect width="800" height="520" rx="16" fill="#FFFFFF"/>
+  <rect x="12" y="12" width="776" height="496" rx="12" fill="none" stroke="#E2E8F0" stroke-width="1.5"/>
+
+  <!-- Title Header Banner (750px full width) -->
+  <rect x="25" y="24" width="750" height="38" rx="8" fill="#1E1B4B"/>
+  <text x="400" y="48" fill="#FFFFFF" font-size="13" font-weight="700" text-anchor="middle" letter-spacing="0.5">РУЧНИЙ РОЗРАХУНОК VS ОНЛАЙН-КАЛЬКУЛЯТОР: ПОРІВНЯЛЬНИЙ ТЕСТ</text>
+
+  <!-- Left Column: Manual Method -->
+  <g transform="translate(25, 78)">
+    <rect width="365" height="350" rx="10" fill="#FFF1F2" stroke="#FECDD3" stroke-width="1.5" filter="url(#compShadow)"/>
+    <rect width="365" height="36" rx="10" fill="#FFE4E6"/>
+    <text x="182" y="23" fill="#9F1239" font-size="11.5" font-weight="800" text-anchor="middle">РУЧНИЙ РОЗРАХУНОК (ФОРМУЛИ В БЛОКНОТІ)</text>
+
+    <!-- Item 1 -->
+    <g transform="translate(14, 48)">
+      <rect width="337" height="48" rx="6" fill="#FFFFFF" stroke="#FDA4AF"/>
+      <text x="12" y="18" fill="#881337" font-size="10" font-weight="700">⏱ Час розрахунку:</text>
+      <text x="12" y="36" fill="#475569" font-size="9.5">25–40 хвилин математики в стовпчик та перевірок</text>
+    </g>
+
+    <!-- Item 2 -->
+    <g transform="translate(14, 104)">
+      <rect width="337" height="48" rx="6" fill="#FFFFFF" stroke="#FDA4AF"/>
+      <text x="12" y="18" fill="#881337" font-size="10" font-weight="700">⚠️ Похибка округлення:</text>
+      <text x="12" y="36" fill="#475569" font-size="9.5">±5–10% (накопичення похибок на рукавах та кокетці)</text>
+    </g>
+
+    <!-- Item 3 -->
+    <g transform="translate(14, 160)">
+      <rect width="337" height="48" rx="6" fill="#FFFFFF" stroke="#FDA4AF"/>
+      <text x="12" y="18" fill="#881337" font-size="10" font-weight="700">🔄 Побудова анатомічного ростка:</text>
+      <text x="12" y="36" fill="#475569" font-size="9.5">Складний розрахунок точок розвороту вкорочених рядів</text>
+    </g>
+
+    <!-- Item 4 -->
+    <g transform="translate(14, 216)">
+      <rect width="337" height="48" rx="6" fill="#FFFFFF" stroke="#FDA4AF"/>
+      <text x="12" y="18" fill="#881337" font-size="10" font-weight="700">❌ Ризик арифметичної помилки:</text>
+      <text x="12" y="36" fill="#475569" font-size="9.5">30–40% випадків потребують розпускання деталей</text>
+    </g>
+
+    <!-- Summary Box -->
+    <g transform="translate(14, 274)">
+      <rect width="337" height="62" rx="6" fill="#FFE4E6"/>
+      <text x="168" y="22" fill="#9F1239" font-size="10" font-weight="800" text-anchor="middle">ДЕ ДОЦІЛЬНИЙ РУЧНИЙ МЕТОД:</text>
+      <text x="168" y="42" fill="#4C0519" font-size="9" text-anchor="middle">Для глибокого розуміння анатомії трикотажу та навчання</text>
+    </g>
+  </g>
+
+  <!-- Right Column: Online Calculator -->
+  <g transform="translate(410, 78)">
+    <rect width="365" height="350" rx="10" fill="#ECFDF5" stroke="#A7F3D0" stroke-width="1.5" filter="url(#compShadow)"/>
+    <rect width="365" height="36" rx="10" fill="#D1FAE5"/>
+    <text x="182" y="23" fill="#065F46" font-size="11.5" font-weight="800" text-anchor="middle">ОНЛАЙН-КАЛЬКУЛЯТОР (VJAZHI.COM.UA)</text>
+
+    <!-- Item 1 -->
+    <g transform="translate(14, 48)">
+      <rect width="337" height="48" rx="6" fill="#FFFFFF" stroke="#6EE7B7"/>
+      <text x="12" y="18" fill="#064E3B" font-size="10" font-weight="700">⚡️ Час розрахунку:</text>
+      <text x="12" y="36" fill="#475569" font-size="9.5">1–2 хвилини на повну покрокову схему светра</text>
+    </g>
+
+    <!-- Item 2 -->
+    <g transform="translate(14, 104)">
+      <rect width="337" height="48" rx="6" fill="#FFFFFF" stroke="#6EE7B7"/>
+      <text x="12" y="18" fill="#064E3B" font-size="10" font-weight="700">🎯 Точність алгоритмів:</text>
+      <text x="12" y="36" fill="#475569" font-size="9.5">±1–2% (ідеальна симетрія петель лівої та правої сторін)</text>
+    </g>
+
+    <!-- Item 3 -->
+    <g transform="translate(14, 160)">
+      <rect width="337" height="48" rx="6" fill="#FFFFFF" stroke="#6EE7B7"/>
+      <text x="12" y="18" fill="#064E3B" font-size="10" font-weight="700">📐 Автоматичний росток і виріз:</text>
+      <text x="12" y="36" fill="#475569" font-size="9.5">Готовий покроковий порядок розворотів без драбинок</text>
+    </g>
+
+    <!-- Item 4 -->
+    <g transform="translate(14, 216)">
+      <rect width="337" height="48" rx="6" fill="#FFFFFF" stroke="#6EE7B7"/>
+      <text x="12" y="18" fill="#064E3B" font-size="10" font-weight="700">🛡 Нульовий ризик перекосу:</text>
+      <text x="12" y="36" fill="#475569" font-size="9.5">Автоматична перевірка кратності рапортів візерунка</text>
+    </g>
+
+    <!-- Summary Box -->
+    <g transform="translate(14, 274)">
+      <rect width="337" height="62" rx="6" fill="#D1FAE5"/>
+      <text x="168" y="22" fill="#065F46" font-size="10" font-weight="800" text-anchor="middle">ДЕ ДОЦІЛЬНИЙ КАЛЬКУЛЯТОР:</text>
+      <text x="168" y="42" fill="#064E3B" font-size="9" text-anchor="middle">Для реальних виробів, економії часу та гарантії посадки</text>
+    </g>
+  </g>
+
+  <!-- Bottom Verdict Banner (750px full width) -->
+  <g transform="translate(25, 442)">
+    <rect width="750" height="52" rx="8" fill="#1E1B4B"/>
+    <text x="400" y="24" fill="#FBBF24" font-size="11" font-weight="800" text-anchor="middle" letter-spacing="0.5">ВЕРДИКТ ЕКСПЕРТІВ «РОЗРАХУЙ І В'ЯЖИ»:</text>
+    <text x="400" y="42" fill="#FFFFFF" font-size="10.5" text-anchor="middle">Калькулятор економить 90% часу та страхує від перев'язувань • Довіряйте рутині алгоритмам, а творчість залиште собі!</text>
+  </g>
+</svg>`,
+  },
 };
 
 function escapeHtml(value: string) {

@@ -1,0 +1,106 @@
+<svg viewBox="0 0 800 520" role="img" aria-labelledby="diagram-manual-calc-title" xmlns="http://www.w3.org/2000/svg" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif">
+  <title id="diagram-manual-calc-title">Ручний розрахунок vs Онлайн-калькулятор: детальне порівняння</title>
+  <defs>
+    <filter id="compShadow" x="-4%" y="-4%" width="108%" height="108%">
+      <feDropShadow dx="0" dy="3" stdDeviation="5" flood-opacity="0.06"/>
+    </filter>
+  </defs>
+
+  <rect width="800" height="520" rx="16" fill="#FFFFFF"/>
+  <rect x="12" y="12" width="776" height="496" rx="12" fill="none" stroke="#E2E8F0" stroke-width="1.5"/>
+
+  <!-- Title Header Banner (750px full width) -->
+  <rect x="25" y="24" width="750" height="38" rx="8" fill="#1E1B4B"/>
+  <text x="400" y="48" fill="#FFFFFF" font-size="13" font-weight="700" text-anchor="middle" letter-spacing="0.5">РУЧНИЙ РОЗРАХУНОК VS ОНЛАЙН-КАЛЬКУЛЯТОР: ПОРІВНЯЛЬНИЙ ТЕСТ</text>
+
+  <!-- Left Column: Manual Method -->
+  <g transform="translate(25, 78)">
+    <rect width="365" height="350" rx="10" fill="#FFF1F2" stroke="#FECDD3" stroke-width="1.5" filter="url(#compShadow)"/>
+    <rect width="365" height="36" rx="10" fill="#FFE4E6"/>
+    <text x="182" y="23" fill="#9F1239" font-size="11.5" font-weight="800" text-anchor="middle">РУЧНИЙ РОЗРАХУНОК (ФОРМУЛИ В БЛОКНОТІ)</text>
+
+    <!-- Item 1 -->
+    <g transform="translate(14, 48)">
+      <rect width="337" height="48" rx="6" fill="#FFFFFF" stroke="#FDA4AF"/>
+      <text x="12" y="18" fill="#881337" font-size="10" font-weight="700">⏱ Час розрахунку:</text>
+      <text x="12" y="36" fill="#475569" font-size="9.5">25–40 хвилин математики в стовпчик та перевірок</text>
+    </g>
+
+    <!-- Item 2 -->
+    <g transform="translate(14, 104)">
+      <rect width="337" height="48" rx="6" fill="#FFFFFF" stroke="#FDA4AF"/>
+      <text x="12" y="18" fill="#881337" font-size="10" font-weight="700">⚠️ Похибка округлення:</text>
+      <text x="12" y="36" fill="#475569" font-size="9.5">±5–10% (накопичення похибок на рукавах та кокетці)</text>
+    </g>
+
+    <!-- Item 3 -->
+    <g transform="translate(14, 160)">
+      <rect width="337" height="48" rx="6" fill="#FFFFFF" stroke="#FDA4AF"/>
+      <text x="12" y="18" fill="#881337" font-size="10" font-weight="700">🔄 Побудова анатомічного ростка:</text>
+      <text x="12" y="36" fill="#475569" font-size="9.5">Складний розрахунок точок розвороту вкорочених рядів</text>
+    </g>
+
+    <!-- Item 4 -->
+    <g transform="translate(14, 216)">
+      <rect width="337" height="48" rx="6" fill="#FFFFFF" stroke="#FDA4AF"/>
+      <text x="12" y="18" fill="#881337" font-size="10" font-weight="700">❌ Ризик арифметичної помилки:</text>
+      <text x="12" y="36" fill="#475569" font-size="9.5">30–40% випадків потребують розпускання деталей</text>
+    </g>
+
+    <!-- Summary Box -->
+    <g transform="translate(14, 274)">
+      <rect width="337" height="62" rx="6" fill="#FFE4E6"/>
+      <text x="168" y="22" fill="#9F1239" font-size="10" font-weight="800" text-anchor="middle">ДЕ ДОЦІЛЬНИЙ РУЧНИЙ МЕТОД:</text>
+      <text x="168" y="42" fill="#4C0519" font-size="9" text-anchor="middle">Для глибокого розуміння анатомії трикотажу та навчання</text>
+    </g>
+  </g>
+
+  <!-- Right Column: Online Calculator -->
+  <g transform="translate(410, 78)">
+    <rect width="365" height="350" rx="10" fill="#ECFDF5" stroke="#A7F3D0" stroke-width="1.5" filter="url(#compShadow)"/>
+    <rect width="365" height="36" rx="10" fill="#D1FAE5"/>
+    <text x="182" y="23" fill="#065F46" font-size="11.5" font-weight="800" text-anchor="middle">ОНЛАЙН-КАЛЬКУЛЯТОР (VJAZHI.COM.UA)</text>
+
+    <!-- Item 1 -->
+    <g transform="translate(14, 48)">
+      <rect width="337" height="48" rx="6" fill="#FFFFFF" stroke="#6EE7B7"/>
+      <text x="12" y="18" fill="#064E3B" font-size="10" font-weight="700">⚡️ Час розрахунку:</text>
+      <text x="12" y="36" fill="#475569" font-size="9.5">1–2 хвилини на повну покрокову схему светра</text>
+    </g>
+
+    <!-- Item 2 -->
+    <g transform="translate(14, 104)">
+      <rect width="337" height="48" rx="6" fill="#FFFFFF" stroke="#6EE7B7"/>
+      <text x="12" y="18" fill="#064E3B" font-size="10" font-weight="700">🎯 Точність алгоритмів:</text>
+      <text x="12" y="36" fill="#475569" font-size="9.5">±1–2% (ідеальна симетрія петель лівої та правої сторін)</text>
+    </g>
+
+    <!-- Item 3 -->
+    <g transform="translate(14, 160)">
+      <rect width="337" height="48" rx="6" fill="#FFFFFF" stroke="#6EE7B7"/>
+      <text x="12" y="18" fill="#064E3B" font-size="10" font-weight="700">📐 Автоматичний росток і виріз:</text>
+      <text x="12" y="36" fill="#475569" font-size="9.5">Готовий покроковий порядок розворотів без драбинок</text>
+    </g>
+
+    <!-- Item 4 -->
+    <g transform="translate(14, 216)">
+      <rect width="337" height="48" rx="6" fill="#FFFFFF" stroke="#6EE7B7"/>
+      <text x="12" y="18" fill="#064E3B" font-size="10" font-weight="700">🛡 Нульовий ризик перекосу:</text>
+      <text x="12" y="36" fill="#475569" font-size="9.5">Автоматична перевірка кратності рапортів візерунка</text>
+    </g>
+
+    <!-- Summary Box -->
+    <g transform="translate(14, 274)">
+      <rect width="337" height="62" rx="6" fill="#D1FAE5"/>
+      <text x="168" y="22" fill="#065F46" font-size="10" font-weight="800" text-anchor="middle">ДЕ ДОЦІЛЬНИЙ КАЛЬКУЛЯТОР:</text>
+      <text x="168" y="42" fill="#064E3B" font-size="9" text-anchor="middle">Для реальних виробів, економії часу та гарантії посадки</text>
+    </g>
+  </g>
+
+  <!-- Bottom Verdict Banner (750px full width) -->
+  <g transform="translate(25, 442)">
+    <rect width="750" height="52" rx="8" fill="#1E1B4B"/>
+    <text x="400" y="24" fill="#FBBF24" font-size="11" font-weight="800" text-anchor="middle" letter-spacing="0.5">ВЕРДИКТ ЕКСПЕРТІВ «РОЗРАХУЙ І В'ЯЖИ»:</text>
+    <text x="400" y="42" fill="#FFFFFF" font-size="10.5" text-anchor="middle">Калькулятор економить 90% часу та страхує від перев'язувань • Довіряйте рутині алгоритмам, а творчість залиште собі!</text>
+  </g>
+</svg>
