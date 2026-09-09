@@ -144,7 +144,13 @@ export const KNOWN_VIDEOS: Record<string, YouTubeVideoData> = {
     channel: "Школа в'язання Марини Шолох",
     image: "/images/videos/yt-nHk9p5ngkbE.jpg",
   },
-}
+  "bVP1ed-FdIM": {
+    id: "bVP1ed-FdIM",
+    title: "V-подібна горловина спицями: розрахунок та техніка вив’язання",
+    channel: "Катерина Македон",
+    image: "/images/videos/yt-bVP1ed-FdIM.jpg",
+  },
+};
 
 function escapeHtml(str: string) {
   return str

@@ -1,0 +1,67 @@
+<!-- Схема V-подібного вирізу. Вставте блок у статтю; SVG інлайновий, масштабується за шириною контейнера. -->
+<figure class="knit-diagram" style="max-width:680px;margin:1.5em auto">
+  <!-- Схема V-подібного вирізу горловини -->
+<svg width="680" height="440" viewBox="0 0 680 440" xmlns="http://www.w3.org/2000/svg" font-family="sans-serif" role="img" aria-labelledby="t d">
+  <title id="t">Схема V-подібного вирізу горловини</title>
+  <desc id="d">Деталь переду светра: плечі з обох боків, по центру V-подібний виріз зі симетричними скісними лініями убавок до центральної точки. Показано ширину горловини та глибину V-вирізу.</desc>
+
+  <!-- Деталь переду з V-подібним вирізом сходинками -->
+  <path d="M120 120 L240 120
+           L240 152 L260 152 L260 184 L280 184 L280 216 L300 216 L300 248 L320 248 L320 280 L340 280
+           L360 280 L360 248 L380 248 L380 216 L400 216 L400 184 L420 184 L420 152 L440 152 L440 120
+           L560 120 L560 400 L120 400 Z"
+        fill="#F1EFE8" stroke="#5F5E5A" stroke-width="1.2" stroke-linejoin="round"/>
+  <text x="340" y="355" text-anchor="middle" font-size="13" fill="#5F5E5A">перед светра / жилета</text>
+
+  <!-- Орієнтовна пряма лінія V-вирізу (пунктир) -->
+  <path d="M240 120 L340 280 L440 120" fill="none" stroke="#5F5E5A" stroke-width="0.8" stroke-dasharray="3 3"/>
+
+  <!-- Зони убавок (сходинки на скосі) -->
+  <g fill="none" stroke="#D85A30" stroke-width="2.4" stroke-linejoin="round">
+    <path d="M240 120 L240 152 L260 152 L260 184 L280 184 L280 216 L300 216 L300 248 L320 248 L320 280 L340 280"/>
+    <path d="M440 120 L440 152 L420 152 L420 184 L400 184 L400 216 L380 216 L380 248 L360 248 L360 280 L340 280"/>
+  </g>
+  <text x="210" y="215" text-anchor="middle" font-size="12" fill="#993C1D">зона убавок</text>
+  <text x="210" y="231" text-anchor="middle" font-size="11" fill="#993C1D">(лівий скіс)</text>
+  <text x="470" y="215" text-anchor="middle" font-size="12" fill="#993C1D">зона убавок</text>
+  <text x="470" y="231" text-anchor="middle" font-size="11" fill="#993C1D">(правий скіс)</text>
+
+  <!-- Центральна петля -->
+  <circle cx="340" cy="280" r="5" fill="#0F6E56"/>
+  <text x="340" y="302" text-anchor="middle" font-size="12" font-weight="600" fill="#0F6E56">1 центральна петля</text>
+  <text x="340" y="318" text-anchor="middle" font-size="11" fill="#0F6E56">(зняти на шпильку для планки)</text>
+
+  <!-- Підпис V-виріз -->
+  <text x="340" y="175" text-anchor="middle" font-size="14" font-weight="600" fill="#2C2C2A">V-подібний виріз</text>
+
+  <!-- Плечі -->
+  <g stroke="#5F5E5A" stroke-width="1">
+    <line x1="120" y1="104" x2="240" y2="104"/><line x1="120" y1="99" x2="120" y2="109"/><line x1="240" y1="99" x2="240" y2="109"/>
+    <line x1="440" y1="104" x2="560" y2="104"/><line x1="440" y1="99" x2="440" y2="109"/><line x1="560" y1="99" x2="560" y2="109"/>
+  </g>
+  <text x="180" y="92" text-anchor="middle" font-size="12" fill="#5F5E5A">плече</text>
+  <text x="500" y="92" text-anchor="middle" font-size="12" fill="#5F5E5A">плече</text>
+
+  <!-- Ширина горловини / вирізу -->
+  <g stroke="#5F5E5A" stroke-width="1">
+    <line x1="240" y1="62" x2="440" y2="62"/><line x1="240" y1="57" x2="240" y2="67"/><line x1="440" y1="57" x2="440" y2="67"/>
+  </g>
+  <text x="340" y="50" text-anchor="middle" font-size="12" fill="#5F5E5A">ширина вирізу (відстань між плечима)</text>
+
+  <!-- Глибина V-вирізу -->
+  <line x1="440" y1="120" x2="590" y2="120" stroke="#5F5E5A" stroke-width="0.8" stroke-dasharray="3 3"/>
+  <line x1="340" y1="280" x2="590" y2="280" stroke="#5F5E5A" stroke-width="0.8" stroke-dasharray="3 3"/>
+  <g stroke="#5F5E5A" stroke-width="1">
+    <line x1="590" y1="120" x2="590" y2="280"/><line x1="585" y1="120" x2="595" y2="120"/><line x1="585" y1="280" x2="595" y2="280"/>
+  </g>
+  <text x="600" y="196" font-size="12" fill="#5F5E5A">глибина</text>
+  <text x="600" y="212" font-size="12" fill="#5F5E5A">V-вирізу</text>
+
+  <!-- Легенда -->
+  <circle cx="120" cy="424" r="5" fill="#0F6E56"/>
+  <text x="132" y="428" font-size="11" fill="#5F5E5A">центральна петля — знімається на шпильку</text>
+  <line x1="380" y1="424" x2="410" y2="424" stroke="#D85A30" stroke-width="2.4"/>
+  <text x="418" y="428" font-size="11" fill="#5F5E5A">убавки скосу вирізу (кожен 4-й або 2-й і 4-й ряд)</text>
+</svg>
+  <figcaption style="font-size:.9em;color:#5F5E5A;text-align:center;margin-top:.5em">Схема V-подібного вирізу: центральна петля на шпильку, симетричні убавки по скосу та розмірні лінії глибини й ширини.</figcaption>
+</figure>

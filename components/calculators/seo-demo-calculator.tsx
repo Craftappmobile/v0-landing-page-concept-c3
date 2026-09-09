@@ -66,16 +66,16 @@ function getCalculatorConfig(slug: string) {
 
     case "vyriz":
       return {
-        field1: { label: "Бажана глибина вирізу", default: "9", suffix: "см", hint: "Глибина від лінії горловини" },
-        field2: { label: "Щільність у рядах", default: "30", suffix: "р / 10 см", hint: "Рядків у 10 см полотна" },
-        field3: null,
-        calculate: (v1: number, v2: number) => {
-          const rows = Math.round(v1 * (v2 / 10))
-          const decreases = Math.round(rows / 2)
+        field1: { label: "Бажана глибина V-вирізу", default: "16", suffix: "см", hint: "Відстань від початку вирізу до лінії плеча" },
+        field2: { label: "Ширина вирізу по лінії плечей", default: "18", suffix: "см", hint: "Бажана відстань між краями плечей" },
+        field3: { label: "Щільність петель після ВТО", default: "22", suffix: "п / 10 см", hint: "Кількість петель у 10 см зразка" },
+        calculate: (v1: number, v2: number, v3: number) => {
+          const halfWidth = v2 / 2
+          const decStitches = Math.round(halfWidth * (v3 / 10))
           return {
-            title: "Ряди для формування вирізу",
-            value: `${rows} рядів`,
-            note: `Формування скосу виконується протягом ${rows} рядів (приблизно ${decreases} точок убавок у кожному 2-му ряду).`,
+            title: "Розрахунок V-подібного вирізу",
+            value: `${decStitches} убавок по 1 п. з кожного боку`,
+            note: `Для глибини ${v1} см і ширини ${v2} см зніміть 1 центральну петлю на шпильку. Пров'яжіть по ${decStitches} убавок з обох боків вирізу (по 1 п. у кожному 4-му ряду або чергуванням 2-го та 4-го рядів) до досягнення потрібної ширини плеча.`,
           }
         },
       }

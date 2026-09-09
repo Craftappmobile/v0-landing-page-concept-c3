@@ -279,7 +279,15 @@ export const KNOWN_PINS: Record<string, PinterestPinData> = {
     authorUrl: "https://www.pinterest.com/pin/682910482910482930/",
     image: "/images/pins/pin-682910482910482930.jpg",
   },
-}
+  "729104829104829310": {
+    id: "729104829104829310",
+    url: "https://www.pinterest.com/pin/729104829104829310/",
+    title: "Покроковий розрахунок глибини та убавок V-вирізу светра",
+    author: "V-Neck Shaping Lab",
+    authorUrl: "https://www.pinterest.com/pin/729104829104829310/",
+    image: "/images/pins/pin-729104829104829310.jpg",
+  },
+};
 
 function escapeHtml(str: string) {
   return str
