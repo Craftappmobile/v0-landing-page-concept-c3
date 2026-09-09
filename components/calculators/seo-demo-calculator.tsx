@@ -270,6 +270,25 @@ function getCalculatorConfig(slug: string) {
         },
       }
 
+    case "shapka":
+      return {
+        field1: { label: "Обхват голови", default: "56", suffix: "см", hint: "Мірка над бровами та потилицею" },
+        field2: { label: "Щільність петель після ВТО", default: "20", suffix: "п / 10 см", hint: "Кількість петель у 10 см зразка" },
+        field3: { label: "Поправка на розтягнення гумки", default: "15", suffix: "%", hint: "Зазвичай 12–15% для гарного облягання" },
+        calculate: (v1: number, v2: number, v3: number) => {
+          const rawStitches = v1 * (v2 / 10)
+          const stretchFactor = 1 - (v3 / 100)
+          const adjustedStitches = rawStitches * stretchFactor
+          const stitches = Math.round(adjustedStitches / 4) * 4
+          const height = Math.round((v1 / 3) + 3)
+          return {
+            title: "Петлі набору для шапки",
+            value: `${stitches} петель (${height} см висота)`,
+            note: `Для обхвату ${v1} см з поправкою на розтягнення -${v3}% наберіть ${stitches} петель (число кратне 4 для гумки 2×2 та симетричної маківки). Орієнтовна висота: ${height} см.`,
+          }
+        },
+      }
+
     // Default garment / sweater / cardigan / oversize / fit calculator
     default:
       return {

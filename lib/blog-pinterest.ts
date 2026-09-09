@@ -207,6 +207,22 @@ export const KNOWN_PINS: Record<string, PinterestPinData> = {
     authorUrl: "https://www.pinterest.com/pin/938102948172940182/",
     image: "/images/pins/pin-938102948172940182.jpg",
   },
+  "948102948192840192": {
+    id: "948102948192840192",
+    url: "https://www.pinterest.com/pin/948102948172940192/",
+    title: "Акуратна 4-клинна маківка шапки біні: симетричні лінії убавок по резинці",
+    author: "Beanie Crown Studio",
+    authorUrl: "https://www.pinterest.com/pin/948102948172940192/",
+    image: "/images/pins/pin-948102948172940192.jpg",
+  },
+  "382910482910482910": {
+    id: "382910482910482910",
+    url: "https://www.pinterest.com/pin/382910482910482910/",
+    title: "Вимірювання розтягнення резинки шапки по лінійці: коефіцієнт облягання",
+    author: "Knit Elasticity Lab",
+    authorUrl: "https://www.pinterest.com/pin/382910482910482910/",
+    image: "/images/pins/pin-382910482910482910.jpg",
+  },
 }
 
 function escapeHtml(str: string) {

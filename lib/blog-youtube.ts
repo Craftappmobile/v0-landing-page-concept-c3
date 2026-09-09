@@ -96,6 +96,18 @@ export const KNOWN_VIDEOS: Record<string, YouTubeVideoData> = {
     channel: "Вʼязання з Юлією Савлюк",
     image: "/images/videos/yt-SJIwGglNGTo.jpg",
   },
+  "bAvTwCLI0-I": {
+    id: "bAvTwCLI0-I",
+    title: "Як зв’язати просту шапку спицями для новачка: універсальна шапка біні",
+    channel: "Тетяна Чорна",
+    image: "/images/videos/yt-bAvTwCLI0-I.jpg",
+  },
+  "nYCo0_0jzwA": {
+    id: "nYCo0_0jzwA",
+    title: "Шапка біні з фіксованим відворотом: експрес-опис та розрахунок",
+    channel: "Калейдоскоп в'язання",
+    image: "/images/videos/yt-nYCo0_0jzwA.jpg",
+  },
 }
 
 function escapeHtml(str: string) {
