@@ -5,6 +5,106 @@ type BlogDiagramDefinition = {
 }
 
 const BLOG_DIAGRAMS: Record<string, BlogDiagramDefinition> = {
+  "hat-crown-decreases": {
+    title: "Схема 4-клинної маківки шапки біні",
+    caption: "Розподіл петель на 4 симетричні сектори та лінії убавок: кожні 2 ряди мінус 8 петель (по 2 п. разом біля кожного маркера).",
+    svg: `<svg viewBox="0 0 680 420" xmlns="http://www.w3.org/2000/svg" font-family="sans-serif" role="img" aria-labelledby="diagram-hat-crown-title diagram-hat-crown-desc">
+  <title id="diagram-hat-crown-title">Схема 4-клинної маківки шапки біні</title>
+  <desc id="diagram-hat-crown-desc">Кругова розкладка верхівки шапки на 4 клини з маркерними лініями убавок через один ряд.</desc>
+  
+  <!-- Основне коло шапки -->
+  <circle cx="340" cy="200" r="160" fill="#F8F6F0" stroke="#5F5E5A" stroke-width="2"/>
+  
+  <!-- Внутрішні кола (етапи убавок) -->
+  <circle cx="340" cy="200" r="110" fill="none" stroke="#D3D1C7" stroke-width="1.5" stroke-dasharray="4,4"/>
+  <circle cx="340" cy="200" r="60" fill="none" stroke="#D3D1C7" stroke-width="1.5" stroke-dasharray="4,4"/>
+  
+  <!-- Центральне кільце стягування -->
+  <circle cx="340" cy="200" r="24" fill="#E8F4F0" stroke="#0F6E56" stroke-width="2.5"/>
+  <text x="340" y="204" text-anchor="middle" font-size="11" font-weight="700" fill="#0F6E56">8-12 п.</text>
+  
+  <!-- 4 маркерні лінії убавок -->
+  <line x1="340" y1="40" x2="340" y2="360" stroke="#D85A30" stroke-width="2.5"/>
+  <line x1="180" y1="200" x2="500" y2="200" stroke="#D85A30" stroke-width="2.5"/>
+  
+  <!-- Маркери на початку клинів -->
+  <circle cx="340" cy="40" r="6" fill="#D85A30"/>
+  <circle cx="500" cy="200" r="6" fill="#D85A30"/>
+  <circle cx="340" cy="360" r="6" fill="#D85A30"/>
+  <circle cx="180" cy="200" r="6" fill="#D85A30"/>
+  
+  <!-- Стрілки/позначки убавок біля маркерних ліній -->
+  <g fill="#993C1D" font-size="12" font-weight="700">
+    <!-- Верхня вертикаль -->
+    <text x="325" y="100" text-anchor="end">2 разом ↗</text>
+    <text x="355" y="100" text-anchor="start">↖ 2 разом</text>
+    <!-- Права горизонталь -->
+    <text x="430" y="185" text-anchor="middle">2 разом ↘</text>
+    <text x="430" y="222" text-anchor="middle">2 разом ↗</text>
+    <!-- Нижня вертикаль -->
+    <text x="325" y="300" text-anchor="end">2 разом ↘</text>
+    <text x="355" y="300" text-anchor="start">↙ 2 разом</text>
+    <!-- Ліва горизонталь -->
+    <text x="250" y="185" text-anchor="middle">↙ 2 разом</text>
+    <text x="250" y="222" text-anchor="middle">↖ 2 разом</text>
+  </g>
+  
+  <!-- Підписи клинів -->
+  <g fill="#2C2C2A" font-size="14" font-weight="700" text-anchor="middle">
+    <text x="415" y="125">Клин 1</text>
+    <text x="415" y="145" font-size="12" font-weight="500" fill="#5F5E5A">¼ петель</text>
+    
+    <text x="415" y="275">Клин 2</text>
+    <text x="415" y="295" font-size="12" font-weight="500" fill="#5F5E5A">¼ петель</text>
+    
+    <text x="265" y="275">Клин 3</text>
+    <text x="265" y="295" font-size="12" font-weight="500" fill="#5F5E5A">¼ петель</text>
+    
+    <text x="265" y="125">Клин 4</text>
+    <text x="265" y="145" font-size="12" font-weight="500" fill="#5F5E5A">¼ петель</text>
+  </g>
+  
+  <!-- Початок кругового ряду -->
+  <text x="340" y="25" text-anchor="middle" font-size="12" font-weight="700" fill="#D85A30">Початок кругового ряду (маркер)</text>
+  
+  <!-- Легенда внизу -->
+  <rect x="80" y="380" width="520" height="30" rx="6" fill="#F1EFE8"/>
+  <line x1="100" y1="395" x2="130" y2="395" stroke="#D85A30" stroke-width="2.5"/>
+  <text x="140" y="399" font-size="12" fill="#2C2C2A">4 лінії убавок (маркери)</text>
+  <circle cx="330" cy="395" r="4" fill="#993C1D"/>
+  <text x="340" y="399" font-size="12" fill="#2C2C2A">Убавка: -8 п. у кожному 2-му ряду</text>
+  <circle cx="515" cy="395" r="4" fill="#0F6E56"/>
+  <text x="525" y="399" font-size="12" fill="#2C2C2A">Стяжка голкою</text>
+</svg>`,
+  },
+  "knitting-gauge-swatch": {
+    title: "Схема розрахунку щільності за зразком 14×14 см",
+    caption: "Контрольний зразок 14×14 см із вимірювальним вікном 10×10 см у центрі: підрахунок петель і рядів без викривлених крайок.",
+    svg: `<svg viewBox="0 0 680 400" xmlns="http://www.w3.org/2000/svg" font-family="sans-serif" role="img" aria-labelledby="diagram-gauge-swatch-title diagram-gauge-swatch-desc">
+  <title id="diagram-gauge-swatch-title">Схема зразка 14×14 см для точного вимірювання щільності</title>
+  <desc id="diagram-gauge-swatch-desc">Полотно 14×14 см із хустковим краєм та виділеною центральною зоною 10×10 см для підрахунку петель і рядів.</desc>
+  <rect x="140" y="40" width="400" height="320" rx="16" fill="#F8F6F0" stroke="#5F5E5A" stroke-width="2"/>
+  <rect x="190" y="80" width="300" height="240" rx="8" fill="#E8F4F0" stroke="#0F6E56" stroke-width="2.5" stroke-dasharray="6,4"/>
+  
+  <line x1="140" y1="22" x2="540" y2="22" stroke="#5F5E5A" stroke-width="1.5"/>
+  <path d="M140 16 L140 28 M540 16 L540 28" stroke="#5F5E5A" stroke-width="1.5"/>
+  <text x="340" y="18" text-anchor="middle" font-size="13" font-weight="600" fill="#2C2C2A">Зразок 14–15 см (набір +30% петель)</text>
+  
+  <line x1="190" y1="340" x2="490" y2="340" stroke="#0F6E56" stroke-width="2"/>
+  <path d="M190 334 L190 346 M490 334 L490 346" stroke="#0F6E56" stroke-width="2"/>
+  <text x="340" y="360" text-anchor="middle" font-size="14" font-weight="700" fill="#0F6E56">Центральні 10 см (горизонталь = петлі)</text>
+  
+  <line x1="110" y1="80" x2="110" y2="320" stroke="#0F6E56" stroke-width="2"/>
+  <path d="M104 80 L116 80 M104 320 L116 320" stroke="#0F6E56" stroke-width="2"/>
+  <text x="95" y="205" text-anchor="middle" font-size="14" font-weight="700" fill="#0F6E56" transform="rotate(-90 95 205)">10 см (вертикаль = ряди)</text>
+  
+  <text x="340" y="195" text-anchor="middle" font-size="16" font-weight="bold" fill="#0F6E56">Вимірювальна зона 10×10 см</text>
+  <text x="340" y="220" text-anchor="middle" font-size="13" fill="#5F5E5A">Рахуємо лише спокійні центральні петлі</text>
+  
+  <text x="165" y="200" text-anchor="middle" font-size="11" fill="#993C1D" transform="rotate(-90 165 200)">Крайові 2 см (ігноруємо)</text>
+  <text x="515" y="200" text-anchor="middle" font-size="11" fill="#993C1D" transform="rotate(90 515 200)">Крайові 2 см (ігноруємо)</text>
+</svg>`,
+  },
   "sweater-basic": {
     title: "Базова схема светра",
     caption: "Схема базового светра: корпус, рукави, горловина, ширина та довжина виробу.",

@@ -231,7 +231,7 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
     notFound()
   }
 
-  const html = await markdownToHtml(post.content)
+  const html = await markdownToHtml(post.content, post.slug)
   const relatedPosts = getRelatedPosts(post.slug)
   const rawQuestions =
     post.editorialQuestions && post.editorialQuestions.length > 0
@@ -252,6 +252,8 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
   const howToSteps = extractHowToSteps(post.content)
   const articleUrl = `${siteUrl}/blog/${post.slug}`
   const imageUrl = `${siteUrl}${post.image || fallbackImage}`
+  const dateModified = post.dateModified || post.date
+
   const jsonLd = {
     "@context": "https://schema.org",
     "@type": "Article",
@@ -259,11 +261,20 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
     description: post.description,
     image: imageUrl,
     datePublished: post.date,
-    dateModified: post.date,
-    author: {
-      "@type": "Organization",
-      name: post.author,
-    },
+    dateModified: dateModified,
+    author: [
+      {
+        "@type": "Person",
+        name: "Жанна",
+        jobTitle: "Експертка з розрахунку в'язання та розробниця",
+        url: siteUrl,
+      },
+      {
+        "@type": "Organization",
+        name: "Розрахуй і В'яжи",
+        url: siteUrl,
+      },
+    ],
     publisher: {
       "@type": "Organization",
       name: "Розрахуй і В'яжи",
@@ -274,6 +285,32 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
     },
     mainEntityOfPage: articleUrl,
   }
+
+  const breadcrumbsJsonLd = {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    itemListElement: [
+      {
+        "@type": "ListItem",
+        position: 1,
+        name: "Головна",
+        item: siteUrl,
+      },
+      {
+        "@type": "ListItem",
+        position: 2,
+        name: "Блог",
+        item: `${siteUrl}/blog`,
+      },
+      {
+        "@type": "ListItem",
+        position: 3,
+        name: post.title,
+        item: articleUrl,
+      },
+    ],
+  }
+
   const faqJsonLd = {
     "@context": "https://schema.org",
     "@type": "FAQPage",
@@ -308,6 +345,7 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
       <Header />
       <main className="flex-1">
         <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
+        <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbsJsonLd) }} />
         <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(faqJsonLd) }} />
         {howToJsonLd ? (
           <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(howToJsonLd) }} />

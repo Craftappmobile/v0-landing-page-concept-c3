@@ -6,6 +6,8 @@ export interface AppCtaOptions {
   primaryButtonHref?: string
   secondaryText?: string
   secondaryHref?: string
+  freeCalcText?: string
+  freeCalcHref?: string
   articleSlug?: string
 }
 
@@ -23,7 +25,7 @@ export function renderBlogAppCta(options?: AppCtaOptions): string {
   const title = options?.title || "Втомилися рахувати петлі та ряди на папірцях?"
   const description =
     options?.description ||
-    "Введіть свої мірки та щільність — мобільний додаток створить персональний попетельний опис светра з усіма лініями, ростком і підрізами. Інтерактивний лічильник на смартфоні сам нагадає, в якому ряду робити прибавки — без страху помилитися та розпускати виріб."
+    "Введіть свої мірки та щільність — мобільний додаток створить персональний попетельний опис виробу з усіма лініями, ростком і підрізами. Інтерактивний лічильник на смартфоні сам нагадає, в якому ряду робити прибавки — без страху помилитися та розпускати полотно."
   const slug = options?.articleSlug || "A05-rahlan"
   const primaryText = options?.primaryButtonText || "Обрати тариф підписки"
   const primaryHref =
@@ -33,6 +35,10 @@ export function renderBlogAppCta(options?: AppCtaOptions): string {
   const secondaryHref =
     options?.secondaryHref ||
     `/checkout?plan=month&utm_source=blog&utm_medium=article&utm_campaign=${slug}&utm_content=mid_test_plan`
+  const freeCalcText = options?.freeCalcText || "Потрібна лише одна цифра? Безкоштовний веб-калькулятор"
+  const freeCalcHref =
+    options?.freeCalcHref ||
+    `/kalkuliatory?utm_source=blog&utm_medium=article&utm_campaign=${slug}&utm_content=mid_free_calc_link`
 
   const safeBadge = escapeHtml(badge)
   const safeTitle = escapeHtml(title)
@@ -41,6 +47,8 @@ export function renderBlogAppCta(options?: AppCtaOptions): string {
   const safePrimaryHref = escapeHtml(primaryHref)
   const safeSecondaryText = escapeHtml(secondaryText)
   const safeSecondaryHref = escapeHtml(secondaryHref)
+  const safeFreeCalcText = escapeHtml(freeCalcText)
+  const safeFreeCalcHref = escapeHtml(freeCalcHref)
 
   return `
 <aside class="blog-app-cta not-prose my-12 overflow-hidden rounded-3xl border-2 border-primary/30 bg-gradient-to-br from-primary/15 via-card to-background p-6 sm:p-8 shadow-md hover:shadow-xl transition-all duration-300">
@@ -91,6 +99,13 @@ export function renderBlogAppCta(options?: AppCtaOptions): string {
         class="inline-flex items-center justify-center gap-1.5 text-xs font-semibold text-muted-foreground hover:text-primary transition-colors text-center py-1 no-underline hover:underline"
       >
         <span>${safeSecondaryText}</span>
+      </a>
+      <a
+        href="${safeFreeCalcHref}"
+        style="text-decoration: none !important;"
+        class="inline-flex items-center justify-center gap-1 text-[11px] text-muted-foreground/75 hover:text-primary transition-colors text-center py-0.5 no-underline hover:underline"
+      >
+        <span>${safeFreeCalcText} ➔</span>
       </a>
     </div>
   </div>
