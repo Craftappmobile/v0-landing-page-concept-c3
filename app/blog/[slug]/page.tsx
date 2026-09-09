@@ -233,10 +233,21 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
 
   const html = await markdownToHtml(post.content)
   const relatedPosts = getRelatedPosts(post.slug)
-  const editorialQuestions =
+  const rawQuestions =
     post.editorialQuestions && post.editorialQuestions.length > 0
       ? post.editorialQuestions
       : getEditorialQuestions(post.title)
+  const editorialQuestions = rawQuestions
+    .map((item: any) => {
+      if (typeof item === "string") {
+        return { question: item, answer: "" }
+      }
+      return {
+        question: item?.question || "",
+        answer: item?.answer || "",
+      }
+    })
+    .filter((item: any) => item.question.trim().length > 0)
   const calculator = getCalculatorForPost(post.slug)
   const howToSteps = extractHowToSteps(post.content)
   const articleUrl = `${siteUrl}/blog/${post.slug}`
@@ -343,10 +354,17 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
               <div className="mt-5 divide-y divide-border rounded-3xl border border-border bg-card/40">
                 {editorialQuestions.map((item) => (
                   <details key={item.question} className="group p-5 open:bg-background/60 md:p-6">
-                    <summary className="cursor-pointer list-none text-base font-semibold text-foreground marker:hidden">
-                      {item.question}
+                    <summary className="flex cursor-pointer list-none items-center justify-between gap-4 text-base font-semibold text-foreground marker:hidden">
+                      <span>{item.question}</span>
+                      <span className="shrink-0 text-primary transition-transform duration-200 group-open:rotate-180" aria-hidden="true">
+                        <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                        </svg>
+                      </span>
                     </summary>
-                    <p className="mt-3 text-sm leading-7 text-muted-foreground">{item.answer}</p>
+                    {item.answer ? (
+                      <p className="mt-3 text-sm leading-7 text-muted-foreground">{item.answer}</p>
+                    ) : null}
                   </details>
                 ))}
               </div>

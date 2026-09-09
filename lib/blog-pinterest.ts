@@ -287,6 +287,14 @@ export const KNOWN_PINS: Record<string, PinterestPinData> = {
     authorUrl: "https://www.pinterest.com/pin/729104829104829310/",
     image: "/images/pins/pin-729104829104829310.jpg",
   },
+  "839104829104829320": {
+    id: "839104829104829320",
+    url: "https://www.pinterest.com/pin/839104829104829320/",
+    title: "Формування ідеального V-подібного вирізу спицями: розрахунок петель та симетрія скосу",
+    author: "V-Neck Knit Architecture",
+    authorUrl: "https://www.pinterest.com/pin/839104829104829320/",
+    image: "/images/pins/pin-839104829104829320.jpg",
+  },
 };
 
 function escapeHtml(str: string) {
