@@ -172,23 +172,162 @@ const BLOG_DIAGRAMS: Record<string, BlogDiagramDefinition> = {
   <text x="592" y="156" font-size="12" fill="#5F5E5A">кокетки</text>
 </svg>`,
   },
+    "sleeve": {
+    title: "Схема формування рукава",
+    caption: "Схема рукава: верхня ширина, манжета, довжина та точки убавок або прибавок по бокових лініях.",
+    svg: `<svg width="680" height="450" viewBox="0 0 680 450" xmlns="http://www.w3.org/2000/svg" font-family="sans-serif" role="img" aria-labelledby="t d">
+  <title id="t">Схема рукава</title>
+  <desc id="d">Рукав у вигляді трапеції: широкий верх, вузька манжета знизу. По бокових лініях відмічено точки прибавок (при в'язанні знизу вгору) або убавок (зверху вниз). Показано верхню ширину, ширину й висоту манжети та довжину рукава.</desc>
+  <defs>
+    <marker id="slv-arrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto">
+      <path d="M2 1L8 5L2 9" fill="none" stroke="#5F5E5A" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+    </marker>
+  </defs>
+
+  <!-- Рукав -->
+  <path d="M190 70 L490 70 L400 350 L280 350 Z" fill="#F1EFE8" stroke="#5F5E5A" stroke-width="1.2" stroke-linejoin="round"/>
+  <text x="340" y="215" text-anchor="middle" font-size="13" font-weight="500" fill="#2C2C2A">рукав</text>
+
+  <!-- Манжета -->
+  <rect x="280" y="350" width="120" height="40" fill="#E1F5EE" stroke="#0F6E56" stroke-width="1.2"/>
+  <g stroke="#0F6E56" stroke-width="0.8" opacity="0.6">
+    <line x1="292" y1="352" x2="292" y2="388"/><line x1="304" y1="352" x2="304" y2="388"/><line x1="316" y1="352" x2="316" y2="388"/>
+    <line x1="364" y1="352" x2="364" y2="388"/><line x1="376" y1="352" x2="376" y2="388"/><line x1="388" y1="352" x2="388" y2="388"/>
+  </g>
+  <text x="340" y="374" text-anchor="middle" font-size="12" fill="#0F6E56">манжета</text>
+
+  <!-- Бокові лінії з точками прибавок / убавок -->
+  <g stroke="#D85A30" stroke-width="2.4">
+    <line x1="190" y1="70" x2="280" y2="350"/>
+    <line x1="490" y1="70" x2="400" y2="350"/>
+  </g>
+  <g fill="#D85A30">
+    <circle cx="203" cy="110" r="4"/><circle cx="216" cy="150" r="4"/><circle cx="229" cy="190" r="4"/>
+    <circle cx="241" cy="230" r="4"/><circle cx="254" cy="270" r="4"/><circle cx="267" cy="310" r="4"/>
+    <circle cx="477" cy="110" r="4"/><circle cx="464" cy="150" r="4"/><circle cx="451" cy="190" r="4"/>
+    <circle cx="439" cy="230" r="4"/><circle cx="426" cy="270" r="4"/><circle cx="413" cy="310" r="4"/>
+  </g>
+  <text x="140" y="200" text-anchor="middle" font-size="12" fill="#993C1D">точки</text>
+  <text x="140" y="216" text-anchor="middle" font-size="12" fill="#993C1D">прибавок</text>
+  <text x="140" y="232" text-anchor="middle" font-size="11" fill="#993C1D">(або убавок)</text>
+  <text x="540" y="200" text-anchor="middle" font-size="12" fill="#993C1D">точки</text>
+  <text x="540" y="216" text-anchor="middle" font-size="12" fill="#993C1D">прибавок</text>
+  <text x="540" y="232" text-anchor="middle" font-size="11" fill="#993C1D">(або убавок)</text>
+
+  <!-- Напрямок в'язання -->
+  <line x1="340" y1="330" x2="340" y2="240" stroke="#5F5E5A" stroke-width="1" marker-end="url(#slv-arrow)"/>
+  <text x="340" y="262" text-anchor="middle" font-size="11" fill="#5F5E5A">знизу вгору</text>
+  <text x="340" y="276" text-anchor="middle" font-size="11" fill="#5F5E5A">→ прибавки</text>
+
+  <!-- Верхня ширина -->
+  <g stroke="#5F5E5A" stroke-width="1">
+    <line x1="190" y1="48" x2="490" y2="48"/><line x1="190" y1="43" x2="190" y2="53"/><line x1="490" y1="43" x2="490" y2="53"/>
+  </g>
+  <text x="340" y="36" text-anchor="middle" font-size="12" fill="#5F5E5A">верхня ширина рукава</text>
+
+  <!-- Ширина манжети -->
+  <g stroke="#5F5E5A" stroke-width="1">
+    <line x1="280" y1="412" x2="400" y2="412"/><line x1="280" y1="407" x2="280" y2="417"/><line x1="400" y1="407" x2="400" y2="417"/>
+  </g>
+  <text x="340" y="430" text-anchor="middle" font-size="12" fill="#5F5E5A">ширина манжети</text>
+
+  <!-- Висота манжети -->
+  <g stroke="#0F6E56" stroke-width="1">
+    <line x1="420" y1="350" x2="420" y2="390"/><line x1="415" y1="350" x2="425" y2="350"/><line x1="415" y1="390" x2="425" y2="390"/>
+  </g>
+  <text x="428" y="374" font-size="11" fill="#0F6E56">висота манжети</text>
+
+  <!-- Довжина рукава -->
+  <line x1="490" y1="70" x2="600" y2="70" stroke="#5F5E5A" stroke-width="0.8" stroke-dasharray="3 3"/>
+  <line x1="400" y1="390" x2="600" y2="390" stroke="#5F5E5A" stroke-width="0.8" stroke-dasharray="3 3"/>
+  <g stroke="#5F5E5A" stroke-width="1">
+    <line x1="600" y1="70" x2="600" y2="390"/><line x1="595" y1="70" x2="605" y2="70"/><line x1="595" y1="390" x2="605" y2="390"/>
+  </g>
+  <text x="608" y="226" font-size="12" fill="#5F5E5A">довжина</text>
+  <text x="608" y="242" font-size="12" fill="#5F5E5A">рукава</text>
+
+  <!-- Легенда -->
+  <circle cx="60" cy="440" r="4" fill="#D85A30"/>
+  <text x="70" y="444" font-size="11" fill="#5F5E5A">прибавка/убавка по 1 п. з кожного боку; знизу вгору — прибавки, зверху вниз — убавки</text>
+</svg>`,
+  },
   "sleeve-shaping": {
     title: "Схема формування рукава",
     caption: "Схема рукава: верхня ширина, манжета, довжина та точки убавок або прибавок по бокових лініях.",
-    svg: `<svg viewBox="0 0 640 420" role="img" aria-labelledby="diagram-sleeve-shaping-title" xmlns="http://www.w3.org/2000/svg">
-  <title id="diagram-sleeve-shaping-title">Схема формування рукава</title>
-  <path d="M235 72 H405 L370 342 H270Z" fill="#f7efe7" stroke="#2e9e3e" stroke-width="5" stroke-linejoin="round"/>
-  <path d="M270 342 H370 V372 H270Z" fill="#fff8f2" stroke="#2e9e3e" stroke-width="5" stroke-linejoin="round"/>
-  <line x1="235" y1="55" x2="405" y2="55" stroke="#2f3430" stroke-width="2"/>
-  <path d="M235 47 V63 M405 47 V63" stroke="#2f3430" stroke-width="2"/>
-  <text x="320" y="36" text-anchor="middle" font-size="21" fill="#2f3430">верх рукава</text>
-  <line x1="430" y1="72" x2="430" y2="372" stroke="#2f3430" stroke-width="2"/>
-  <path d="M422 72 H438 M422 372 H438" stroke="#2f3430" stroke-width="2"/>
-  <text x="455" y="226" font-size="21" fill="#2f3430">довжина</text>
-  <circle cx="250" cy="150" r="6" fill="#d97060"/><circle cx="390" cy="150" r="6" fill="#d97060"/>
-  <circle cx="260" cy="225" r="6" fill="#d97060"/><circle cx="380" cy="225" r="6" fill="#d97060"/>
-  <circle cx="268" cy="296" r="6" fill="#d97060"/><circle cx="372" cy="296" r="6" fill="#d97060"/>
-  <text x="320" y="398" text-anchor="middle" font-size="21" fill="#2f3430">манжета</text>
+    svg: `<svg width="680" height="450" viewBox="0 0 680 450" xmlns="http://www.w3.org/2000/svg" font-family="sans-serif" role="img" aria-labelledby="t d">
+  <title id="t">Схема рукава</title>
+  <desc id="d">Рукав у вигляді трапеції: широкий верх, вузька манжета знизу. По бокових лініях відмічено точки прибавок (при в'язанні знизу вгору) або убавок (зверху вниз). Показано верхню ширину, ширину й висоту манжети та довжину рукава.</desc>
+  <defs>
+    <marker id="slv-arrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto">
+      <path d="M2 1L8 5L2 9" fill="none" stroke="#5F5E5A" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+    </marker>
+  </defs>
+
+  <!-- Рукав -->
+  <path d="M190 70 L490 70 L400 350 L280 350 Z" fill="#F1EFE8" stroke="#5F5E5A" stroke-width="1.2" stroke-linejoin="round"/>
+  <text x="340" y="215" text-anchor="middle" font-size="13" font-weight="500" fill="#2C2C2A">рукав</text>
+
+  <!-- Манжета -->
+  <rect x="280" y="350" width="120" height="40" fill="#E1F5EE" stroke="#0F6E56" stroke-width="1.2"/>
+  <g stroke="#0F6E56" stroke-width="0.8" opacity="0.6">
+    <line x1="292" y1="352" x2="292" y2="388"/><line x1="304" y1="352" x2="304" y2="388"/><line x1="316" y1="352" x2="316" y2="388"/>
+    <line x1="364" y1="352" x2="364" y2="388"/><line x1="376" y1="352" x2="376" y2="388"/><line x1="388" y1="352" x2="388" y2="388"/>
+  </g>
+  <text x="340" y="374" text-anchor="middle" font-size="12" fill="#0F6E56">манжета</text>
+
+  <!-- Бокові лінії з точками прибавок / убавок -->
+  <g stroke="#D85A30" stroke-width="2.4">
+    <line x1="190" y1="70" x2="280" y2="350"/>
+    <line x1="490" y1="70" x2="400" y2="350"/>
+  </g>
+  <g fill="#D85A30">
+    <circle cx="203" cy="110" r="4"/><circle cx="216" cy="150" r="4"/><circle cx="229" cy="190" r="4"/>
+    <circle cx="241" cy="230" r="4"/><circle cx="254" cy="270" r="4"/><circle cx="267" cy="310" r="4"/>
+    <circle cx="477" cy="110" r="4"/><circle cx="464" cy="150" r="4"/><circle cx="451" cy="190" r="4"/>
+    <circle cx="439" cy="230" r="4"/><circle cx="426" cy="270" r="4"/><circle cx="413" cy="310" r="4"/>
+  </g>
+  <text x="140" y="200" text-anchor="middle" font-size="12" fill="#993C1D">точки</text>
+  <text x="140" y="216" text-anchor="middle" font-size="12" fill="#993C1D">прибавок</text>
+  <text x="140" y="232" text-anchor="middle" font-size="11" fill="#993C1D">(або убавок)</text>
+  <text x="540" y="200" text-anchor="middle" font-size="12" fill="#993C1D">точки</text>
+  <text x="540" y="216" text-anchor="middle" font-size="12" fill="#993C1D">прибавок</text>
+  <text x="540" y="232" text-anchor="middle" font-size="11" fill="#993C1D">(або убавок)</text>
+
+  <!-- Напрямок в'язання -->
+  <line x1="340" y1="330" x2="340" y2="240" stroke="#5F5E5A" stroke-width="1" marker-end="url(#slv-arrow)"/>
+  <text x="340" y="262" text-anchor="middle" font-size="11" fill="#5F5E5A">знизу вгору</text>
+  <text x="340" y="276" text-anchor="middle" font-size="11" fill="#5F5E5A">→ прибавки</text>
+
+  <!-- Верхня ширина -->
+  <g stroke="#5F5E5A" stroke-width="1">
+    <line x1="190" y1="48" x2="490" y2="48"/><line x1="190" y1="43" x2="190" y2="53"/><line x1="490" y1="43" x2="490" y2="53"/>
+  </g>
+  <text x="340" y="36" text-anchor="middle" font-size="12" fill="#5F5E5A">верхня ширина рукава</text>
+
+  <!-- Ширина манжети -->
+  <g stroke="#5F5E5A" stroke-width="1">
+    <line x1="280" y1="412" x2="400" y2="412"/><line x1="280" y1="407" x2="280" y2="417"/><line x1="400" y1="407" x2="400" y2="417"/>
+  </g>
+  <text x="340" y="430" text-anchor="middle" font-size="12" fill="#5F5E5A">ширина манжети</text>
+
+  <!-- Висота манжети -->
+  <g stroke="#0F6E56" stroke-width="1">
+    <line x1="420" y1="350" x2="420" y2="390"/><line x1="415" y1="350" x2="425" y2="350"/><line x1="415" y1="390" x2="425" y2="390"/>
+  </g>
+  <text x="428" y="374" font-size="11" fill="#0F6E56">висота манжети</text>
+
+  <!-- Довжина рукава -->
+  <line x1="490" y1="70" x2="600" y2="70" stroke="#5F5E5A" stroke-width="0.8" stroke-dasharray="3 3"/>
+  <line x1="400" y1="390" x2="600" y2="390" stroke="#5F5E5A" stroke-width="0.8" stroke-dasharray="3 3"/>
+  <g stroke="#5F5E5A" stroke-width="1">
+    <line x1="600" y1="70" x2="600" y2="390"/><line x1="595" y1="70" x2="605" y2="70"/><line x1="595" y1="390" x2="605" y2="390"/>
+  </g>
+  <text x="608" y="226" font-size="12" fill="#5F5E5A">довжина</text>
+  <text x="608" y="242" font-size="12" fill="#5F5E5A">рукава</text>
+
+  <!-- Легенда -->
+  <circle cx="60" cy="440" r="4" fill="#D85A30"/>
+  <text x="70" y="444" font-size="11" fill="#5F5E5A">прибавка/убавка по 1 п. з кожного боку; знизу вгору — прибавки, зверху вниз — убавки</text>
 </svg>`,
   },
   "neckline-basic": {
