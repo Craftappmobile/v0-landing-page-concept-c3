@@ -1,8 +1,8 @@
 ---
-title: "Джемпер з круглим вирізом (crew neck): розрахунок горловини та планки"
-description: "Розрахунок джемпера з круглим вирізом: глибина спереду і ззаду, розподіл петель горловини, убавки без сходинок, плечовий скіс, tubular bind-off і бейка. Приклади M і XL."
+title: "Джемпер з круглим вирізом crew neck: розрахунок бейки"
+description: "Розрахунок джемпера з круглим вирізом: глибина спереду і ззаду, убавки без сходинок, плечовий скіс, tubular bind-off і бейка. Приклади M і XL."
 slug: "yak-rozrahuvaty-dzhemper-z-kruhlym-vyrizom"
-datePublished: "2026-05-09"
+datePublished: "2026-05-18"
 dateModified: "2026-09-09"
 author: "Жанна (майстриня в'язання)"
 image: "/images/blog/yak-rozrahuvaty-dzhemper-z-kruhlym-vyrizom.jpg"
@@ -130,7 +130,7 @@ Crew neck — класичний круглий виріз, який щільн�
 
 
 
-{{app-cta:Розрахуйте круглий виріз джемпера під вашу щільність|Введіть щільність полотна, обхват шиї та бажану глибину вирізу. Додаток «Розрахуй і В'яжи» автоматично згенерує порядовий ритм закриття петель і кількість петель для бейки.|/#pricing?utm_source=blog&utm_medium=article&utm_campaign=yak-rozrahuvaty-dzhemper-z-kruhlym-vyrizom&utm_content=mid_app_cta}}
+{{app-cta:Розрахуйте круглий виріз джемпера під вашу щільність|Введіть щільність полотна, обхват шиї та бажану глибину вирізу. Додаток «Розрахуй і В'яжи» автоматично згенерує порядовий ритм закриття петель і кількість петель для бейки.|/#pricing?utm_source=blog&utm_medium=article&utm_campaign=yak-rozrahuvaty-dzhemper-z-kruhlym-vyrizom&utm_content=mid_app_cta}} Фінішна обробка бейки джемпера відповідає [керівництву з безступеневого закриття Techknitting](https://techknitting.blogspot.com/).
 
 ## Крок 4: Розрахунок плечового скосу німецькими вкороченими рядами
 

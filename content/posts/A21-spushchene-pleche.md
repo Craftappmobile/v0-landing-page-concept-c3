@@ -1,8 +1,8 @@
 ---
-title: "Як розрахувати спущений рукав спицями: пройма, скіс і довжина"
-description: "Розрахунок спущеного рукава (drop shoulder): скільки см спускати плече, глибина прямої пройми, скіс німецькими вкороченими рядами, довжина рукава. Таблиця S–XXL."
+title: "Светр зі спущеним плечем: розрахунок пройми та скосу"
+description: "Розрахунок спущеного плеча (drop shoulder): глибина прямої пройми, скіс німецькими вкороченими рядами, довжина рукава. Таблиця розмірів S–XXL."
 slug: "yak-rozrahuvaty-spushchenyy-rukav"
-datePublished: "2026-05-09"
+datePublished: "2026-05-18"
 dateModified: "2026-09-09"
 author: "Жанна (майстриня в'язання)"
 image: "/images/blog/yak-rozrahuvaty-spushchenyy-rukav.jpg"
@@ -166,7 +166,7 @@ editorialQuestions:
 
 {{app-cta:Розрахуйте спущене плече, пройму та рукав у додатку «Розрахуй і В'яжи»|Введіть ширину плечей, бажане спущення (3–10 см) та щільність зразка. Додаток автоматично розрахує деталі переду і спинки, пряму пройму та компенсацію довжини рукава без ручних помилок.|/#pricing?utm_source=blog&utm_medium=article&utm_campaign=yak-rozrahuvaty-spushchenyy-rukav&utm_content=mid_app_cta}}
 
----
+--- Побудова прямої пройми та скосу плеча відповідає [стандартам пропорцій силуетів Craft Yarn Council](https://www.craftyarncouncil.com/standards/body-sizing).
 
 ## Калькулятор чи додаток: розрахунок спущеного плеча
 
