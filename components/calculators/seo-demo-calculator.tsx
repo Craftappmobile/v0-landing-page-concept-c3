@@ -170,6 +170,26 @@ function getCalculatorConfig(slug: string) {
         },
       }
 
+    case "oversayz":
+      return {
+        field1: { label: "Обхват грудей (ОГ)", default: "92", suffix: "см", hint: "Фактичний обхват фігури по грудях" },
+        field2: { label: "Свобода облягання", default: "20", suffix: "см", hint: "Легкий: +14–18 см, класичний: +18–24 см, глибокий: +26–34 см" },
+        field3: { label: "Щільність петель", default: "18", suffix: "п / 10 см", hint: "Петель у 10 см зразка після ВТО" },
+        calculate: (v1: number, v2: number, v3: number) => {
+          const totalCircumference = v1 + v2
+          const halfWidth = totalCircumference / 2
+          const density = v3 / 10
+          const halfStitches = Math.round(halfWidth * density)
+          const totalStitches = Math.round(totalCircumference * density)
+          const dropShoulder = v2 >= 26 ? "7–9 см" : v2 >= 18 ? "5–7 см" : "3–5 см"
+          return {
+            title: "Розрахунок оверсайз джемпера",
+            value: `${halfStitches} п. (на одну деталь)`,
+            note: `Для ОГ ${v1} см з припуском +${v2} см повна ширина светра дорівнює ${totalCircumference} см (${halfWidth} см півобхват). Набирайте ${halfStitches} п. для спинки/переду (або ${totalStitches} п. по колу). Рекомендований спуск плеча: ${dropShoulder}. Скоротіть довжину рукава на таку ж величину.`,
+          }
+        },
+      }
+
     case "letucha-mysha":
       return {
         field1: { label: "Півобхват грудей + оверсайз", default: "54", suffix: "см", hint: "Ширина корпусу світшота" },

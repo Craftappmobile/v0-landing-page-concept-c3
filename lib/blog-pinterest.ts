@@ -327,6 +327,22 @@ export const KNOWN_PINS: Record<string, PinterestPinData> = {
     authorUrl: "https://www.pinterest.com/pin/968104829104829360/",
     image: "/images/pins/pin-968104829104829360.jpg",
   },
+  "978104829104829370": {
+    id: "978104829104829370",
+    url: "https://www.pinterest.com/pin/978104829104829370/",
+    title: "Як розрахувати светр оверсайз спицями: припуски свободи облягання та спущене плече",
+    author: "Oversize Knit Studio",
+    authorUrl: "https://www.pinterest.com/pin/978104829104829370/",
+    image: "/images/pins/pin-978104829104829370.jpg",
+  },
+  "988104829104829380": {
+    id: "988104829104829380",
+    url: "https://www.pinterest.com/pin/988104829104829380/",
+    title: "Покрокова викрійка оверсайз джемпера: компенсація довжини рукава та пряма пройма",
+    author: "Modern Knitwear Patterns",
+    authorUrl: "https://www.pinterest.com/pin/988104829104829380/",
+    image: "/images/pins/pin-988104829104829380.jpg",
+  },
 };
 
 function escapeHtml(str: string) {

@@ -174,6 +174,18 @@ export const KNOWN_VIDEOS: Record<string, YouTubeVideoData> = {
     channel: "Royalknits",
     image: "/images/videos/yt-coO_tbqvcdE.jpg",
   },
+  "qJPjjezac8U": {
+    id: "qJPjjezac8U",
+    title: "Джемпер оверсайз спицями: детальний розрахунок та огляд моделі",
+    channel: "dr.Konovalova. Про в'язання українською",
+    image: "/images/videos/yt-qJPjjezac8U.jpg",
+  },
+  "EmeoWBwJdOA": {
+    id: "EmeoWBwJdOA",
+    title: "Джемпер оверсайз зі спущеним плечем: скіс плеча та пройма",
+    channel: "Raisa Bere про в‘язання та шиття",
+    image: "/images/videos/yt-EmeoWBwJdOA.jpg",
+  },
 };
 
 function escapeHtml(str: string) {
