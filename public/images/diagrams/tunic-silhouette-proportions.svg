@@ -1,0 +1,81 @@
+<svg viewBox="0 0 680 430" role="img" aria-labelledby="diagram-tunic-proportions-title" xmlns="http://www.w3.org/2000/svg" font-family="sans-serif">
+  <title id="diagram-tunic-proportions-title">Схема розрахунку туніки: пропорції довжини, А-силует та бічні розрізи</title>
+  <defs>
+    <marker id="tunic-arrow" viewBox="0 0 10 10" refX="6" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M 0 1 L 8 5 L 0 9 z" fill="#0284C7" />
+    </marker>
+    <marker id="tunic-arrow-teal" viewBox="0 0 10 10" refX="6" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M 0 1 L 8 5 L 0 9 z" fill="#0D9488" />
+    </marker>
+  </defs>
+
+  <!-- Background -->
+  <rect width="680" height="430" fill="#FCFAF7" rx="12"/>
+
+  <!-- Top Title -->
+  <rect x="25" y="16" width="630" height="34" rx="6" fill="#F0F9FF" stroke="#BAE6FD" stroke-width="1"/>
+  <text x="340" y="38" text-anchor="middle" font-size="13" font-weight="700" fill="#0369A1">АНАТОМІЯ ТУНІКИ: ПРОПОРЦІЇ ЗРОСТУ, А-СИЛУЕТ ТА БІЧНІ РОЗРІЗИ</text>
+
+  <!-- Box 1: Proportions & Height Formula -->
+  <g transform="translate(35, 66)">
+    <rect width="285" height="185" rx="8" fill="#FFFFFF" stroke="#0284C7" stroke-width="1.3"/>
+    <rect x="0" y="0" width="285" height="28" rx="8" fill="#E0F2FE"/>
+    <text x="142" y="19" text-anchor="middle" font-size="12" font-weight="700" fill="#0369A1">1. Формула довжини та зріст</text>
+
+    <!-- Formula badge -->
+    <rect x="15" y="38" width="255" height="32" rx="6" fill="#F8FAFC" stroke="#E2E8F0"/>
+    <text x="142" y="59" text-anchor="middle" font-size="12.5" font-weight="800" fill="#0F172A">L = Зріст × 0,37 + 3–5 см</text>
+
+    <text x="20" y="92" font-size="11.5" fill="#475569">• Звичайний светр: <tspan font-weight="600" fill="#64748B">50–58 см</tspan></text>
+    <text x="20" y="112" font-size="11.5" fill="#475569">• Туніка (довжина): <tspan font-weight="700" fill="#0284C7">65–78 см (+15–20 см)</tspan></text>
+    <text x="20" y="132" font-size="11.5" fill="#475569">• Точка завершення: середина стегна</text>
+    <text x="20" y="152" font-size="11.5" fill="#475569">• Рукав: <tspan font-weight="700" fill="#0284C7">7/8 (-5–7 см)</tspan> для балансу зросту</text>
+
+    <rect x="15" y="160" width="255" height="18" rx="4" fill="#F0FDF4"/>
+    <text x="142" y="173" text-anchor="middle" font-size="10" font-weight="700" fill="#15803D">✓ Ноги виглядають візуально довшими</text>
+  </g>
+
+  <!-- Box 2: A-line expansion & shaping -->
+  <g transform="translate(360, 66)">
+    <rect width="285" height="185" rx="8" fill="#FFFFFF" stroke="#0D9488" stroke-width="1.3"/>
+    <rect x="0" y="0" width="285" height="28" rx="8" fill="#CCFBF1"/>
+    <text x="142" y="19" text-anchor="middle" font-size="12" font-weight="700" fill="#0F766E">2. Розрахунок А-силуету</text>
+
+    <!-- Formula badge -->
+    <rect x="15" y="38" width="255" height="32" rx="6" fill="#F8FAFC" stroke="#E2E8F0"/>
+    <text x="142" y="59" text-anchor="middle" font-size="11.5" font-weight="800" fill="#0F172A">Розширення = (Ш_низу − Ш_грудей) ÷ 2</text>
+
+    <text x="20" y="92" font-size="11.5" fill="#475569">• Добавка з кожного боку: <tspan font-weight="700" fill="#0D9488">+2–4 см (6–8 п.)</tspan></text>
+    <text x="20" y="112" font-size="11.5" fill="#475569">• Ритм: <tspan font-weight="600" fill="#0F172A">Довжина в рядах ÷ к-сть добавок</tspan></text>
+    <text x="20" y="132" font-size="11.5" fill="#475569">• Типовий крок: <tspan font-weight="700" fill="#0D9488">кожен 16–19-й ряд</tspan></text>
+    <text x="20" y="152" font-size="11.5" fill="#475569">• Перепад талія-стегна: Δ = (ОС - ОТ) ÷ 2</text>
+
+    <rect x="15" y="160" width="255" height="18" rx="4" fill="#F0FDFA"/>
+    <text x="142" y="173" text-anchor="middle" font-size="10" font-weight="700" fill="#0F766E">✓ М'яке розширення без зайвих складок</text>
+  </g>
+
+  <!-- Bottom Details: Side Slits & Yarn Consumption -->
+  <g transform="translate(35, 268)">
+    <rect width="610" height="142" rx="8" fill="#FFFFFF" stroke="#E2DCD2" stroke-width="1.2"/>
+    <rect x="0" y="0" width="610" height="26" rx="8" fill="#F5F3EF"/>
+    <text x="305" y="18" text-anchor="middle" font-size="11.5" font-weight="700" fill="#2C2C2A">3. ТЕХНІЧНІ ОСОБЛИВОСТІ: БІЧНІ РОЗРІЗИ ТА ВИТРАТА ПРЯЖІ</text>
+
+    <!-- Sub-block A: Side slits -->
+    <g transform="translate(20, 36)">
+      <rect width="270" height="92" rx="6" fill="#F8FAFC" stroke="#E2E8F0"/>
+      <text x="15" y="22" font-size="12" font-weight="700" fill="#0369A1">Бічні розрізи (10–15 см):</text>
+      <text x="15" y="42" font-size="11" fill="#475569">• Початок розширення — на 5–7 см вище розрізу</text>
+      <text x="15" y="60" font-size="11" fill="#475569">• Запобігають деформації та натягу на стегнах</text>
+      <text x="15" y="78" font-size="11" font-weight="600" fill="#0284C7">• Гармонійно полегшують довге полотно</text>
+    </g>
+
+    <!-- Sub-block B: Yarn consumption -->
+    <g transform="translate(315, 36)">
+      <rect width="275" height="92" rx="6" fill="#F8FAFC" stroke="#E2E8F0"/>
+      <text x="15" y="22" font-size="12" font-weight="700" fill="#D97706">Витрата пряжі (+20–30%):</text>
+      <text x="15" y="42" font-size="11" fill="#475569">• Розмір 48: светр 500 г → туніка <tspan font-weight="700" fill="#D97706">600–650 г</tspan></text>
+      <text x="15" y="60" font-size="11" fill="#475569">• Кожні +5 см довжини додають 35–40 г</text>
+      <text x="15" y="78" font-size="11" font-weight="600" fill="#B45309">• Рекомендовано: +2 мотки запасу на проект</text>
+    </g>
+  </g>
+</svg>

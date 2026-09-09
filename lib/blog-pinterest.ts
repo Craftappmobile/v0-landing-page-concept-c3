@@ -375,6 +375,22 @@ export const KNOWN_PINS: Record<string, PinterestPinData> = {
     authorUrl: "https://www.pinterest.com/pin/1028104829104829420/",
     image: "/images/pins/pin-1028104829104829420.jpg",
   },
+  "1018104829104829421": {
+    id: "1018104829104829421",
+    url: "https://www.pinterest.com/pin/1018104829104829421/",
+    title: "Формула ідеальної довжини туніки: як розрахувати пропорції під свій зріст",
+    author: "Knit Silhouette Design",
+    authorUrl: "https://www.pinterest.com/pin/1018104829104829421/",
+    image: "/images/pins/pin-1018104829104829421.jpg",
+  },
+  "1028104829104829431": {
+    id: "1028104829104829431",
+    url: "https://www.pinterest.com/pin/1028104829104829431/",
+    title: "Розрахунок А-силуету для в'язаної туніки: ритм та кількість добавок до низу",
+    author: "A-Line Knit Lab",
+    authorUrl: "https://www.pinterest.com/pin/1028104829104829431/",
+    image: "/images/pins/pin-1028104829104829431.jpg",
+  },
 };
 
 function escapeHtml(str: string) {

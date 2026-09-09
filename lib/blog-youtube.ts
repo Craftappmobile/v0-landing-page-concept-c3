@@ -210,6 +210,18 @@ export const KNOWN_VIDEOS: Record<string, YouTubeVideoData> = {
     channel: "Ksenia Klimenko",
     image: "/images/videos/yt-No-lqyZ_C4I.jpg",
   },
+  "6L1AwkVdIJY": {
+    id: "6L1AwkVdIJY",
+    title: "Туніка-сукня спицями узором Кучинеллі: Покроковий майстер-клас",
+    channel: "Julicrochetlove",
+    image: "/images/videos/yt-6L1AwkVdIJY.jpg",
+  },
+  "8By17UJwIDE": {
+    id: "8By17UJwIDE",
+    title: "В'язана туніка регланом зверху: Розрахунок довжини та прибавок",
+    channel: "ВʼЯЗАННЯ Людмила Тарсукова",
+    image: "/images/videos/yt-8By17UJwIDE.jpg",
+  },
 };
 
 function escapeHtml(str: string) {
