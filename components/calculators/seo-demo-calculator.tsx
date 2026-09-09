@@ -327,6 +327,24 @@ function getCalculatorConfig(slug: string) {
         },
       }
 
+    case "rukav":
+      return {
+        field1: { label: "Обхват плеча у найширшому місці", default: "33", suffix: "см", hint: "Обхват руки зверху + 4–6 см припуску на свободу" },
+        field2: { label: "Обхват зап'ястя (манжета)", default: "17", suffix: "см", hint: "Бажана ширина манжети" },
+        field3: { label: "Щільність петель після ВТО", default: "22", suffix: "п / 10 см", hint: "Кількість петель у 10 см зразка" },
+        calculate: (v1: number, v2: number, v3: number) => {
+          const topStitches = Math.round(v1 * (v3 / 10))
+          const cuffStitches = Math.round(v2 * (v3 / 10))
+          const diff = Math.max(0, topStitches - cuffStitches)
+          const incPerSide = Math.round(diff / 2)
+          return {
+            title: "Розрахунок петель та прибавок рукава",
+            value: `${cuffStitches} п. манжета → ${topStitches} п. пройма (+${incPerSide} з кожного боку)`,
+            note: `Наберіть ${cuffStitches} петель на манжету. Для розширення до ${v1} см (${topStitches} п.) додайте ${diff} петель — по ${incPerSide} прибавок симетрично з обох боків рукава.`,
+          }
+        },
+      }
+
     // Default garment / sweater / cardigan / oversize / fit calculator
     default:
       return {

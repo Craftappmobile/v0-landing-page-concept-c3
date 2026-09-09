@@ -132,6 +132,18 @@ export const KNOWN_VIDEOS: Record<string, YouTubeVideoData> = {
     channel: "SMITH OLGA - KNITWEAR DESIGNER",
     image: "/images/videos/yt-1nkHtQ6HPi0.jpg",
   },
+  "O2qtkGuqutw": {
+    id: "O2qtkGuqutw",
+    title: "Логіка вив'язування окату рукава з пройми",
+    channel: "NeetkeeClub",
+    image: "/images/videos/yt-O2qtkGuqutw.jpg",
+  },
+  "nHk9p5ngkbE": {
+    id: "nHk9p5ngkbE",
+    title: "Вʼязання рукава від пройми: основи та розрахунок",
+    channel: "Школа в'язання Марини Шолох",
+    image: "/images/videos/yt-nHk9p5ngkbE.jpg",
+  },
 }
 
 function escapeHtml(str: string) {

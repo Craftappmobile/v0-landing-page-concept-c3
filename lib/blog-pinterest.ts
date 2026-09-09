@@ -263,6 +263,22 @@ export const KNOWN_PINS: Record<string, PinterestPinData> = {
     authorUrl: "https://www.pinterest.com/pin/582910482910482920/",
     image: "/images/pins/pin-582910482910482920.jpg",
   },
+  "394810294818294810": {
+    id: "394810294818294810",
+    url: "https://www.pinterest.com/pin/394810294818294810/",
+    title: "Розрахунок окату рукава спицями: покрокова схема кривої пройми",
+    author: "Sleeve Cap Studio",
+    authorUrl: "https://www.pinterest.com/pin/394810294818294810/",
+    image: "/images/pins/pin-394810294818294810.jpg",
+  },
+  "682910482910482930": {
+    id: "682910482910482930",
+    url: "https://www.pinterest.com/pin/682910482910482930/",
+    title: "Розрахунок скосу та прибавок рукава від манжети до пройми",
+    author: "Sleeve Shaping Lab",
+    authorUrl: "https://www.pinterest.com/pin/682910482910482930/",
+    image: "/images/pins/pin-682910482910482930.jpg",
+  },
 }
 
 function escapeHtml(str: string) {
