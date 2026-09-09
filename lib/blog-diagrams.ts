@@ -1858,6 +1858,630 @@ const BLOG_DIAGRAMS: Record<string, BlogDiagramDefinition> = {
   </g>
 </svg>`,
   },
+  "drop-shoulder-construction": {
+    title: "Конструкція та розрахунок светра зі спущеним плечем",
+    caption: "Схема спущеного плеча: лінії природного та спущеного плеча (3–10 см), глибина прямої пройми, рукав без окату та компенсація довжини.",
+    svg: `<svg viewBox="0 0 800 520" role="img" aria-labelledby="diagram-drop-shoulder-title" xmlns="http://www.w3.org/2000/svg" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif">
+  <title id="diagram-drop-shoulder-title">Конструкція та розрахунок светра зі спущеним плечем</title>
+  <defs>
+    <linearGradient id="dsBodyGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#EFF6FF" stop-opacity="0.9"/>
+      <stop offset="100%" stop-color="#DBEAFE" stop-opacity="0.7"/>
+    </linearGradient>
+    <linearGradient id="dsSleeveGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#FEF3C7" stop-opacity="0.9"/>
+      <stop offset="100%" stop-color="#FDE68A" stop-opacity="0.7"/>
+    </linearGradient>
+    <filter id="dsShadow" x="-5%" y="-5%" width="110%" height="110%">
+      <feDropShadow dx="0" dy="4" stdDeviation="6" flood-opacity="0.08"/>
+    </filter>
+  </defs>
+
+  <rect width="800" height="520" rx="16" fill="#FAFAFA"/>
+  <rect x="12" y="12" width="776" height="496" rx="12" fill="none" stroke="#E2E8F0" stroke-width="1.5"/>
+
+  <!-- Title Badge -->
+  <g transform="translate(30, 32)">
+    <rect width="320" height="30" rx="8" fill="#1E3A8A"/>
+    <text x="160" y="20" fill="#FFFFFF" font-size="13" font-weight="700" text-anchor="middle">ГЕОМЕТРІЯ СПУЩЕНОГО ПЛЕЧА (DROP SHOULDER)</text>
+  </g>
+
+  <!-- Left: Garment Silhouette -->
+  <g transform="translate(60, 80)">
+    <!-- Natural Shoulder Guide (Dotted Red) -->
+    <path d="M 100,50 L 150,55" stroke="#EF4444" stroke-width="2" stroke-dasharray="4,4" fill="none"/>
+    <path d="M 230,55 L 280,50" stroke="#EF4444" stroke-width="2" stroke-dasharray="4,4" fill="none"/>
+    <text x="80" y="44" fill="#DC2626" font-size="11" font-weight="600">Анатомічне плече</text>
+
+    <!-- Sweater Body (Wide rectangle) -->
+    <!-- Neckline -->
+    <path d="M 150,55 Q 190,80 230,55 L 310,72 L 310,210 L 290,210 L 290,360 L 90,360 L 90,210 L 70,210 L 70,72 Z" fill="url(#dsBodyGrad)" stroke="#2563EB" stroke-width="2.5" filter="url(#dsShadow)"/>
+    
+    <!-- Ribbing Hem -->
+    <rect x="90" y="340" width="200" height="20" fill="#BFDBFE" stroke="#2563EB" stroke-width="1.5"/>
+    <text x="190" y="354" fill="#1E40AF" font-size="11" font-weight="600" text-anchor="middle">Еластична гумка низу</text>
+
+    <!-- Neck Ribbing -->
+    <path d="M 150,55 Q 190,80 230,55 Q 190,68 150,55 Z" fill="#BFDBFE" stroke="#2563EB" stroke-width="1.5"/>
+
+    <!-- Left Dropped Sleeve -->
+    <!-- Attached to straight vertical armhole from y=72 to y=210 -->
+    <path d="M 70,72 L -20,130 L 0,165 L 70,210 Z" fill="url(#dsSleeveGrad)" stroke="#D97706" stroke-width="2"/>
+    <!-- Cuff -->
+    <rect x="-22" y="130" width="24" height="36" rx="4" transform="rotate(-30, -10, 148)" fill="#FDE68A" stroke="#D97706" stroke-width="1.5"/>
+
+    <!-- Right Dropped Sleeve -->
+    <path d="M 310,72 L 400,130 L 380,165 L 310,210 Z" fill="url(#dsSleeveGrad)" stroke="#D97706" stroke-width="2"/>
+    <rect x="380" y="130" width="24" height="36" rx="4" transform="rotate(30, 392, 148)" fill="#FDE68A" stroke="#D97706" stroke-width="1.5"/>
+
+    <!-- Dropped shoulder seam indicator -->
+    <line x1="70" y1="72" x2="70" y2="210" stroke="#DC2626" stroke-width="3"/>
+    <line x1="310" y1="72" x2="310" y2="210" stroke="#DC2626" stroke-width="3"/>
+    <circle cx="70" cy="72" r="4" fill="#DC2626"/>
+    <circle cx="70" cy="210" r="4" fill="#DC2626"/>
+
+    <!-- Annotations & Arrows -->
+    <!-- Drop Depth Indicator -->
+    <line x1="48" y1="50" x2="48" y2="72" stroke="#475569" stroke-width="1.5"/>
+    <path d="M 45,52 L 48,46 L 51,52 M 45,70 L 48,76 L 51,70" stroke="#475569" stroke-width="1.5" fill="none"/>
+    <text x="42" y="65" fill="#475569" font-size="11" font-weight="700" text-anchor="end">Спущення 3–10 см</text>
+
+    <!-- Armhole Depth -->
+    <line x1="325" y1="72" x2="325" y2="210" stroke="#2563EB" stroke-width="1.5"/>
+    <path d="M 322,74 L 325,68 L 328,74 M 322,208 L 325,214 L 328,208" stroke="#2563EB" stroke-width="1.5" fill="none"/>
+    <text x="335" y="145" fill="#1E40AF" font-size="11" font-weight="700">Пройма: 20–25 см (пряма)</text>
+
+    <!-- Body Width Ease -->
+    <line x1="90" y1="380" x2="290" y2="380" stroke="#1E293B" stroke-width="1.5"/>
+    <path d="M 92,377 L 86,380 L 92,383 M 288,377 L 294,380 L 288,383" stroke="#1E293B" stroke-width="1.5" fill="none"/>
+    <text x="190" y="398" fill="#1E293B" font-size="12" font-weight="700" text-anchor="middle">Ширина: ½ ОГ + свобода 8–20 см</text>
+  </g>
+
+  <!-- Right: Engineering Calculation Cards -->
+  <g transform="translate(500, 75)">
+    <!-- Card 1: Key Drop Rules -->
+    <rect width="270" height="115" rx="10" fill="#FFFFFF" stroke="#E2E8F0" stroke-width="1.5" filter="url(#dsShadow)"/>
+    <rect width="270" height="28" rx="10" fill="#EFF6FF"/>
+    <text x="15" y="19" fill="#1D4ED8" font-size="12" font-weight="700">1. ШИРИНА ПЛЕЧА ТА СПУЩЕННЯ</text>
+    <text x="15" y="48" fill="#334155" font-size="11">• Легке спущення: <tspan font-weight="700" fill="#0F172A">3–5 см</tspan> (розміри 42–46)</text>
+    <text x="15" y="68" fill="#334155" font-size="11">• Помірне оверсайз: <tspan font-weight="700" fill="#0F172A">5–8 см</tspan> (48–52)</text>
+    <text x="15" y="88" fill="#334155" font-size="11">• Сильний оверсайз: <tspan font-weight="700" fill="#0F172A">8–10 см</tspan> (54+)</text>
+    <text x="15" y="105" fill="#DC2626" font-size="10" font-weight="600">Скіс плеча обов'язковий: 2–3 см (не 0!)</text>
+
+    <!-- Card 2: Sleeve Length Compensation -->
+    <rect y="130" width="270" height="110" rx="10" fill="#FFFFFF" stroke="#E2E8F0" stroke-width="1.5" filter="url(#dsShadow)"/>
+    <rect y="130" width="270" height="28" rx="10" fill="#FEF3C7"/>
+    <text x="15" y="149" fill="#B45309" font-size="12" font-weight="700">2. ДОВЖИНА ТА ОКАТ РУКАВА</text>
+    <text x="15" y="178" fill="#334155" font-size="11">Формула довжини рукава:</text>
+    <text x="15" y="198" fill="#B45309" font-size="12" font-weight="800">L рукава = L стандарт − Глибина спущення</text>
+    <text x="15" y="222" fill="#64748B" font-size="10.5">Окат = 0 см (прямокутний набір по проймі)</text>
+
+    <!-- Card 3: Seam & Armhole Ratio -->
+    <rect y="255" width="270" height="135" rx="10" fill="#FFFFFF" stroke="#E2E8F0" stroke-width="1.5" filter="url(#dsShadow)"/>
+    <rect y="255" width="270" height="28" rx="10" fill="#F1F5F9"/>
+    <text x="15" y="274" fill="#334155" font-size="12" font-weight="700">3. РОЗРАХУНОК ПРОЙМИ</text>
+    <text x="15" y="302" fill="#0F172A" font-size="11" font-weight="600">Глибина пройми = Базова + Спущення</text>
+    <text x="15" y="322" fill="#475569" font-size="10.5">• Розмір 42–44: 18–19 см + спущення</text>
+    <text x="15" y="340" fill="#475569" font-size="10.5">• Розмір 46–48: 20–21 см + спущення</text>
+    <text x="15" y="358" fill="#475569" font-size="10.5">• Розмір 50–52: 22–23 см + спущення</text>
+    <text x="15" y="378" fill="#16A34A" font-size="10.5" font-weight="700">✓ Прямий край без заокруглень</text>
+  </g>
+</svg>`,
+  },
+  "spushchene-pleche": {
+    title: "Конструкція та розрахунок светра зі спущеним плечем",
+    caption: "Схема спущеного плеча: лінії природного та спущеного плеча (3–10 см), глибина прямої пройми, рукав без окату та компенсація довжини.",
+    svg: `<svg viewBox="0 0 800 520" role="img" aria-labelledby="diagram-drop-shoulder-title" xmlns="http://www.w3.org/2000/svg" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif">
+  <title id="diagram-drop-shoulder-title">Конструкція та розрахунок светра зі спущеним плечем</title>
+  <defs>
+    <linearGradient id="dsBodyGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#EFF6FF" stop-opacity="0.9"/>
+      <stop offset="100%" stop-color="#DBEAFE" stop-opacity="0.7"/>
+    </linearGradient>
+    <linearGradient id="dsSleeveGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#FEF3C7" stop-opacity="0.9"/>
+      <stop offset="100%" stop-color="#FDE68A" stop-opacity="0.7"/>
+    </linearGradient>
+    <filter id="dsShadow" x="-5%" y="-5%" width="110%" height="110%">
+      <feDropShadow dx="0" dy="4" stdDeviation="6" flood-opacity="0.08"/>
+    </filter>
+  </defs>
+
+  <rect width="800" height="520" rx="16" fill="#FAFAFA"/>
+  <rect x="12" y="12" width="776" height="496" rx="12" fill="none" stroke="#E2E8F0" stroke-width="1.5"/>
+
+  <!-- Title Badge -->
+  <g transform="translate(30, 32)">
+    <rect width="320" height="30" rx="8" fill="#1E3A8A"/>
+    <text x="160" y="20" fill="#FFFFFF" font-size="13" font-weight="700" text-anchor="middle">ГЕОМЕТРІЯ СПУЩЕНОГО ПЛЕЧА (DROP SHOULDER)</text>
+  </g>
+
+  <!-- Left: Garment Silhouette -->
+  <g transform="translate(60, 80)">
+    <!-- Natural Shoulder Guide (Dotted Red) -->
+    <path d="M 100,50 L 150,55" stroke="#EF4444" stroke-width="2" stroke-dasharray="4,4" fill="none"/>
+    <path d="M 230,55 L 280,50" stroke="#EF4444" stroke-width="2" stroke-dasharray="4,4" fill="none"/>
+    <text x="80" y="44" fill="#DC2626" font-size="11" font-weight="600">Анатомічне плече</text>
+
+    <!-- Sweater Body (Wide rectangle) -->
+    <!-- Neckline -->
+    <path d="M 150,55 Q 190,80 230,55 L 310,72 L 310,210 L 290,210 L 290,360 L 90,360 L 90,210 L 70,210 L 70,72 Z" fill="url(#dsBodyGrad)" stroke="#2563EB" stroke-width="2.5" filter="url(#dsShadow)"/>
+    
+    <!-- Ribbing Hem -->
+    <rect x="90" y="340" width="200" height="20" fill="#BFDBFE" stroke="#2563EB" stroke-width="1.5"/>
+    <text x="190" y="354" fill="#1E40AF" font-size="11" font-weight="600" text-anchor="middle">Еластична гумка низу</text>
+
+    <!-- Neck Ribbing -->
+    <path d="M 150,55 Q 190,80 230,55 Q 190,68 150,55 Z" fill="#BFDBFE" stroke="#2563EB" stroke-width="1.5"/>
+
+    <!-- Left Dropped Sleeve -->
+    <!-- Attached to straight vertical armhole from y=72 to y=210 -->
+    <path d="M 70,72 L -20,130 L 0,165 L 70,210 Z" fill="url(#dsSleeveGrad)" stroke="#D97706" stroke-width="2"/>
+    <!-- Cuff -->
+    <rect x="-22" y="130" width="24" height="36" rx="4" transform="rotate(-30, -10, 148)" fill="#FDE68A" stroke="#D97706" stroke-width="1.5"/>
+
+    <!-- Right Dropped Sleeve -->
+    <path d="M 310,72 L 400,130 L 380,165 L 310,210 Z" fill="url(#dsSleeveGrad)" stroke="#D97706" stroke-width="2"/>
+    <rect x="380" y="130" width="24" height="36" rx="4" transform="rotate(30, 392, 148)" fill="#FDE68A" stroke="#D97706" stroke-width="1.5"/>
+
+    <!-- Dropped shoulder seam indicator -->
+    <line x1="70" y1="72" x2="70" y2="210" stroke="#DC2626" stroke-width="3"/>
+    <line x1="310" y1="72" x2="310" y2="210" stroke="#DC2626" stroke-width="3"/>
+    <circle cx="70" cy="72" r="4" fill="#DC2626"/>
+    <circle cx="70" cy="210" r="4" fill="#DC2626"/>
+
+    <!-- Annotations & Arrows -->
+    <!-- Drop Depth Indicator -->
+    <line x1="48" y1="50" x2="48" y2="72" stroke="#475569" stroke-width="1.5"/>
+    <path d="M 45,52 L 48,46 L 51,52 M 45,70 L 48,76 L 51,70" stroke="#475569" stroke-width="1.5" fill="none"/>
+    <text x="42" y="65" fill="#475569" font-size="11" font-weight="700" text-anchor="end">Спущення 3–10 см</text>
+
+    <!-- Armhole Depth -->
+    <line x1="325" y1="72" x2="325" y2="210" stroke="#2563EB" stroke-width="1.5"/>
+    <path d="M 322,74 L 325,68 L 328,74 M 322,208 L 325,214 L 328,208" stroke="#2563EB" stroke-width="1.5" fill="none"/>
+    <text x="335" y="145" fill="#1E40AF" font-size="11" font-weight="700">Пройма: 20–25 см (пряма)</text>
+
+    <!-- Body Width Ease -->
+    <line x1="90" y1="380" x2="290" y2="380" stroke="#1E293B" stroke-width="1.5"/>
+    <path d="M 92,377 L 86,380 L 92,383 M 288,377 L 294,380 L 288,383" stroke="#1E293B" stroke-width="1.5" fill="none"/>
+    <text x="190" y="398" fill="#1E293B" font-size="12" font-weight="700" text-anchor="middle">Ширина: ½ ОГ + свобода 8–20 см</text>
+  </g>
+
+  <!-- Right: Engineering Calculation Cards -->
+  <g transform="translate(500, 75)">
+    <!-- Card 1: Key Drop Rules -->
+    <rect width="270" height="115" rx="10" fill="#FFFFFF" stroke="#E2E8F0" stroke-width="1.5" filter="url(#dsShadow)"/>
+    <rect width="270" height="28" rx="10" fill="#EFF6FF"/>
+    <text x="15" y="19" fill="#1D4ED8" font-size="12" font-weight="700">1. ШИРИНА ПЛЕЧА ТА СПУЩЕННЯ</text>
+    <text x="15" y="48" fill="#334155" font-size="11">• Легке спущення: <tspan font-weight="700" fill="#0F172A">3–5 см</tspan> (розміри 42–46)</text>
+    <text x="15" y="68" fill="#334155" font-size="11">• Помірне оверсайз: <tspan font-weight="700" fill="#0F172A">5–8 см</tspan> (48–52)</text>
+    <text x="15" y="88" fill="#334155" font-size="11">• Сильний оверсайз: <tspan font-weight="700" fill="#0F172A">8–10 см</tspan> (54+)</text>
+    <text x="15" y="105" fill="#DC2626" font-size="10" font-weight="600">Скіс плеча обов'язковий: 2–3 см (не 0!)</text>
+
+    <!-- Card 2: Sleeve Length Compensation -->
+    <rect y="130" width="270" height="110" rx="10" fill="#FFFFFF" stroke="#E2E8F0" stroke-width="1.5" filter="url(#dsShadow)"/>
+    <rect y="130" width="270" height="28" rx="10" fill="#FEF3C7"/>
+    <text x="15" y="149" fill="#B45309" font-size="12" font-weight="700">2. ДОВЖИНА ТА ОКАТ РУКАВА</text>
+    <text x="15" y="178" fill="#334155" font-size="11">Формула довжини рукава:</text>
+    <text x="15" y="198" fill="#B45309" font-size="12" font-weight="800">L рукава = L стандарт − Глибина спущення</text>
+    <text x="15" y="222" fill="#64748B" font-size="10.5">Окат = 0 см (прямокутний набір по проймі)</text>
+
+    <!-- Card 3: Seam & Armhole Ratio -->
+    <rect y="255" width="270" height="135" rx="10" fill="#FFFFFF" stroke="#E2E8F0" stroke-width="1.5" filter="url(#dsShadow)"/>
+    <rect y="255" width="270" height="28" rx="10" fill="#F1F5F9"/>
+    <text x="15" y="274" fill="#334155" font-size="12" font-weight="700">3. РОЗРАХУНОК ПРОЙМИ</text>
+    <text x="15" y="302" fill="#0F172A" font-size="11" font-weight="600">Глибина пройми = Базова + Спущення</text>
+    <text x="15" y="322" fill="#475569" font-size="10.5">• Розмір 42–44: 18–19 см + спущення</text>
+    <text x="15" y="340" fill="#475569" font-size="10.5">• Розмір 46–48: 20–21 см + спущення</text>
+    <text x="15" y="358" fill="#475569" font-size="10.5">• Розмір 50–52: 22–23 см + спущення</text>
+    <text x="15" y="378" fill="#16A34A" font-size="10.5" font-weight="700">✓ Прямий край без заокруглень</text>
+  </g>
+</svg>`,
+  },
+  "circular-knitting-guide": {
+    title: "Кругове безшовне вʼязання: геометрія, волосінь та замикання в коло",
+    caption: "Інженерний гайд кругового в'язання: спіральні ряди без швів, підбір довжини волосіні (-5..10 см), круговий зразок та змикання без дірочки.",
+    svg: `<svg viewBox="0 0 800 520" role="img" aria-labelledby="diagram-circular-title" xmlns="http://www.w3.org/2000/svg" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif">
+  <title id="diagram-circular-title">Кругове безшовне в'язання: геометрія, волосінь та замикання в коло</title>
+  <defs>
+    <linearGradient id="ckRingGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#10B981" stop-opacity="0.2"/>
+      <stop offset="100%" stop-color="#059669" stop-opacity="0.35"/>
+    </linearGradient>
+    <linearGradient id="ckCardGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#FFFFFF"/>
+      <stop offset="100%" stop-color="#F8FAFC"/>
+    </linearGradient>
+    <filter id="ckShadow" x="-5%" y="-5%" width="110%" height="110%">
+      <feDropShadow dx="0" dy="4" stdDeviation="6" flood-opacity="0.08"/>
+    </filter>
+  </defs>
+
+  <rect width="800" height="520" rx="16" fill="#FAFAFA"/>
+  <rect x="12" y="12" width="776" height="496" rx="12" fill="none" stroke="#E2E8F0" stroke-width="1.5"/>
+
+  <!-- Title Badge -->
+  <g transform="translate(30, 32)">
+    <rect width="360" height="30" rx="8" fill="#065F46"/>
+    <text x="180" y="20" fill="#FFFFFF" font-size="13" font-weight="700" text-anchor="middle">ІНЖЕНЕРНИЙ ГАЙД КРУГОВОГО В'ЯЗАННЯ СПИЦЯМИ</text>
+  </g>
+
+  <!-- Left Side: Circular Geometry & 1-Stitch Join -->
+  <g transform="translate(60, 85)">
+    <!-- Big Circle Representing Circular Seamless Body -->
+    <circle cx="160" cy="160" r="130" fill="url(#ckRingGrad)" stroke="#059669" stroke-width="3"/>
+    <circle cx="160" cy="160" r="100" fill="#FAFAFA" stroke="#10B981" stroke-width="1.5" stroke-dasharray="4,4"/>
+
+    <!-- Spiral Rows Indicator -->
+    <path d="M 160,30 A 130,130 0 1,1 159,30.5" stroke="#047857" stroke-width="2" fill="none"/>
+    <path d="M 160,42 A 118,118 0 1,1 159,42.5" stroke="#10B981" stroke-width="2" fill="none"/>
+
+    <!-- Marker at Beginning of Round -->
+    <circle cx="160" cy="30" r="8" fill="#EF4444"/>
+    <text x="160" y="16" fill="#DC2626" font-size="11" font-weight="700" text-anchor="middle">МАРКЕР (Початок ряду)</text>
+
+    <!-- Seamless Join Note Inside Circle -->
+    <g transform="translate(160, 140)">
+      <text x="0" y="-20" fill="#065F46" font-size="13" font-weight="800" text-anchor="middle">БЕЗШОВНЕ КОЛО</text>
+      <text x="0" y="0" fill="#047857" font-size="11" font-weight="600" text-anchor="middle">Крайових петель = 0</text>
+      <text x="0" y="18" fill="#334155" font-size="10.5" text-anchor="middle">Формула: Обхват × Щільність</text>
+      <text x="0" y="34" fill="#059669" font-size="10.5" font-weight="700" text-anchor="middle">+ 1 п. для змикання</text>
+    </g>
+
+    <!-- Side Markers for Split -->
+    <circle cx="30" cy="160" r="5" fill="#3B82F6"/>
+    <text x="25" y="180" fill="#2563EB" font-size="10" font-weight="600" text-anchor="end">Бічний шов 1</text>
+    
+    <circle cx="290" cy="160" r="5" fill="#3B82F6"/>
+    <text x="295" y="180" fill="#2563EB" font-size="10" font-weight="600">Бічний шов 2</text>
+
+    <!-- Step / Jogless visual arrow -->
+    <path d="M 165,30 C 180,30 185,55 170,55" stroke="#F59E0B" stroke-width="2.5" fill="none"/>
+    <text x="195" y="48" fill="#D97706" font-size="10.5" font-weight="700">Jogless: підйом дужки</text>
+  </g>
+
+  <!-- Right Side: 3 Technical Guidance Cards -->
+  <g transform="translate(430, 80)">
+    <!-- Card 1: Cable Length Golden Rule -->
+    <rect width="330" height="110" rx="10" fill="url(#ckCardGrad)" stroke="#CBD5E1" stroke-width="1.5" filter="url(#ckShadow)"/>
+    <rect width="330" height="26" rx="10" fill="#ECFDF5"/>
+    <text x="15" y="18" fill="#047857" font-size="12" font-weight="700">1. ПРАВИЛО ДОВЖИНИ ВОЛОСІНІ (ТРОСИКА)</text>
+    <text x="15" y="46" fill="#065F46" font-size="11.5" font-weight="700">Довжина спиць = Обхват деталі − (5–10 см)</text>
+    <text x="15" y="66" fill="#475569" font-size="11">• 40 см: манжети, шапки, горловини</text>
+    <text x="15" y="84" fill="#475569" font-size="11">• 60–80 см: дитячі светри, рукави</text>
+    <text x="15" y="102" fill="#475569" font-size="11">• 80–100 см: тіло светра (дорослі) / Magic Loop</text>
+
+    <!-- Card 2: Density Shift (+5..10%) -->
+    <rect y="125" width="330" height="120" rx="10" fill="url(#ckCardGrad)" stroke="#CBD5E1" stroke-width="1.5" filter="url(#ckShadow)"/>
+    <rect y="125" width="330" height="26" rx="10" fill="#FEF3C7"/>
+    <text x="15" y="143" fill="#B45309" font-size="12" font-weight="700">2. ЩІЛЬНІСТЬ: ПОВОРОТНЕ vs КРУГОВЕ</text>
+    <text x="15" y="172" fill="#0F172A" font-size="11">• У колі <tspan font-weight="700">немає слабких виворітних петель</tspan></text>
+    <text x="15" y="190" fill="#D97706" font-size="11" font-weight="700">⚠ Щільність по колу на 5–10% щільніша!</text>
+    <text x="15" y="210" fill="#334155" font-size="10.5">Зразок в'язати з протяжками позаду або</text>
+    <text x="15" y="228" fill="#334155" font-size="10.5">робити надбавку +1 розмір спиць при потребі.</text>
+
+    <!-- Card 3: Symmetrical Pattern Repeat -->
+    <rect y="260" width="330" height="125" rx="10" fill="url(#ckCardGrad)" stroke="#CBD5E1" stroke-width="1.5" filter="url(#ckShadow)"/>
+    <rect y="260" width="330" height="26" rx="10" fill="#EFF6FF"/>
+    <text x="15" y="278" fill="#1D4ED8" font-size="12" font-weight="700">3. КРАТНІСТЬ РАПОРТІВ ПО КОЛУ</text>
+    <text x="15" y="306" fill="#334155" font-size="11">• Гумка 1×1: <tspan font-weight="700" fill="#1E40AF">кратна 2</tspan></text>
+    <text x="15" y="324" fill="#334155" font-size="11">• Гумка 2×2: <tspan font-weight="700" fill="#1E40AF">кратна 4</tspan> (без залишку!)</text>
+    <text x="15" y="342" fill="#334155" font-size="11">• Французька гумка / ажур: <tspan font-weight="700" fill="#1E40AF">кратна 4 або 6</tspan></text>
+    <text x="15" y="362" fill="#DC2626" font-size="10.5" font-weight="600">Косина гладі: в'яжіть з 2 клубків кожні 2 ряди</text>
+  </g>
+</svg>`,
+  },
+  "krugove-vyazannya": {
+    title: "Кругове безшовне вʼязання: геометрія, волосінь та замикання в коло",
+    caption: "Інженерний гайд кругового в'язання: спіральні ряди без швів, підбір довжини волосіні (-5..10 см), круговий зразок та змикання без дірочки.",
+    svg: `<svg viewBox="0 0 800 520" role="img" aria-labelledby="diagram-circular-title" xmlns="http://www.w3.org/2000/svg" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif">
+  <title id="diagram-circular-title">Кругове безшовне в'язання: геометрія, волосінь та замикання в коло</title>
+  <defs>
+    <linearGradient id="ckRingGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#10B981" stop-opacity="0.2"/>
+      <stop offset="100%" stop-color="#059669" stop-opacity="0.35"/>
+    </linearGradient>
+    <linearGradient id="ckCardGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#FFFFFF"/>
+      <stop offset="100%" stop-color="#F8FAFC"/>
+    </linearGradient>
+    <filter id="ckShadow" x="-5%" y="-5%" width="110%" height="110%">
+      <feDropShadow dx="0" dy="4" stdDeviation="6" flood-opacity="0.08"/>
+    </filter>
+  </defs>
+
+  <rect width="800" height="520" rx="16" fill="#FAFAFA"/>
+  <rect x="12" y="12" width="776" height="496" rx="12" fill="none" stroke="#E2E8F0" stroke-width="1.5"/>
+
+  <!-- Title Badge -->
+  <g transform="translate(30, 32)">
+    <rect width="360" height="30" rx="8" fill="#065F46"/>
+    <text x="180" y="20" fill="#FFFFFF" font-size="13" font-weight="700" text-anchor="middle">ІНЖЕНЕРНИЙ ГАЙД КРУГОВОГО В'ЯЗАННЯ СПИЦЯМИ</text>
+  </g>
+
+  <!-- Left Side: Circular Geometry & 1-Stitch Join -->
+  <g transform="translate(60, 85)">
+    <!-- Big Circle Representing Circular Seamless Body -->
+    <circle cx="160" cy="160" r="130" fill="url(#ckRingGrad)" stroke="#059669" stroke-width="3"/>
+    <circle cx="160" cy="160" r="100" fill="#FAFAFA" stroke="#10B981" stroke-width="1.5" stroke-dasharray="4,4"/>
+
+    <!-- Spiral Rows Indicator -->
+    <path d="M 160,30 A 130,130 0 1,1 159,30.5" stroke="#047857" stroke-width="2" fill="none"/>
+    <path d="M 160,42 A 118,118 0 1,1 159,42.5" stroke="#10B981" stroke-width="2" fill="none"/>
+
+    <!-- Marker at Beginning of Round -->
+    <circle cx="160" cy="30" r="8" fill="#EF4444"/>
+    <text x="160" y="16" fill="#DC2626" font-size="11" font-weight="700" text-anchor="middle">МАРКЕР (Початок ряду)</text>
+
+    <!-- Seamless Join Note Inside Circle -->
+    <g transform="translate(160, 140)">
+      <text x="0" y="-20" fill="#065F46" font-size="13" font-weight="800" text-anchor="middle">БЕЗШОВНЕ КОЛО</text>
+      <text x="0" y="0" fill="#047857" font-size="11" font-weight="600" text-anchor="middle">Крайових петель = 0</text>
+      <text x="0" y="18" fill="#334155" font-size="10.5" text-anchor="middle">Формула: Обхват × Щільність</text>
+      <text x="0" y="34" fill="#059669" font-size="10.5" font-weight="700" text-anchor="middle">+ 1 п. для змикання</text>
+    </g>
+
+    <!-- Side Markers for Split -->
+    <circle cx="30" cy="160" r="5" fill="#3B82F6"/>
+    <text x="25" y="180" fill="#2563EB" font-size="10" font-weight="600" text-anchor="end">Бічний шов 1</text>
+    
+    <circle cx="290" cy="160" r="5" fill="#3B82F6"/>
+    <text x="295" y="180" fill="#2563EB" font-size="10" font-weight="600">Бічний шов 2</text>
+
+    <!-- Step / Jogless visual arrow -->
+    <path d="M 165,30 C 180,30 185,55 170,55" stroke="#F59E0B" stroke-width="2.5" fill="none"/>
+    <text x="195" y="48" fill="#D97706" font-size="10.5" font-weight="700">Jogless: підйом дужки</text>
+  </g>
+
+  <!-- Right Side: 3 Technical Guidance Cards -->
+  <g transform="translate(430, 80)">
+    <!-- Card 1: Cable Length Golden Rule -->
+    <rect width="330" height="110" rx="10" fill="url(#ckCardGrad)" stroke="#CBD5E1" stroke-width="1.5" filter="url(#ckShadow)"/>
+    <rect width="330" height="26" rx="10" fill="#ECFDF5"/>
+    <text x="15" y="18" fill="#047857" font-size="12" font-weight="700">1. ПРАВИЛО ДОВЖИНИ ВОЛОСІНІ (ТРОСИКА)</text>
+    <text x="15" y="46" fill="#065F46" font-size="11.5" font-weight="700">Довжина спиць = Обхват деталі − (5–10 см)</text>
+    <text x="15" y="66" fill="#475569" font-size="11">• 40 см: манжети, шапки, горловини</text>
+    <text x="15" y="84" fill="#475569" font-size="11">• 60–80 см: дитячі светри, рукави</text>
+    <text x="15" y="102" fill="#475569" font-size="11">• 80–100 см: тіло светра (дорослі) / Magic Loop</text>
+
+    <!-- Card 2: Density Shift (+5..10%) -->
+    <rect y="125" width="330" height="120" rx="10" fill="url(#ckCardGrad)" stroke="#CBD5E1" stroke-width="1.5" filter="url(#ckShadow)"/>
+    <rect y="125" width="330" height="26" rx="10" fill="#FEF3C7"/>
+    <text x="15" y="143" fill="#B45309" font-size="12" font-weight="700">2. ЩІЛЬНІСТЬ: ПОВОРОТНЕ vs КРУГОВЕ</text>
+    <text x="15" y="172" fill="#0F172A" font-size="11">• У колі <tspan font-weight="700">немає слабких виворітних петель</tspan></text>
+    <text x="15" y="190" fill="#D97706" font-size="11" font-weight="700">⚠ Щільність по колу на 5–10% щільніша!</text>
+    <text x="15" y="210" fill="#334155" font-size="10.5">Зразок в'язати з протяжками позаду або</text>
+    <text x="15" y="228" fill="#334155" font-size="10.5">робити надбавку +1 розмір спиць при потребі.</text>
+
+    <!-- Card 3: Symmetrical Pattern Repeat -->
+    <rect y="260" width="330" height="125" rx="10" fill="url(#ckCardGrad)" stroke="#CBD5E1" stroke-width="1.5" filter="url(#ckShadow)"/>
+    <rect y="260" width="330" height="26" rx="10" fill="#EFF6FF"/>
+    <text x="15" y="278" fill="#1D4ED8" font-size="12" font-weight="700">3. КРАТНІСТЬ РАПОРТІВ ПО КОЛУ</text>
+    <text x="15" y="306" fill="#334155" font-size="11">• Гумка 1×1: <tspan font-weight="700" fill="#1E40AF">кратна 2</tspan></text>
+    <text x="15" y="324" fill="#334155" font-size="11">• Гумка 2×2: <tspan font-weight="700" fill="#1E40AF">кратна 4</tspan> (без залишку!)</text>
+    <text x="15" y="342" fill="#334155" font-size="11">• Французька гумка / ажур: <tspan font-weight="700" fill="#1E40AF">кратна 4 або 6</tspan></text>
+    <text x="15" y="362" fill="#DC2626" font-size="10.5" font-weight="600">Косина гладі: в'яжіть з 2 клубків кожні 2 ряди</text>
+  </g>
+</svg>`,
+  },
+  "ribbing-calculation-chart": {
+    title: "Таблиця стискання та перехід від гумки до основного полотна",
+    caption: "Розрахунок гумки для светра: коефіцієнти стискання 1×1 (K=0.88), 2×2 (K=0.80), патентної (K=0.96) та формула кроку переходу до гладі.",
+    svg: `<svg viewBox="0 0 800 520" role="img" aria-labelledby="diagram-ribbing-title" xmlns="http://www.w3.org/2000/svg" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif">
+  <title id="diagram-ribbing-title">Таблиця стискання та перехід від гумки до основного полотна</title>
+  <defs>
+    <linearGradient id="rbHeadGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#C2410C"/>
+      <stop offset="100%" stop-color="#EA580C"/>
+    </linearGradient>
+    <filter id="rbShadow" x="-5%" y="-5%" width="110%" height="110%">
+      <feDropShadow dx="0" dy="4" stdDeviation="5" flood-opacity="0.07"/>
+    </filter>
+  </defs>
+
+  <rect width="800" height="520" rx="16" fill="#FAFAFA"/>
+  <rect x="12" y="12" width="776" height="496" rx="12" fill="none" stroke="#E2E8F0" stroke-width="1.5"/>
+
+  <!-- Title Badge -->
+  <g transform="translate(30, 32)">
+    <rect width="370" height="30" rx="8" fill="url(#rbHeadGrad)"/>
+    <text x="185" y="20" fill="#FFFFFF" font-size="13" font-weight="700" text-anchor="middle">РОЗРАХУНОК ГУМКИ ДЛЯ СВЕТРА: СТИСКАННЯ ТА ПЕРЕХІД</text>
+  </g>
+
+  <!-- Left: Contraction Comparison Bars -->
+  <g transform="translate(45, 80)">
+    <text x="0" y="20" fill="#0F172A" font-size="14" font-weight="800">1. КОЕФІЦІЄНТИ СТИСКАННЯ РІЗНИХ ТИПІВ ГУМОК</text>
+    
+    <!-- Base Fabric 100% (Stockinette) -->
+    <g transform="translate(0, 45)">
+      <rect width="360" height="36" rx="6" fill="#E2E8F0"/>
+      <text x="14" y="23" fill="#334155" font-size="12" font-weight="700">Лицьова гладь (База: 100% ширини)</text>
+      <text x="345" y="23" fill="#475569" font-size="11" font-weight="600" text-anchor="end">K = 1.00</text>
+    </g>
+
+    <!-- Rib 1x1 (-12..15%) -->
+    <g transform="translate(0, 95)">
+      <rect width="310" height="36" rx="6" fill="#FED7AA" stroke="#EA580C" stroke-width="1.5"/>
+      <text x="14" y="23" fill="#9A3412" font-size="12" font-weight="700">Гумка 1×1 (стискання 12–15%)</text>
+      <text x="295" y="23" fill="#C2410C" font-size="11" font-weight="700" text-anchor="end">K = 0.88</text>
+      <text x="320" y="23" fill="#64748B" font-size="10.5">Кратність 2</text>
+    </g>
+
+    <!-- Rib 2x2 (-18..22%) -->
+    <g transform="translate(0, 145)">
+      <rect width="285" height="36" rx="6" fill="#FFEDD5" stroke="#F97316" stroke-width="2"/>
+      <text x="14" y="23" fill="#C2410C" font-size="12" font-weight="800">Гумка 2×2 (стискання 18–22%)</text>
+      <text x="270" y="23" fill="#EA580C" font-size="11" font-weight="800" text-anchor="end">K = 0.80</text>
+      <text x="295" y="23" fill="#64748B" font-size="10.5">Кратність 4</text>
+    </g>
+
+    <!-- Brioche / Patent (-3..5%) -->
+    <g transform="translate(0, 195)">
+      <rect width="345" height="36" rx="6" fill="#FEF3C7" stroke="#D97706" stroke-width="1.5"/>
+      <text x="14" y="23" fill="#92400E" font-size="12" font-weight="700">Патентна / бріош (стискання 3–5%)</text>
+      <text x="330" y="23" fill="#B45309" font-size="11" font-weight="700" text-anchor="end">K = 0.96</text>
+      <text x="355" y="23" fill="#64748B" font-size="10.5">Кратність 2</text>
+    </g>
+
+    <!-- Double Hollow Rib (-2..3%) -->
+    <g transform="translate(0, 245)">
+      <rect width="352" height="36" rx="6" fill="#F1F5F9" stroke="#94A3B8" stroke-width="1.5"/>
+      <text x="14" y="23" fill="#475569" font-size="12" font-weight="700">Порожниста (подвійна) гумка</text>
+      <text x="335" y="23" fill="#334155" font-size="11" font-weight="700" text-anchor="end">K = 0.98</text>
+      <text x="360" y="23" fill="#64748B" font-size="10.5">Для планок</text>
+    </g>
+
+    <!-- Golden Rule Box -->
+    <g transform="translate(0, 305)">
+      <rect width="370" height="75" rx="8" fill="#FFF7ED" stroke="#FDBA74" stroke-width="1.5"/>
+      <text x="15" y="22" fill="#C2410C" font-size="11.5" font-weight="800">ЗОЛОТЕ ПРАВИЛО СПИЦЬ ДЛЯ ГУМКИ:</text>
+      <text x="15" y="42" fill="#431407" font-size="11">Завжди в'яжіть гумку на спицях на <tspan font-weight="700" fill="#EA580C">0.5–1.0 мм тонших</tspan>,</text>
+      <text x="15" y="60" fill="#431407" font-size="11">ніж основне полотно — це запобігає розхлябаності!</text>
+    </g>
+  </g>
+
+  <!-- Right: Transition & Increase Step Calculation -->
+  <g transform="translate(455, 80)">
+    <text x="0" y="20" fill="#0F172A" font-size="14" font-weight="800">2. АЛГОРИТМ ПЕРЕХОДУ ВІД ГУМКИ ДО ТІЛА</text>
+
+    <!-- Transition Formula Card -->
+    <rect y="45" width="305" height="135" rx="10" fill="#FFFFFF" stroke="#E2E8F0" stroke-width="1.5" filter="url(#rbShadow)"/>
+    <rect y="45" width="305" height="28" rx="10" fill="#FFEDD5"/>
+    <text x="15" y="64" fill="#C2410C" font-size="12" font-weight="700">ФОРМУЛА КРОКУ ДОДАВАННЯ ПЕТЕЛЬ</text>
+    
+    <text x="15" y="94" fill="#334155" font-size="11">Різниця петель: <tspan font-weight="700" fill="#0F172A">Δ = N_тіла − N_гумки</tspan></text>
+    <text x="15" y="116" fill="#334155" font-size="11">Крок додавання: <tspan font-weight="800" fill="#EA580C">Крок = N_гумки ÷ Δ</tspan></text>
+    
+    <rect x="15" y="130" width="275" height="38" rx="6" fill="#F8FAFC"/>
+    <text x="25" y="146" fill="#64748B" font-size="10">Приклад: Гумка 96 п, полотно 120 п (Δ = 24)</text>
+    <text x="25" y="160" fill="#0F172A" font-size="10.5" font-weight="700">96 ÷ 24 = 4 → додавати по 1 п. після кожної 4-ї петлі</text>
+
+    <!-- Anatomical Recommendations Card -->
+    <rect y="200" width="305" height="180" rx="10" fill="#FFFFFF" stroke="#E2E8F0" stroke-width="1.5" filter="url(#rbShadow)"/>
+    <rect y="200" width="305" height="28" rx="10" fill="#F1F5F9"/>
+    <text x="15" y="219" fill="#334155" font-size="12" font-weight="700">ВИСОТА ТА ЕЛАСТИЧНІСТЬ ЗА ЗОНАМИ</text>
+    
+    <text x="15" y="248" fill="#0F172A" font-size="11" font-weight="700">• Манжети рукавів:</text>
+    <text x="25" y="266" fill="#64748B" font-size="10.5">Висота: 5–8 см | K = 0.80–0.85 від зап'ястя</text>
+    
+    <text x="15" y="288" fill="#0F172A" font-size="11" font-weight="700">• Низ светра:</text>
+    <text x="25" y="306" fill="#64748B" font-size="10.5">Висота: 6–10 см | K = 0.80 (2×2) або 0.88 (1×1)</text>
+
+    <text x="15" y="328" fill="#0F172A" font-size="11" font-weight="700">• Горловина:</text>
+    <text x="25" y="346" fill="#64748B" font-size="10.5">Висота: 3–5 см (стійка 8–12 см) | Набір 80–85%</text>
+    <text x="25" y="364" fill="#16A34A" font-size="10" font-weight="700">✓ Закриття голкою (італійський шов) для еластичності</text>
+  </g>
+</svg>`,
+  },
+  "humka-dlya-svetra": {
+    title: "Таблиця стискання та перехід від гумки до основного полотна",
+    caption: "Розрахунок гумки для светра: коефіцієнти стискання 1×1 (K=0.88), 2×2 (K=0.80), патентної (K=0.96) та формула кроку переходу до гладі.",
+    svg: `<svg viewBox="0 0 800 520" role="img" aria-labelledby="diagram-ribbing-title" xmlns="http://www.w3.org/2000/svg" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif">
+  <title id="diagram-ribbing-title">Таблиця стискання та перехід від гумки до основного полотна</title>
+  <defs>
+    <linearGradient id="rbHeadGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#C2410C"/>
+      <stop offset="100%" stop-color="#EA580C"/>
+    </linearGradient>
+    <filter id="rbShadow" x="-5%" y="-5%" width="110%" height="110%">
+      <feDropShadow dx="0" dy="4" stdDeviation="5" flood-opacity="0.07"/>
+    </filter>
+  </defs>
+
+  <rect width="800" height="520" rx="16" fill="#FAFAFA"/>
+  <rect x="12" y="12" width="776" height="496" rx="12" fill="none" stroke="#E2E8F0" stroke-width="1.5"/>
+
+  <!-- Title Badge -->
+  <g transform="translate(30, 32)">
+    <rect width="370" height="30" rx="8" fill="url(#rbHeadGrad)"/>
+    <text x="185" y="20" fill="#FFFFFF" font-size="13" font-weight="700" text-anchor="middle">РОЗРАХУНОК ГУМКИ ДЛЯ СВЕТРА: СТИСКАННЯ ТА ПЕРЕХІД</text>
+  </g>
+
+  <!-- Left: Contraction Comparison Bars -->
+  <g transform="translate(45, 80)">
+    <text x="0" y="20" fill="#0F172A" font-size="14" font-weight="800">1. КОЕФІЦІЄНТИ СТИСКАННЯ РІЗНИХ ТИПІВ ГУМОК</text>
+    
+    <!-- Base Fabric 100% (Stockinette) -->
+    <g transform="translate(0, 45)">
+      <rect width="360" height="36" rx="6" fill="#E2E8F0"/>
+      <text x="14" y="23" fill="#334155" font-size="12" font-weight="700">Лицьова гладь (База: 100% ширини)</text>
+      <text x="345" y="23" fill="#475569" font-size="11" font-weight="600" text-anchor="end">K = 1.00</text>
+    </g>
+
+    <!-- Rib 1x1 (-12..15%) -->
+    <g transform="translate(0, 95)">
+      <rect width="310" height="36" rx="6" fill="#FED7AA" stroke="#EA580C" stroke-width="1.5"/>
+      <text x="14" y="23" fill="#9A3412" font-size="12" font-weight="700">Гумка 1×1 (стискання 12–15%)</text>
+      <text x="295" y="23" fill="#C2410C" font-size="11" font-weight="700" text-anchor="end">K = 0.88</text>
+      <text x="320" y="23" fill="#64748B" font-size="10.5">Кратність 2</text>
+    </g>
+
+    <!-- Rib 2x2 (-18..22%) -->
+    <g transform="translate(0, 145)">
+      <rect width="285" height="36" rx="6" fill="#FFEDD5" stroke="#F97316" stroke-width="2"/>
+      <text x="14" y="23" fill="#C2410C" font-size="12" font-weight="800">Гумка 2×2 (стискання 18–22%)</text>
+      <text x="270" y="23" fill="#EA580C" font-size="11" font-weight="800" text-anchor="end">K = 0.80</text>
+      <text x="295" y="23" fill="#64748B" font-size="10.5">Кратність 4</text>
+    </g>
+
+    <!-- Brioche / Patent (-3..5%) -->
+    <g transform="translate(0, 195)">
+      <rect width="345" height="36" rx="6" fill="#FEF3C7" stroke="#D97706" stroke-width="1.5"/>
+      <text x="14" y="23" fill="#92400E" font-size="12" font-weight="700">Патентна / бріош (стискання 3–5%)</text>
+      <text x="330" y="23" fill="#B45309" font-size="11" font-weight="700" text-anchor="end">K = 0.96</text>
+      <text x="355" y="23" fill="#64748B" font-size="10.5">Кратність 2</text>
+    </g>
+
+    <!-- Double Hollow Rib (-2..3%) -->
+    <g transform="translate(0, 245)">
+      <rect width="352" height="36" rx="6" fill="#F1F5F9" stroke="#94A3B8" stroke-width="1.5"/>
+      <text x="14" y="23" fill="#475569" font-size="12" font-weight="700">Порожниста (подвійна) гумка</text>
+      <text x="335" y="23" fill="#334155" font-size="11" font-weight="700" text-anchor="end">K = 0.98</text>
+      <text x="360" y="23" fill="#64748B" font-size="10.5">Для планок</text>
+    </g>
+
+    <!-- Golden Rule Box -->
+    <g transform="translate(0, 305)">
+      <rect width="370" height="75" rx="8" fill="#FFF7ED" stroke="#FDBA74" stroke-width="1.5"/>
+      <text x="15" y="22" fill="#C2410C" font-size="11.5" font-weight="800">ЗОЛОТЕ ПРАВИЛО СПИЦЬ ДЛЯ ГУМКИ:</text>
+      <text x="15" y="42" fill="#431407" font-size="11">Завжди в'яжіть гумку на спицях на <tspan font-weight="700" fill="#EA580C">0.5–1.0 мм тонших</tspan>,</text>
+      <text x="15" y="60" fill="#431407" font-size="11">ніж основне полотно — це запобігає розхлябаності!</text>
+    </g>
+  </g>
+
+  <!-- Right: Transition & Increase Step Calculation -->
+  <g transform="translate(455, 80)">
+    <text x="0" y="20" fill="#0F172A" font-size="14" font-weight="800">2. АЛГОРИТМ ПЕРЕХОДУ ВІД ГУМКИ ДО ТІЛА</text>
+
+    <!-- Transition Formula Card -->
+    <rect y="45" width="305" height="135" rx="10" fill="#FFFFFF" stroke="#E2E8F0" stroke-width="1.5" filter="url(#rbShadow)"/>
+    <rect y="45" width="305" height="28" rx="10" fill="#FFEDD5"/>
+    <text x="15" y="64" fill="#C2410C" font-size="12" font-weight="700">ФОРМУЛА КРОКУ ДОДАВАННЯ ПЕТЕЛЬ</text>
+    
+    <text x="15" y="94" fill="#334155" font-size="11">Різниця петель: <tspan font-weight="700" fill="#0F172A">Δ = N_тіла − N_гумки</tspan></text>
+    <text x="15" y="116" fill="#334155" font-size="11">Крок додавання: <tspan font-weight="800" fill="#EA580C">Крок = N_гумки ÷ Δ</tspan></text>
+    
+    <rect x="15" y="130" width="275" height="38" rx="6" fill="#F8FAFC"/>
+    <text x="25" y="146" fill="#64748B" font-size="10">Приклад: Гумка 96 п, полотно 120 п (Δ = 24)</text>
+    <text x="25" y="160" fill="#0F172A" font-size="10.5" font-weight="700">96 ÷ 24 = 4 → додавати по 1 п. після кожної 4-ї петлі</text>
+
+    <!-- Anatomical Recommendations Card -->
+    <rect y="200" width="305" height="180" rx="10" fill="#FFFFFF" stroke="#E2E8F0" stroke-width="1.5" filter="url(#rbShadow)"/>
+    <rect y="200" width="305" height="28" rx="10" fill="#F1F5F9"/>
+    <text x="15" y="219" fill="#334155" font-size="12" font-weight="700">ВИСОТА ТА ЕЛАСТИЧНІСТЬ ЗА ЗОНАМИ</text>
+    
+    <text x="15" y="248" fill="#0F172A" font-size="11" font-weight="700">• Манжети рукавів:</text>
+    <text x="25" y="266" fill="#64748B" font-size="10.5">Висота: 5–8 см | K = 0.80–0.85 від зап'ястя</text>
+    
+    <text x="15" y="288" fill="#0F172A" font-size="11" font-weight="700">• Низ светра:</text>
+    <text x="25" y="306" fill="#64748B" font-size="10.5">Висота: 6–10 см | K = 0.80 (2×2) або 0.88 (1×1)</text>
+
+    <text x="15" y="328" fill="#0F172A" font-size="11" font-weight="700">• Горловина:</text>
+    <text x="25" y="346" fill="#64748B" font-size="10.5">Висота: 3–5 см (стійка 8–12 см) | Набір 80–85%</text>
+    <text x="25" y="364" fill="#16A34A" font-size="10" font-weight="700">✓ Закриття голкою (італійський шов) для еластичності</text>
+  </g>
+</svg>`,
+  },
 };
 
 function escapeHtml(value: string) {

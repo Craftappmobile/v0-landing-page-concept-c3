@@ -252,6 +252,36 @@ export const KNOWN_VIDEOS: Record<string, YouTubeVideoData> = {
     channel: "Candy-Yarn",
     image: "/images/videos/yt-TgTtR0h_FQU.jpg",
   },
+  "HFJy-IVgFco": {
+    id: "HFJy-IVgFco",
+    title: "Светр спицями. Спущене плече. Покроковий МК для початківців",
+    channel: "Марічка Ревва",
+    image: "/images/videos/yt-HFJy-IVgFco.jpg",
+  },
+  "i2uEKbG6CJg": {
+    id: "i2uEKbG6CJg",
+    title: "В'яжемо светр спицями: розрахунок вільного силуету зі спущеним плечем",
+    channel: "Needleworksofi",
+    image: "/images/videos/yt-i2uEKbG6CJg.jpg",
+  },
+  "LSMK0Mze8w4": {
+    id: "LSMK0Mze8w4",
+    title: "Як зʼєднати петлі в коло: безшовне кругове вʼязання для початківців",
+    channel: "Вʼязання з Юлією Савлюк",
+    image: "/images/videos/yt-LSMK0Mze8w4.jpg",
+  },
+  "xWGAa1JMyDc": {
+    id: "xWGAa1JMyDc",
+    title: "Резинка 1×1 спицями: еластичний край та правильний натяг петель",
+    channel: "Royalknits",
+    image: "/images/videos/yt-xWGAa1JMyDc.jpg",
+  },
+  "KGUSSc8e47U": {
+    id: "KGUSSc8e47U",
+    title: "Як вʼязати резинку спицями: розрахунок стискання для манжет і низу",
+    channel: "Котики Вʼяжуть",
+    image: "/images/videos/yt-KGUSSc8e47U.jpg",
+  },
 };
 
 function escapeHtml(str: string) {
