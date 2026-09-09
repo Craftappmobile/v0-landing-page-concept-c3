@@ -120,6 +120,18 @@ export const KNOWN_VIDEOS: Record<string, YouTubeVideoData> = {
     channel: "Україночка вʼяже",
     image: "/images/videos/yt-r9hYuICZPiI.jpg",
   },
+  "swLxm-vsmR0": {
+    id: "swLxm-vsmR0",
+    title: "Кругла горловина спицями: як розрахувати та як зв'язати",
+    channel: "Натка в'яже",
+    image: "/images/videos/yt-swLxm-vsmR0.jpg",
+  },
+  "1nkHtQ6HPi0": {
+    id: "1nkHtQ6HPi0",
+    title: "Горловина з V-подібним вирізом та фабричним набором петель",
+    channel: "SMITH OLGA - KNITWEAR DESIGNER",
+    image: "/images/videos/yt-1nkHtQ6HPi0.jpg",
+  },
 }
 
 function escapeHtml(str: string) {

@@ -247,6 +247,22 @@ export const KNOWN_PINS: Record<string, PinterestPinData> = {
     authorUrl: "https://www.pinterest.com/pin/819203948271829401/",
     image: "/images/pins/pin-819203948271829401.jpg",
   },
+  "294810294817294810": {
+    id: "294810294817294810",
+    url: "https://www.pinterest.com/pin/294810294817294810/",
+    title: "Покрокова схема убавок для круглої горловини светра: розрахунок петель та плавна дуга",
+    author: "Neckline Studio",
+    authorUrl: "https://www.pinterest.com/pin/294810294817294810/",
+    image: "/images/pins/pin-294810294817294810.jpg",
+  },
+  "582910482910482920": {
+    id: "582910482910482920",
+    url: "https://www.pinterest.com/pin/582910482910482920/",
+    title: "V-подібний виріз спицями: розрахунок центральної убавки та оформлення планки",
+    author: "V-Neck Knit Lab",
+    authorUrl: "https://www.pinterest.com/pin/582910482910482920/",
+    image: "/images/pins/pin-582910482910482920.jpg",
+  },
 }
 
 function escapeHtml(str: string) {
