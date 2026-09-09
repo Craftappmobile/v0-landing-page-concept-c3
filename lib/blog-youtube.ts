@@ -60,6 +60,18 @@ export const KNOWN_VIDEOS: Record<string, YouTubeVideoData> = {
     channel: "Оксана Недошитко",
     image: "/images/videos/yt-Di3oUr1qOWk.jpg",
   },
+  "cIXfO_of-vM": {
+    id: "cIXfO_of-vM",
+    title: "Як зв'язати дитячий светр спицями: розрахунок петель, безшовний реглан",
+    channel: "Тетяна Чорна",
+    image: "/images/videos/yt-cIXfO_of-vM.jpg",
+  },
+  "mU6K26xXE6Q": {
+    id: "mU6K26xXE6Q",
+    title: "Светрик для дівчинки регланом зверху: покроковий майстер-клас",
+    channel: "Natas knitting & life",
+    image: "/images/videos/yt-mU6K26xXE6Q.jpg",
+  },
 }
 
 function escapeHtml(str: string) {

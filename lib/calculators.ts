@@ -311,12 +311,11 @@ export function getCalculatorForPost(postSlug: string): CalculatorDefinition | n
   if (slugLower.includes("kruhove") || slugLower.includes("krugove")) return getCalculatorBySlug("kruhove") || getCalculatorBySlug("krugove")
   if (slugLower.includes("sektsiyna")) return getCalculatorBySlug("sektsiyna")
   if (slugLower.includes("ubavky") || slugLower.includes("dobavky")) return getCalculatorBySlug("ubavky")
-  if (slugLower.includes("vyriz")) return getCalculatorBySlug("vyriz")
+  if (slugLower.includes("dytyachyy") || slugLower.includes("kombinezon")) return getCalculatorBySlug("dytyachyy")
   if (slugLower.includes("svetr") || slugLower.includes("dzhemper")) return getCalculatorBySlug("svetr") || getCalculatorBySlug("rahlan")
   if (slugLower.includes("zhaket")) return getCalculatorBySlug("zhaket")
   if (slugLower.includes("zhilet")) return getCalculatorBySlug("zhilet")
   if (slugLower.includes("sharf") || slugLower.includes("snud")) return getCalculatorBySlug("sharf")
-  if (slugLower.includes("dytyachyy") || slugLower.includes("kombinezon")) return getCalculatorBySlug("dytyachyy")
   if (slugLower.includes("skladannya")) return getCalculatorBySlug("skladannya")
 
   return getCalculatorBySlug("shchilnist")

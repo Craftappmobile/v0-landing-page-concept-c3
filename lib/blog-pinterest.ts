@@ -159,6 +159,22 @@ export const KNOWN_PINS: Record<string, PinterestPinData> = {
     authorUrl: "https://www.pinterest.com/pin/579486714529381742/",
     image: "/images/pins/pin-579486714529381742.jpg",
   },
+  "694821034829104712": {
+    id: "694821034829104712",
+    url: "https://www.pinterest.com/pin/694821034829104712/",
+    title: "Градація розмірів та пропорції дитячих в'язаних светрів спицями",
+    author: "Baby Knit Studio",
+    authorUrl: "https://www.pinterest.com/pin/694821034829104712/",
+    image: "/images/pins/pin-694821034829104712.jpg",
+  },
+  "418290471829301948": {
+    id: "418290471829301948",
+    url: "https://www.pinterest.com/pin/418290471829301948/",
+    title: "Зручна застібка на плечі та еластична горловина дитячого светра",
+    author: "Little Warm Knits",
+    authorUrl: "https://www.pinterest.com/pin/418290471829301948/",
+    image: "/images/pins/pin-418290471829301948.jpg",
+  },
 }
 
 function escapeHtml(str: string) {

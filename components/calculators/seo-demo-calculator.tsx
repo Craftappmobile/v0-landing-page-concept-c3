@@ -216,6 +216,24 @@ function getCalculatorConfig(slug: string) {
         },
       }
 
+    case "dytyachyy":
+      return {
+        field1: { label: "Обхват грудей дитини", default: "60", suffix: "см", hint: "Базовий обхват грудей (наприклад, 60 см для 3–4 років)" },
+        field2: { label: "Щільність петель після ВТО", default: "22", suffix: "п / 10 см", hint: "Кількість петель у 10 см зразка" },
+        field3: { label: "Запас на виріст та свободу", default: "5", suffix: "см", hint: "Рекомендований запас 4–6 см для дитячого светра" },
+        calculate: (v1: number, v2: number, v3: number) => {
+          const totalWidth = v1 + v3
+          const rawStitches = totalWidth * (v2 / 10)
+          const stitches = Math.round(rawStitches / 2) * 2
+          const half = stitches / 2
+          return {
+            title: "Петлі для дитячого светра",
+            value: `${stitches} петель (${half} п. перед / спинка)`,
+            note: `Для обхвату ${v1} см із запасом на виріст +${v3} см (разом ${totalWidth} см) наберіть ${stitches} петель по колу або по ${half} п. на поличку та спинку.`,
+          }
+        },
+      }
+
     // Default garment / sweater / cardigan / oversize / fit calculator
     default:
       return {
