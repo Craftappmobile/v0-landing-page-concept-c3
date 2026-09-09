@@ -191,6 +191,22 @@ export const KNOWN_PINS: Record<string, PinterestPinData> = {
     authorUrl: "https://www.pinterest.com/pin/719482019482038192/",
     image: "/images/pins/pin-719482019482038192.jpg",
   },
+  "829104719283019284": {
+    id: "829104719283019284",
+    url: "https://www.pinterest.com/pin/829104719283019284/",
+    title: "Скільки мотків пряжі потрібно на светр: таблиця товщини нитки та підрахунок ваги",
+    author: "Yarn Balance Studio",
+    authorUrl: "https://www.pinterest.com/pin/829104719283019284/",
+    image: "/images/pins/pin-829104719283019284.jpg",
+  },
+  "938102948172940182": {
+    id: "938102948172940182",
+    url: "https://www.pinterest.com/pin/938102948172940182/",
+    title: "Зважування зразка на вагах для точного розрахунку площі та витрати пряжі",
+    author: "Knit Calculation Lab",
+    authorUrl: "https://www.pinterest.com/pin/938102948172940182/",
+    image: "/images/pins/pin-938102948172940182.jpg",
+  },
 }
 
 function escapeHtml(str: string) {

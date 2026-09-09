@@ -251,6 +251,25 @@ function getCalculatorConfig(slug: string) {
         },
       }
 
+    case "vytrata":
+      return {
+        field1: { label: "Орієнтовний метраж на виріб", default: "1150", suffix: "метрів", hint: "Зазвичай 1000–1400 м на класичний светр" },
+        field2: { label: "Метраж одного мотка", default: "250", suffix: "м / моток", hint: "Довжина нитки в одному мотку за етикеткою" },
+        field3: { label: "Вага одного мотка", default: "100", suffix: "грамів", hint: "Фасування пряжі (50 г або 100 г)" },
+        calculate: (v1: number, v2: number, v3: number) => {
+          const skeinMeters = Math.max(1, v2)
+          const baseSkeins = Math.ceil(v1 / skeinMeters)
+          const safetyMeters = v1 * 1.1
+          const safetySkeins = Math.ceil(safetyMeters / skeinMeters)
+          const totalWeight = safetySkeins * v3
+          return {
+            title: "Рекомендована кількість мотків",
+            value: `${safetySkeins} мотків (${totalWeight} г)`,
+            note: `Базова потреба: ${baseSkeins} мотків (${v1} м). З обов'язковим запасом +10% на зразок та хвостики (${Math.round(safetyMeters)} м) купуйте ${safetySkeins} мотків по ${v3} г.`,
+          }
+        },
+      }
+
     // Default garment / sweater / cardigan / oversize / fit calculator
     default:
       return {

@@ -84,6 +84,18 @@ export const KNOWN_VIDEOS: Record<string, YouTubeVideoData> = {
     channel: "Yuliya Kisil про в'язання",
     image: "/images/videos/yt-DMm7GnC_Biw.jpg",
   },
+  "-6dtCI00uWY": {
+    id: "-6dtCI00uWY",
+    title: "Як розрахувати витрати пряжі: скільки пряжі потрібно на светр",
+    channel: "Вʼязання з Юлією Савлюк",
+    image: "/images/videos/yt--6dtCI00uWY.jpg",
+  },
+  "SJIwGglNGTo": {
+    id: "SJIwGglNGTo",
+    title: "Розрахунки для ідеального светра спицями: покрокова інструкція",
+    channel: "Вʼязання з Юлією Савлюк",
+    image: "/images/videos/yt-SJIwGglNGTo.jpg",
+  },
 }
 
 function escapeHtml(str: string) {
