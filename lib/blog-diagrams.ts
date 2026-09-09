@@ -192,21 +192,91 @@ const BLOG_DIAGRAMS: Record<string, BlogDiagramDefinition> = {
 </svg>`,
   },
   "neckline-basic": {
-    title: "Схема базової горловини",
+    title: "Схема округлого вирізу горловини",
     caption: "Схема горловини: плечі, виріз, центральні петлі та зони убавок для формування округлої форми.",
-    svg: `<svg viewBox="0 0 640 420" role="img" aria-labelledby="diagram-neckline-basic-title" xmlns="http://www.w3.org/2000/svg">
-  <title id="diagram-neckline-basic-title">Схема базової горловини</title>
-  <path d="M170 108 H470 V342 H170Z" fill="#f7efe7" stroke="#2e9e3e" stroke-width="5" stroke-linejoin="round"/>
-  <path d="M245 108 Q320 210 395 108" fill="#ffffff" stroke="#d97060" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/>
-  <line x1="245" y1="88" x2="395" y2="88" stroke="#2f3430" stroke-width="2"/>
-  <path d="M245 80 V96 M395 80 V96" stroke="#2f3430" stroke-width="2"/>
-  <text x="320" y="66" text-anchor="middle" font-size="21" fill="#2f3430">ширина горловини</text>
-  <path d="M270 128 Q288 166 306 182" fill="none" stroke="#d97060" stroke-width="3" stroke-dasharray="7 8"/>
-  <path d="M370 128 Q352 166 334 182" fill="none" stroke="#d97060" stroke-width="3" stroke-dasharray="7 8"/>
-  <text x="206" y="150" font-size="20" fill="#2f3430">плече</text>
-  <text x="410" y="150" font-size="20" fill="#2f3430">плече</text>
-  <text x="320" y="244" text-anchor="middle" font-size="21" fill="#2f3430">виріз</text>
-  <text x="320" y="292" text-anchor="middle" font-size="19" fill="#2f3430">зони убавок</text>
+    svg: `<svg viewBox="0 0 680 440" xmlns="http://www.w3.org/2000/svg" font-family="sans-serif" role="img" aria-labelledby="diagram-neckline-round-title diagram-neckline-round-desc">
+  <title id="diagram-neckline-round-title">Схема округлого вирізу горловини</title>
+  <desc id="diagram-neckline-round-desc">Деталь переду або спинки; зверху плечі з обох боків, між ними виріз: центральні петлі закривають одразу, далі сходинками йдуть зони убавок до плечей. Показано ширину горловини та глибину вирізу.</desc>
+  <path d="M120 120 L250 120 L250 140 L262.5 140 L262.5 160 L275 160 L275 180 L287.5 180 L287.5 200 L300 200 L380 200 L392.5 200 L392.5 180 L405 180 L405 160 L417.5 160 L417.5 140 L430 140 L430 120 L560 120 L560 400 L120 400 Z" fill="#F1EFE8" stroke="#5F5E5A" stroke-width="1.2" stroke-linejoin="round"/>
+  <text x="340" y="330" text-anchor="middle" font-size="13" fill="#5F5E5A">перед / спинка</text>
+  <path d="M250 120 Q265 190 300 200 L380 200 Q415 190 430 120" fill="none" stroke="#5F5E5A" stroke-width="0.8" stroke-dasharray="3 3"/>
+  <g fill="none" stroke="#D85A30" stroke-width="2.4" stroke-linejoin="round">
+    <path d="M250 120 L250 140 L262.5 140 L262.5 160 L275 160 L275 180 L287.5 180 L287.5 200 L300 200"/>
+    <path d="M430 120 L430 140 L417.5 140 L417.5 160 L405 160 L405 180 L392.5 180 L392.5 200 L380 200"/>
+  </g>
+  <text x="200" y="168" text-anchor="middle" font-size="12" fill="#993C1D">зона</text>
+  <text x="200" y="184" text-anchor="middle" font-size="12" fill="#993C1D">убавок</text>
+  <text x="480" y="168" text-anchor="middle" font-size="12" fill="#993C1D">зона</text>
+  <text x="480" y="184" text-anchor="middle" font-size="12" fill="#993C1D">убавок</text>
+  <line x1="300" y1="200" x2="380" y2="200" stroke="#0F6E56" stroke-width="3" stroke-linecap="round"/>
+  <text x="340" y="222" text-anchor="middle" font-size="12" fill="#0F6E56">центральні петлі</text>
+  <text x="340" y="237" text-anchor="middle" font-size="11" fill="#0F6E56">(закрити за один раз)</text>
+  <text x="340" y="160" text-anchor="middle" font-size="13" font-weight="500" fill="#2C2C2A">виріз</text>
+  <g stroke="#5F5E5A" stroke-width="1">
+    <line x1="120" y1="104" x2="250" y2="104"/><line x1="120" y1="99" x2="120" y2="109"/><line x1="250" y1="99" x2="250" y2="109"/>
+    <line x1="430" y1="104" x2="560" y2="104"/><line x1="430" y1="99" x2="430" y2="109"/><line x1="560" y1="99" x2="560" y2="109"/>
+  </g>
+  <text x="185" y="92" text-anchor="middle" font-size="12" fill="#5F5E5A">плече</text>
+  <text x="495" y="92" text-anchor="middle" font-size="12" fill="#5F5E5A">плече</text>
+  <g stroke="#5F5E5A" stroke-width="1">
+    <line x1="250" y1="62" x2="430" y2="62"/><line x1="250" y1="57" x2="250" y2="67"/><line x1="430" y1="57" x2="430" y2="67"/>
+  </g>
+  <text x="340" y="50" text-anchor="middle" font-size="12" fill="#5F5E5A">ширина горловини</text>
+  <line x1="430" y1="120" x2="590" y2="120" stroke="#5F5E5A" stroke-width="0.8" stroke-dasharray="3 3"/>
+  <line x1="380" y1="200" x2="590" y2="200" stroke="#5F5E5A" stroke-width="0.8" stroke-dasharray="3 3"/>
+  <g stroke="#5F5E5A" stroke-width="1">
+    <line x1="590" y1="120" x2="590" y2="200"/><line x1="585" y1="120" x2="595" y2="120"/><line x1="585" y1="200" x2="595" y2="200"/>
+  </g>
+  <text x="600" y="156" font-size="12" fill="#5F5E5A">глибина</text>
+  <text x="600" y="172" font-size="12" fill="#5F5E5A">вирізу</text>
+  <line x1="120" y1="422" x2="150" y2="422" stroke="#0F6E56" stroke-width="3" stroke-linecap="round"/>
+  <text x="158" y="426" font-size="11" fill="#5F5E5A">центральні петлі — закриваються одразу</text>
+  <line x1="390" y1="422" x2="420" y2="422" stroke="#D85A30" stroke-width="2.4"/>
+  <text x="428" y="426" font-size="11" fill="#5F5E5A">убавки сходинками з обох боків</text>
+</svg>`,
+  },
+  "neckline-round": {
+    title: "Схема округлого вирізу горловини",
+    caption: "Схема горловини: плечі, виріз, центральні петлі та зони убавок для формування округлої форми.",
+    svg: `<svg viewBox="0 0 680 440" xmlns="http://www.w3.org/2000/svg" font-family="sans-serif" role="img" aria-labelledby="diagram-neckline-round-title diagram-neckline-round-desc">
+  <title id="diagram-neckline-round-title">Схема округлого вирізу горловини</title>
+  <desc id="diagram-neckline-round-desc">Деталь переду або спинки; зверху плечі з обох боків, між ними виріз: центральні петлі закривають одразу, далі сходинками йдуть зони убавок до плечей. Показано ширину горловини та глибину вирізу.</desc>
+  <path d="M120 120 L250 120 L250 140 L262.5 140 L262.5 160 L275 160 L275 180 L287.5 180 L287.5 200 L300 200 L380 200 L392.5 200 L392.5 180 L405 180 L405 160 L417.5 160 L417.5 140 L430 140 L430 120 L560 120 L560 400 L120 400 Z" fill="#F1EFE8" stroke="#5F5E5A" stroke-width="1.2" stroke-linejoin="round"/>
+  <text x="340" y="330" text-anchor="middle" font-size="13" fill="#5F5E5A">перед / спинка</text>
+  <path d="M250 120 Q265 190 300 200 L380 200 Q415 190 430 120" fill="none" stroke="#5F5E5A" stroke-width="0.8" stroke-dasharray="3 3"/>
+  <g fill="none" stroke="#D85A30" stroke-width="2.4" stroke-linejoin="round">
+    <path d="M250 120 L250 140 L262.5 140 L262.5 160 L275 160 L275 180 L287.5 180 L287.5 200 L300 200"/>
+    <path d="M430 120 L430 140 L417.5 140 L417.5 160 L405 160 L405 180 L392.5 180 L392.5 200 L380 200"/>
+  </g>
+  <text x="200" y="168" text-anchor="middle" font-size="12" fill="#993C1D">зона</text>
+  <text x="200" y="184" text-anchor="middle" font-size="12" fill="#993C1D">убавок</text>
+  <text x="480" y="168" text-anchor="middle" font-size="12" fill="#993C1D">зона</text>
+  <text x="480" y="184" text-anchor="middle" font-size="12" fill="#993C1D">убавок</text>
+  <line x1="300" y1="200" x2="380" y2="200" stroke="#0F6E56" stroke-width="3" stroke-linecap="round"/>
+  <text x="340" y="222" text-anchor="middle" font-size="12" fill="#0F6E56">центральні петлі</text>
+  <text x="340" y="237" text-anchor="middle" font-size="11" fill="#0F6E56">(закрити за один раз)</text>
+  <text x="340" y="160" text-anchor="middle" font-size="13" font-weight="500" fill="#2C2C2A">виріз</text>
+  <g stroke="#5F5E5A" stroke-width="1">
+    <line x1="120" y1="104" x2="250" y2="104"/><line x1="120" y1="99" x2="120" y2="109"/><line x1="250" y1="99" x2="250" y2="109"/>
+    <line x1="430" y1="104" x2="560" y2="104"/><line x1="430" y1="99" x2="430" y2="109"/><line x1="560" y1="99" x2="560" y2="109"/>
+  </g>
+  <text x="185" y="92" text-anchor="middle" font-size="12" fill="#5F5E5A">плече</text>
+  <text x="495" y="92" text-anchor="middle" font-size="12" fill="#5F5E5A">плече</text>
+  <g stroke="#5F5E5A" stroke-width="1">
+    <line x1="250" y1="62" x2="430" y2="62"/><line x1="250" y1="57" x2="250" y2="67"/><line x1="430" y1="57" x2="430" y2="67"/>
+  </g>
+  <text x="340" y="50" text-anchor="middle" font-size="12" fill="#5F5E5A">ширина горловини</text>
+  <line x1="430" y1="120" x2="590" y2="120" stroke="#5F5E5A" stroke-width="0.8" stroke-dasharray="3 3"/>
+  <line x1="380" y1="200" x2="590" y2="200" stroke="#5F5E5A" stroke-width="0.8" stroke-dasharray="3 3"/>
+  <g stroke="#5F5E5A" stroke-width="1">
+    <line x1="590" y1="120" x2="590" y2="200"/><line x1="585" y1="120" x2="595" y2="120"/><line x1="585" y1="200" x2="595" y2="200"/>
+  </g>
+  <text x="600" y="156" font-size="12" fill="#5F5E5A">глибина</text>
+  <text x="600" y="172" font-size="12" fill="#5F5E5A">вирізу</text>
+  <line x1="120" y1="422" x2="150" y2="422" stroke="#0F6E56" stroke-width="3" stroke-linecap="round"/>
+  <text x="158" y="426" font-size="11" fill="#5F5E5A">центральні петлі — закриваються одразу</text>
+  <line x1="390" y1="422" x2="420" y2="422" stroke="#D85A30" stroke-width="2.4"/>
+  <text x="428" y="426" font-size="11" fill="#5F5E5A">убавки сходинками з обох боків</text>
 </svg>`,
   },
 }
