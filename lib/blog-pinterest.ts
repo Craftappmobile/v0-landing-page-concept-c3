@@ -311,6 +311,22 @@ export const KNOWN_PINS: Record<string, PinterestPinData> = {
     authorUrl: "https://www.pinterest.com/pin/948104829104829340/",
     image: "/images/pins/pin-948104829104829340.jpg",
   },
+  "958104829104829350": {
+    id: "958104829104829350",
+    url: "https://www.pinterest.com/pin/958104829104829350/",
+    title: "Як розрахувати рапорт ажурного візерунка спицями: баланс петель та симетрія",
+    author: "Lace Knitting Studio",
+    authorUrl: "https://www.pinterest.com/pin/958104829104829350/",
+    image: "/images/pins/pin-958104829104829350.jpg",
+  },
+  "968104829104829360": {
+    id: "968104829104829360",
+    url: "https://www.pinterest.com/pin/968104829104829360/",
+    title: "Покрокова схема суміщення ажуру з проймами та горловиною светра",
+    author: "Knitting Pattern Design",
+    authorUrl: "https://www.pinterest.com/pin/968104829104829360/",
+    image: "/images/pins/pin-968104829104829360.jpg",
+  },
 };
 
 function escapeHtml(str: string) {

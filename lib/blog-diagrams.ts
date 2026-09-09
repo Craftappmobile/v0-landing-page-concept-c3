@@ -628,6 +628,134 @@ const BLOG_DIAGRAMS: Record<string, BlogDiagramDefinition> = {
   </g>
 </svg>`,
   },
+  "lace-repeat": {
+    title: "Схема розрахунку рапорту та балансу ажуру",
+    caption: "Схема структури ажурного ряду: рапорт R, петлі симетрії до та після рапорту, кромкові та закон балансу накидів і убавок.",
+    svg: `<svg width="680" height="420" viewBox="0 0 680 420" xmlns="http://www.w3.org/2000/svg" font-family="sans-serif" role="img" aria-labelledby="diagram-lace-repeat-title diagram-lace-repeat-desc">
+  <title id="diagram-lace-repeat-title">Схема розрахунку рапорту та балансу ажурного візерунка</title>
+  <desc id="diagram-lace-repeat-desc">Анатомія ажурного полотна: кромкові петлі, петлі симетрії, кратні рапорти R та закон рівноваги накидів і убавок.</desc>
+  <defs>
+    <marker id="lace-arrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M2 1L8 5L2 9" fill="none" stroke="#5F5E5A" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+    </marker>
+    <marker id="lace-arrow-left" viewBox="0 0 10 10" refX="2" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M8 1L2 5L8 9" fill="none" stroke="#5F5E5A" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+    </marker>
+  </defs>
+  <text x="340" y="32" text-anchor="middle" font-size="14" font-weight="700" fill="#2C2C2A">Анатомія ряду ажурного візерунка: розподіл петель</text>
+  <rect x="40" y="52" width="600" height="96" rx="12" fill="#F1EFE8" stroke="#5F5E5A" stroke-width="1.4"/>
+  <rect x="40" y="52" width="35" height="96" rx="12" fill="#EAE7DC" stroke="#5F5E5A" stroke-width="1.2"/>
+  <text x="57" y="94" text-anchor="middle" font-size="11" font-weight="700" fill="#5F5E5A">Кр.</text>
+  <text x="57" y="112" text-anchor="middle" font-size="9" fill="#7A7870">1 п.</text>
+  <rect x="75" y="52" width="65" height="96" fill="#FBF9F5" stroke="#5F5E5A" stroke-width="1"/>
+  <text x="107" y="92" text-anchor="middle" font-size="11" font-weight="600" fill="#2C2C2A">До рапорту</text>
+  <text x="107" y="110" text-anchor="middle" font-size="10" fill="#0F6E56">симетрія</text>
+  <rect x="140" y="52" width="145" height="96" fill="#E1F5EE" stroke="#0F6E56" stroke-width="1.8"/>
+  <text x="212" y="86" text-anchor="middle" font-size="13" font-weight="700" fill="#0F6E56">РАПОРТ 1 (R)</text>
+  <text x="212" y="106" text-anchor="middle" font-size="11" fill="#2C2C2A">основний мотив</text>
+  <text x="212" y="124" text-anchor="middle" font-size="10" font-weight="600" fill="#0F6E56">R петель</text>
+  <rect x="285" y="52" width="145" height="96" fill="#E1F5EE" stroke="#0F6E56" stroke-width="1.8"/>
+  <text x="357" y="86" text-anchor="middle" font-size="13" font-weight="700" fill="#0F6E56">РАПОРТ 2 (R)</text>
+  <text x="357" y="106" text-anchor="middle" font-size="11" fill="#2C2C2A">повторення мотиву</text>
+  <text x="357" y="124" text-anchor="middle" font-size="10" font-weight="600" fill="#0F6E56">R петель</text>
+  <rect x="430" y="52" width="95" height="96" fill="#F2F9F6" stroke="#0F6E56" stroke-width="1.4" stroke-dasharray="4 2"/>
+  <text x="477" y="88" text-anchor="middle" font-size="12" font-weight="700" fill="#0F6E56">РАПОРТ k</text>
+  <text x="477" y="108" text-anchor="middle" font-size="10" fill="#5F5E5A">... k-й раз</text>
+  <rect x="525" y="52" width="80" height="96" fill="#FBF9F5" stroke="#5F5E5A" stroke-width="1"/>
+  <text x="565" y="92" text-anchor="middle" font-size="11" font-weight="600" fill="#2C2C2A">Після рапорту</text>
+  <text x="565" y="110" text-anchor="middle" font-size="10" fill="#0F6E56">симетрія</text>
+  <rect x="605" y="52" width="35" height="96" rx="12" fill="#EAE7DC" stroke="#5F5E5A" stroke-width="1.2"/>
+  <text x="622" y="94" text-anchor="middle" font-size="11" font-weight="700" fill="#5F5E5A">Кр.</text>
+  <text x="622" y="112" text-anchor="middle" font-size="9" fill="#7A7870">1 п.</text>
+  <line x1="40" y1="162" x2="640" y2="162" stroke="#5F5E5A" stroke-width="1.2" marker-start="url(#lace-arrow-left)" marker-end="url(#lace-arrow)"/>
+  <text x="340" y="180" text-anchor="middle" font-size="12" font-weight="600" fill="#2C2C2A">Загальна кількість петель набору: N = (k × R) + S + 2 кр.</text>
+  <rect x="40" y="200" width="600" height="152" rx="14" fill="#F8F6F0" stroke="#E2DCD2" stroke-width="1.2"/>
+  <text x="65" y="228" font-size="13" font-weight="700" fill="#2C2C2A">Закон балансу ажуру в кожному ряду та біля пройми:</text>
+  <g transform="translate(65, 245)">
+    <circle cx="20" cy="20" r="14" fill="#FFFFFF" stroke="#0F6E56" stroke-width="2"/>
+    <circle cx="20" cy="20" r="6" fill="none" stroke="#0F6E56" stroke-width="1.8"/>
+    <text x="44" y="18" font-size="12" font-weight="700" fill="#0F6E56">Накид (U / yo): +1 петля</text>
+    <text x="44" y="34" font-size="11" fill="#5F5E5A">Утворює ажурний отвір (просвіт)</text>
+  </g>
+  <g transform="translate(350, 245)">
+    <circle cx="20" cy="20" r="14" fill="#FFFFFF" stroke="#D85A30" stroke-width="2"/>
+    <line x1="13" y1="27" x2="27" y2="13" stroke="#D85A30" stroke-width="2.5" stroke-linecap="round"/>
+    <text x="44" y="18" font-size="12" font-weight="700" fill="#993C1D">2 разом лицьовою (k2tog): −1 петля</text>
+    <text x="44" y="34" font-size="11" fill="#5F5E5A">Зменшення з нахилом вправо</text>
+  </g>
+  <rect x="65" y="295" width="550" height="42" rx="8" fill="#FFFFFF" stroke="#0F6E56" stroke-width="1.2"/>
+  <text x="340" y="321" text-anchor="middle" font-size="13" font-weight="700" fill="#0F6E56">Баланс ряду: Кількість накидів (+1) = Кількість убавок (−1)</text>
+  <g transform="translate(45, 372)">
+    <rect x="0" y="0" width="590" height="34" rx="8" fill="#FEF3F2" stroke="#FECDCA" stroke-width="1"/>
+    <text x="12" y="21" font-size="11" font-weight="600" fill="#B42318">⚠️ Увага біля пройми та горловини:</text>
+    <text x="210" y="21" font-size="11" fill="#475467">якщо для парної убавки не вистачає петель, накид НЕ роблять (в'яжуть гладдю).</text>
+  </g>
+</svg>`,
+  },
+  "azhur": {
+    title: "Схема розрахунку рапорту та балансу ажуру",
+    caption: "Схема структури ажурного ряду: рапорт R, петлі симетрії до та після рапорту, кромкові та закон балансу накидів і убавок.",
+    svg: `<svg width="680" height="420" viewBox="0 0 680 420" xmlns="http://www.w3.org/2000/svg" font-family="sans-serif" role="img" aria-labelledby="diagram-lace-repeat-title diagram-lace-repeat-desc">
+  <title id="diagram-lace-repeat-title">Схема розрахунку рапорту та балансу ажурного візерунка</title>
+  <desc id="diagram-lace-repeat-desc">Анатомія ажурного полотна: кромкові петлі, петлі симетрії, кратні рапорти R та закон рівноваги накидів і убавок.</desc>
+  <defs>
+    <marker id="lace-arrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M2 1L8 5L2 9" fill="none" stroke="#5F5E5A" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+    </marker>
+    <marker id="lace-arrow-left" viewBox="0 0 10 10" refX="2" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M8 1L2 5L8 9" fill="none" stroke="#5F5E5A" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+    </marker>
+  </defs>
+  <text x="340" y="32" text-anchor="middle" font-size="14" font-weight="700" fill="#2C2C2A">Анатомія ряду ажурного візерунка: розподіл петель</text>
+  <rect x="40" y="52" width="600" height="96" rx="12" fill="#F1EFE8" stroke="#5F5E5A" stroke-width="1.4"/>
+  <rect x="40" y="52" width="35" height="96" rx="12" fill="#EAE7DC" stroke="#5F5E5A" stroke-width="1.2"/>
+  <text x="57" y="94" text-anchor="middle" font-size="11" font-weight="700" fill="#5F5E5A">Кр.</text>
+  <text x="57" y="112" text-anchor="middle" font-size="9" fill="#7A7870">1 п.</text>
+  <rect x="75" y="52" width="65" height="96" fill="#FBF9F5" stroke="#5F5E5A" stroke-width="1"/>
+  <text x="107" y="92" text-anchor="middle" font-size="11" font-weight="600" fill="#2C2C2A">До рапорту</text>
+  <text x="107" y="110" text-anchor="middle" font-size="10" fill="#0F6E56">симетрія</text>
+  <rect x="140" y="52" width="145" height="96" fill="#E1F5EE" stroke="#0F6E56" stroke-width="1.8"/>
+  <text x="212" y="86" text-anchor="middle" font-size="13" font-weight="700" fill="#0F6E56">РАПОРТ 1 (R)</text>
+  <text x="212" y="106" text-anchor="middle" font-size="11" fill="#2C2C2A">основний мотив</text>
+  <text x="212" y="124" text-anchor="middle" font-size="10" font-weight="600" fill="#0F6E56">R петель</text>
+  <rect x="285" y="52" width="145" height="96" fill="#E1F5EE" stroke="#0F6E56" stroke-width="1.8"/>
+  <text x="357" y="86" text-anchor="middle" font-size="13" font-weight="700" fill="#0F6E56">РАПОРТ 2 (R)</text>
+  <text x="357" y="106" text-anchor="middle" font-size="11" fill="#2C2C2A">повторення мотиву</text>
+  <text x="357" y="124" text-anchor="middle" font-size="10" font-weight="600" fill="#0F6E56">R петель</text>
+  <rect x="430" y="52" width="95" height="96" fill="#F2F9F6" stroke="#0F6E56" stroke-width="1.4" stroke-dasharray="4 2"/>
+  <text x="477" y="88" text-anchor="middle" font-size="12" font-weight="700" fill="#0F6E56">РАПОРТ k</text>
+  <text x="477" y="108" text-anchor="middle" font-size="10" fill="#5F5E5A">... k-й раз</text>
+  <rect x="525" y="52" width="80" height="96" fill="#FBF9F5" stroke="#5F5E5A" stroke-width="1"/>
+  <text x="565" y="92" text-anchor="middle" font-size="11" font-weight="600" fill="#2C2C2A">Після рапорту</text>
+  <text x="565" y="110" text-anchor="middle" font-size="10" fill="#0F6E56">симетрія</text>
+  <rect x="605" y="52" width="35" height="96" rx="12" fill="#EAE7DC" stroke="#5F5E5A" stroke-width="1.2"/>
+  <text x="622" y="94" text-anchor="middle" font-size="11" font-weight="700" fill="#5F5E5A">Кр.</text>
+  <text x="622" y="112" text-anchor="middle" font-size="9" fill="#7A7870">1 п.</text>
+  <line x1="40" y1="162" x2="640" y2="162" stroke="#5F5E5A" stroke-width="1.2" marker-start="url(#lace-arrow-left)" marker-end="url(#lace-arrow)"/>
+  <text x="340" y="180" text-anchor="middle" font-size="12" font-weight="600" fill="#2C2C2A">Загальна кількість петель набору: N = (k × R) + S + 2 кр.</text>
+  <rect x="40" y="200" width="600" height="152" rx="14" fill="#F8F6F0" stroke="#E2DCD2" stroke-width="1.2"/>
+  <text x="65" y="228" font-size="13" font-weight="700" fill="#2C2C2A">Закон балансу ажуру в кожному ряду та біля пройми:</text>
+  <g transform="translate(65, 245)">
+    <circle cx="20" cy="20" r="14" fill="#FFFFFF" stroke="#0F6E56" stroke-width="2"/>
+    <circle cx="20" cy="20" r="6" fill="none" stroke="#0F6E56" stroke-width="1.8"/>
+    <text x="44" y="18" font-size="12" font-weight="700" fill="#0F6E56">Накид (U / yo): +1 петля</text>
+    <text x="44" y="34" font-size="11" fill="#5F5E5A">Утворює ажурний отвір (просвіт)</text>
+  </g>
+  <g transform="translate(350, 245)">
+    <circle cx="20" cy="20" r="14" fill="#FFFFFF" stroke="#D85A30" stroke-width="2"/>
+    <line x1="13" y1="27" x2="27" y2="13" stroke="#D85A30" stroke-width="2.5" stroke-linecap="round"/>
+    <text x="44" y="18" font-size="12" font-weight="700" fill="#993C1D">2 разом лицьовою (k2tog): −1 петля</text>
+    <text x="44" y="34" font-size="11" fill="#5F5E5A">Зменшення з нахилом вправо</text>
+  </g>
+  <rect x="65" y="295" width="550" height="42" rx="8" fill="#FFFFFF" stroke="#0F6E56" stroke-width="1.2"/>
+  <text x="340" y="321" text-anchor="middle" font-size="13" font-weight="700" fill="#0F6E56">Баланс ряду: Кількість накидів (+1) = Кількість убавок (−1)</text>
+  <g transform="translate(45, 372)">
+    <rect x="0" y="0" width="590" height="34" rx="8" fill="#FEF3F2" stroke="#FECDCA" stroke-width="1"/>
+    <text x="12" y="21" font-size="11" font-weight="600" fill="#B42318">⚠️ Увага біля пройми та горловини:</text>
+    <text x="210" y="21" font-size="11" fill="#475467">якщо для парної убавки не вистачає петель, накид НЕ роблять (в'яжуть гладдю).</text>
+  </g>
+</svg>`,
+  },
 };
 
 function escapeHtml(value: string) {

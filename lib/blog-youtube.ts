@@ -162,6 +162,18 @@ export const KNOWN_VIDEOS: Record<string, YouTubeVideoData> = {
     channel: "Катерина Македон",
     image: "/images/videos/yt-XwwyT-yEv1M.jpg",
   },
+  "y3Ncco9248E": {
+    id: "y3Ncco9248E",
+    title: "Ажурний візерунок спицями: схема та покрокове в’язання",
+    channel: "Катерина Македон",
+    image: "/images/videos/yt-y3Ncco9248E.jpg",
+  },
+  "coO_tbqvcdE": {
+    id: "coO_tbqvcdE",
+    title: "Дуже легкий ажурний візерунок спицями Листочки для початківців",
+    channel: "Royalknits",
+    image: "/images/videos/yt-coO_tbqvcdE.jpg",
+  },
 };
 
 function escapeHtml(str: string) {
