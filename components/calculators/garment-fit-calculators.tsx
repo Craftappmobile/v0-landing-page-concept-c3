@@ -143,7 +143,7 @@ function SocksCalculator() {
       </div>
       <div className="space-y-5">
         <ResultBox title="Результат" value={`${result.stitches} петель`} note={`Підйом: ${result.instep} п · підошва/п'ятка: ${result.heel} п · мисок починати приблизно після ${formatNumber(result.toeStart)} см.`} />
-        <MiniTable rows={[["35–36 розмір", "22–23 см"], ["37–39 розмір", "24–25 см"], ["40–42 розмір", "26–27 см"]]} />
+        <MiniTable rows={[["36–38 (жіночий)", "23–24.5 см"], ["39–41 (універсальний)", "25–26.5 см"], ["42–45 (чоловічий / ЗСУ)", "27–29.5 см"]]} />
       </div>
       <InfoList title="Типові помилки" items={["Не врахувати негативне облягання — шкарпетка збирається складками.", "Не округлити до кратності 4 для спиць.", "Почати мисок запізно й отримати довгу стопу."]} />
       <RelatedLinks links={[["/blog/yak-rozrahuvaty-shkarpetky", "Як розрахувати шкарпетки"], ["/kalkuliatory/shchilnist", "Калькулятор щільності"], ["/#pricing", "Спробувати Premium"]]} />

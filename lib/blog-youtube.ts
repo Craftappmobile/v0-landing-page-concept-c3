@@ -108,6 +108,18 @@ export const KNOWN_VIDEOS: Record<string, YouTubeVideoData> = {
     channel: "Калейдоскоп в'язання",
     image: "/images/videos/yt-nYCo0_0jzwA.jpg",
   },
+  "e13I2YmfKLI": {
+    id: "e13I2YmfKLI",
+    title: "Як звʼязати класичні шкарпетки спицями: детальний майстер-клас",
+    channel: "Pro100knit",
+    image: "/images/videos/yt-e13I2YmfKLI.jpg",
+  },
+  "r9hYuICZPiI": {
+    id: "r9hYuICZPiI",
+    title: "Шкарпетки для ЗСУ спицями: попетельний опис та таблиці під берці",
+    channel: "Україночка вʼяже",
+    image: "/images/videos/yt-r9hYuICZPiI.jpg",
+  },
 }
 
 function escapeHtml(str: string) {

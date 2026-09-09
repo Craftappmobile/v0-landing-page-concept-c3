@@ -289,6 +289,24 @@ function getCalculatorConfig(slug: string) {
         },
       }
 
+    case "shkarpetky":
+      return {
+        field1: { label: "Обхват стопи (по кісточках)", default: "24", suffix: "см", hint: "Найширше місце біля основи пальців" },
+        field2: { label: "Щільність петель після ВТО", default: "28", suffix: "п / 10 см", hint: "Кількість петель у 10 см зразка" },
+        field3: { label: "Коефіцієнт облягання", default: "10", suffix: "%", hint: "Зазвичай 10% (мінус на щільне облягання)" },
+        calculate: (v1: number, v2: number, v3: number) => {
+          const rawStitches = v1 * (v2 / 10)
+          const adjustedStitches = rawStitches * (1 - v3 / 100)
+          const stitches = Math.round(adjustedStitches / 4) * 4
+          const perNeedle = stitches / 4
+          return {
+            title: "Петлі набору для шкарпеток",
+            value: `${stitches} петель (${perNeedle} п на спицю)`,
+            note: `Для обхвату ${v1} см з поправкою -${v3}% наберіть ${stitches} петель. Розподіліть рівно по ${perNeedle} петель на кожну з 4 панчішних спиць.`,
+          }
+        },
+      }
+
     // Default garment / sweater / cardigan / oversize / fit calculator
     default:
       return {

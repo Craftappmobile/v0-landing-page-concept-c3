@@ -231,6 +231,22 @@ export const KNOWN_PINS: Record<string, PinterestPinData> = {
     authorUrl: "https://www.pinterest.com/pin/382910482910482910/",
     image: "/images/pins/pin-382910482910482910.jpg",
   },
+  "728102948182940191": {
+    id: "728102948182940191",
+    url: "https://www.pinterest.com/pin/728102948182940191/",
+    title: "Покроковий розрахунок класичної прямої п'ятки шкарпетки: стінка, заокруглення та клин підйому",
+    author: "Classic Sock Studio",
+    authorUrl: "https://www.pinterest.com/pin/728102948182940191/",
+    image: "/images/pins/pin-728102948182940191.jpg",
+  },
+  "819203948271829401": {
+    id: "819203948271829401",
+    url: "https://www.pinterest.com/pin/819203948271829401/",
+    title: "В'язання міцних шкарпеток під берці для ЗСУ: анатомічний високий паголінок та посилена п'ятка",
+    author: "Tactical Knit Lab",
+    authorUrl: "https://www.pinterest.com/pin/819203948271829401/",
+    image: "/images/pins/pin-819203948271829401.jpg",
+  },
 }
 
 function escapeHtml(str: string) {
