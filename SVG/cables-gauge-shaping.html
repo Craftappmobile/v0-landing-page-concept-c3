@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+  <meta charset="UTF-8">
+  <title>Схема розрахунку светра з косами</title>
+  <style>
+    body { font-family: sans-serif; background: #e5e7eb; display: flex; justify-content: center; align-items: center; min-height: 100vh; margin: 0; padding: 20px; }
+    .card { background: white; border-radius: 16px; padding: 24px; box-shadow: 0 10px 25px rgba(0,0,0,0.1); max-width: 720px; width: 100%; }
+    h2 { margin-top: 0; color: #1e293b; text-align: center; }
+  </style>
+</head>
+<body>
+  <div class="card">
+    <h2>Схема розрахунку светра з косами та аранами</h2>
+    <svg viewBox="0 0 680 430" role="img" aria-labelledby="diagram-cables-gauge-title" xmlns="http://www.w3.org/2000/svg" font-family="sans-serif">
+  <title id="diagram-cables-gauge-title">Схема розрахунку светра з косами: компенсація стягування полотна та перехід від резинки</title>
+  <defs>
+    <marker id="cable-arrow" viewBox="0 0 10 10" refX="6" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M 0 1 L 8 5 L 0 9 z" fill="#0F6E56" />
+    </marker>
+    <marker id="cable-arrow-orange" viewBox="0 0 10 10" refX="6" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M 0 1 L 8 5 L 0 9 z" fill="#D85A30" />
+    </marker>
+  </defs>
+
+  <!-- Background -->
+  <rect width="680" height="430" fill="#FCFAF7" rx="12"/>
+
+  <!-- Top Title -->
+  <rect x="25" y="16" width="630" height="34" rx="6" fill="#F1EFE8" stroke="#E2DCD2" stroke-width="1"/>
+  <text x="340" y="38" text-anchor="middle" font-size="13" font-weight="700" fill="#2C2C2A">АНАТОМІЯ СТЯГУВАННЯ: ЛИЦЬОВА ГЛАДЬ vs РЕЛЬЄФНІ КОСИ / АРАНИ</text>
+
+  <!-- Box 1: Stockinette Swatch -->
+  <g transform="translate(35, 66)">
+    <rect width="280" height="150" rx="8" fill="#FFFFFF" stroke="#5F5E5A" stroke-width="1.2"/>
+    <rect x="0" y="0" width="280" height="28" rx="8" fill="#F4F1EA"/>
+    <text x="140" y="19" text-anchor="middle" font-size="12" font-weight="700" fill="#2C2C2A">1. Лицьова гладь (базова)</text>
+
+    <!-- Visual Swatch -->
+    <rect x="20" y="42" width="80" height="60" rx="4" fill="#EAE7DC" stroke="#5F5E5A" stroke-dasharray="3 3"/>
+    <text x="60" y="76" text-anchor="middle" font-size="11" font-weight="600" fill="#5F5E5A">10 см = 20 п.</text>
+
+    <text x="115" y="58" font-size="12" font-weight="600" fill="#2C2C2A">Ширина деталі: <tspan font-weight="700" fill="#0F6E56">50 см</tspan></text>
+    <text x="115" y="78" font-size="12" fill="#5F5E5A">Петлі: 50 × 2.0 = <tspan font-weight="700" fill="#2C2C2A">100 п.</tspan></text>
+    <text x="115" y="98" font-size="11" fill="#5F5E5A">Коефіцієнт: 1.00 (база)</text>
+
+    <rect x="15" y="118" width="250" height="22" rx="4" fill="#F8F6F0"/>
+    <text x="140" y="133" text-anchor="middle" font-size="10.5" font-weight="500" fill="#5F5E5A">Резинка низу 2×2: 84–90 петель</text>
+  </g>
+
+  <!-- Box 2: Cable Swatch -->
+  <g transform="translate(365, 66)">
+    <rect width="280" height="150" rx="8" fill="#FFFFFF" stroke="#0F6E56" stroke-width="1.5"/>
+    <rect x="0" y="0" width="280" height="28" rx="8" fill="#E1F5EE"/>
+    <text x="140" y="19" text-anchor="middle" font-size="12" font-weight="700" fill="#0F6E56">2. Полотно з косами / аранами</text>
+
+    <!-- Visual Swatch with Cable icon -->
+    <rect x="20" y="42" width="80" height="60" rx="4" fill="#CEEAD6" stroke="#0F6E56"/>
+    <path d="M40 50 Q50 60 40 70 Q30 80 40 90" fill="none" stroke="#0F6E56" stroke-width="2.5"/>
+    <path d="M60 50 Q70 60 60 70 Q50 80 60 90" fill="none" stroke="#0F6E56" stroke-width="2.5"/>
+    <path d="M80 50 Q90 60 80 70 Q70 80 80 90" fill="none" stroke="#0F6E56" stroke-width="2.5"/>
+
+    <text x="115" y="58" font-size="12" font-weight="600" fill="#2C2C2A">Ширина деталі: <tspan font-weight="700" fill="#0F6E56">50 см</tspan></text>
+    <text x="115" y="78" font-size="12" font-weight="700" fill="#0F6E56">10 см = 25–28 петель</text>
+    <text x="115" y="98" font-size="12" fill="#2C2C2A">Потрібно: <tspan font-weight="700" fill="#D85A30">125–135 п.</tspan></text>
+
+    <rect x="15" y="118" width="250" height="22" rx="4" fill="#E8F5E9"/>
+    <text x="140" y="133" text-anchor="middle" font-size="10.5" font-weight="700" fill="#0F6E56">+25–35 петель різниці!</text>
+  </g>
+
+  <!-- Central Transformation Arrow -->
+  <line x1="320" y1="140" x2="360" y2="140" stroke="#0F6E56" stroke-width="2" marker-end="url(#cable-arrow)"/>
+
+  <!-- Transition Strategy: Where to add stitches -->
+  <g transform="translate(35, 230)">
+    <rect width="610" height="106" rx="8" fill="#F1EFE8" stroke="#D8D1C5" stroke-width="1.2"/>
+    <text x="305" y="24" text-anchor="middle" font-size="12" font-weight="700" fill="#2C2C2A">ТЕХНІКА БЕЗДОГАННОГО ПЕРЕХОДУ: РЕЗИНКА ➔ АРАНИ</text>
+
+    <!-- Step A -->
+    <rect x="20" y="36" width="275" height="58" rx="6" fill="#FFFFFF" stroke="#0F6E56" stroke-width="1"/>
+    <text x="35" y="56" font-size="11.5" font-weight="700" fill="#0F6E56">1. В'язання резинки манжети / низу:</text>
+    <text x="35" y="74" font-size="11" fill="#2C2C2A">Спиці на 0.5–1.0 мм тонші. Набір 90 п.</text>
+    <text x="35" y="88" font-size="10" fill="#5F5E5A">Резинка не розширюється дзвіночком.</text>
+
+    <!-- Step B -->
+    <rect x="315" y="36" width="275" height="58" rx="6" fill="#FFFFFF" stroke="#D85A30" stroke-width="1"/>
+    <text x="330" y="56" font-size="11.5" font-weight="700" fill="#D85A30">2. Останній виворітний ряд резинки:</text>
+    <text x="330" y="74" font-size="11" font-weight="700" fill="#2C2C2A">Рівномірні прибавки +28 п. з протяжки</text>
+    <text x="330" y="88" font-size="10" fill="#5F5E5A">Додавати в центрі майбутніх кіс (непомітно!).</text>
+  </g>
+
+  <!-- Bottom Rules Note -->
+  <g transform="translate(35, 348)">
+    <rect width="610" height="68" rx="8" fill="#FFFFFF" stroke="#E2DCD2" stroke-width="1.2"/>
+    <circle cx="20" cy="22" r="8" fill="#D85A30"/>
+    <text x="20" y="26" text-anchor="middle" font-size="10" font-weight="700" fill="#FFFFFF">!</text>
+    <text x="38" y="24" font-size="11" font-weight="700" fill="#2C2C2A">ФОРМУЛА ВИТРАТИ ПРЯЖІ ТА ЦЕНТРУВАННЯ:</text>
+    
+    <text x="38" y="42" font-size="10.5" fill="#5F5E5A">1. <tspan font-weight="600" fill="#2C2C2A">Витрата пряжі:</tspan> закладайте +25–35% до ваги (650–850 г замість 500 г для лицьової гладі).</text>
+    <text x="38" y="58" font-size="10.5" fill="#5F5E5A">2. <tspan font-weight="600" fill="#2C2C2A">Симетрія рапортів:</tspan> головну центральну косу виставляйте строго по осі переду/спинки.</text>
+  </g>
+</svg>
+  </div>
+</body>
+</html>

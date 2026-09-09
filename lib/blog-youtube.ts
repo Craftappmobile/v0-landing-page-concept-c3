@@ -198,6 +198,18 @@ export const KNOWN_VIDEOS: Record<string, YouTubeVideoData> = {
     channel: "dr.Konovalova. Про в'язання українською",
     image: "/images/videos/yt-FXkHpn9pAEA.jpg",
   },
+  "vWtVbEu0CKw": {
+    id: "vWtVbEu0CKw",
+    title: "Ажур і коси, які закохують з першого ряду: Візерунок спицями",
+    channel: "Ksenia Klimenko",
+    image: "/images/videos/yt-vWtVbEu0CKw.jpg",
+  },
+  "No-lqyZ_C4I": {
+    id: "No-lqyZ_C4I",
+    title: "Візерунок Аран спицями: Об’ємні жгути та переплетіння, майстер-клас",
+    channel: "Ksenia Klimenko",
+    image: "/images/videos/yt-No-lqyZ_C4I.jpg",
+  },
 };
 
 function escapeHtml(str: string) {

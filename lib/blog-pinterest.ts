@@ -359,6 +359,22 @@ export const KNOWN_PINS: Record<string, PinterestPinData> = {
     authorUrl: "https://www.pinterest.com/pin/1008104829104829400/",
     image: "/images/pins/pin-1008104829104829400.jpg",
   },
+  "1018104829104829410": {
+    id: "1018104829104829410",
+    url: "https://www.pinterest.com/pin/1018104829104829410/",
+    title: "Як розрахувати светр з косами: коефіцієнт стягування полотна та прибавки",
+    author: "Aran Knitting Studio",
+    authorUrl: "https://www.pinterest.com/pin/1018104829104829410/",
+    image: "/images/pins/pin-1018104829104829410.jpg",
+  },
+  "1028104829104829420": {
+    id: "1028104829104829420",
+    url: "https://www.pinterest.com/pin/1028104829104829420/",
+    title: "Покроковий перехід від резинки до кіс: де додавати петлі для ідеальної форми",
+    author: "Cable Patterns Lab",
+    authorUrl: "https://www.pinterest.com/pin/1028104829104829420/",
+    image: "/images/pins/pin-1028104829104829420.jpg",
+  },
 };
 
 function escapeHtml(str: string) {
