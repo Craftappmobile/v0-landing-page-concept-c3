@@ -234,6 +234,24 @@ export const KNOWN_VIDEOS: Record<string, YouTubeVideoData> = {
     channel: "В'язання від Світлани Заєць",
     image: "/images/videos/yt-148W3fcYSrk.jpg",
   },
+  "Ouv7Li1tSOg": {
+    id: "Ouv7Li1tSOg",
+    title: "Светр «летюча миша» спицями: розбір викрійки та технологія в'язання",
+    channel: "Вязать легко",
+    image: "/images/videos/yt-Ouv7Li1tSOg.jpg",
+  },
+  "0nC-nKOzEwk": {
+    id: "0nC-nKOzEwk",
+    title: "В'яжемо джемпер летюча миша спицями: розрахунок скосу та прибавок",
+    channel: "Модні петельки",
+    image: "/images/videos/yt-0nC-nKOzEwk.jpg",
+  },
+  "TgTtR0h_FQU": {
+    id: "TgTtR0h_FQU",
+    title: "Джемпер-павутинка з кід-мохеру: майстер-клас для початківців",
+    channel: "Candy-Yarn",
+    image: "/images/videos/yt-TgTtR0h_FQU.jpg",
+  },
 };
 
 function escapeHtml(str: string) {

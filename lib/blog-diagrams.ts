@@ -1450,6 +1450,414 @@ const BLOG_DIAGRAMS: Record<string, BlogDiagramDefinition> = {
   </g>
 </svg>`,
   },
+  "dolman-sleeve-construction": {
+    title: "Конструкція рукава «летюча миша»",
+    caption: "Схема суцільнокроєного рукава «летюча миша»: розмах зап'ясть, кут розширення, глибина пройми та напрямки в'язання.",
+    svg: `<svg viewBox="0 0 680 430" role="img" aria-labelledby="diagram-dolman-pattern-title" xmlns="http://www.w3.org/2000/svg" font-family="sans-serif">
+  <title id="diagram-dolman-pattern-title">Схема крою рукава «летюча миша»: суцільнокроєна конструкція, кут нахилу, розширення та манжети</title>
+  <defs>
+    <marker id="dolman-arrow" viewBox="0 0 10 10" refX="6" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M 0 1 L 8 5 L 0 9 z" fill="#D97706" />
+    </marker>
+  </defs>
+
+  <!-- Background -->
+  <rect width="680" height="430" fill="#FCFAF7" rx="12"/>
+
+  <!-- Top Header Title -->
+  <rect x="25" y="16" width="630" height="34" rx="6" fill="#FEF3C7" stroke="#FDE68A" stroke-width="1"/>
+  <text x="340" y="38" text-anchor="middle" font-size="13" font-weight="700" fill="#92400E">КОНСТРУКЦІЯ РУКАВА «ЛЕТЮЧА МИША»: СУЦІЛЬНОКРОЄНЕ РОЗШИРЕННЯ ТА ПРОПОРЦІЇ</text>
+
+  <!-- Left: Visual Silhouette Shape -->
+  <g transform="translate(30, 66)">
+    <rect width="320" height="230" rx="8" fill="#FFFFFF" stroke="#D97706" stroke-width="1.3"/>
+    <rect x="0" y="0" width="320" height="28" rx="8" fill="#FEF3C7"/>
+    <text x="160" y="19" text-anchor="middle" font-size="12" font-weight="700" fill="#92400E">1. Викрійка: цільне полотно (рукав + корпус)</text>
+
+    <!-- Dolman silhouette path -->
+    <!-- Neckline -->
+    <path d="M 130 50 Q 160 62 190 50 L 300 85 L 290 120 L 220 125 Q 185 140 185 210 L 135 210 Q 135 140 100 125 L 30 120 L 20 85 Z" fill="#FFFBEB" stroke="#D97706" stroke-width="1.6"/>
+
+    <!-- Labels on shape -->
+    <text x="160" y="58" text-anchor="middle" font-size="10" font-weight="600" fill="#B45309">Горловина</text>
+    <text x="160" y="190" text-anchor="middle" font-size="11" font-weight="700" fill="#92400E">½ ОГ + свобода</text>
+    <text x="25" y="105" font-size="9.5" font-weight="600" fill="#B45309">Манжета</text>
+    <text x="260" y="105" font-size="9.5" font-weight="600" fill="#B45309">Манжета</text>
+
+    <!-- Dimension annotations -->
+    <line x1="20" y1="42" x2="300" y2="42" stroke="#B45309" stroke-width="1.2" stroke-dasharray="3 3"/>
+    <text x="160" y="38" text-anchor="middle" font-size="10" font-weight="700" fill="#B45309">Розмах від зап'ястя до зап'ястя: 140–155 см</text>
+
+    <!-- Angle indicator -->
+    <path d="M 185 210 Q 185 155 220 125" fill="none" stroke="#DC2626" stroke-width="1.8" stroke-dasharray="2 2"/>
+    <text x="215" y="165" font-size="10.5" font-weight="700" fill="#DC2626">Кут: 28–35°</text>
+  </g>
+
+  <!-- Right: 3 Key Parameters Cards -->
+  <g transform="translate(365, 66)">
+    <rect width="285" height="230" rx="8" fill="#FFFFFF" stroke="#0284C7" stroke-width="1.3"/>
+    <rect x="0" y="0" width="285" height="28" rx="8" fill="#E0F2FE"/>
+    <text x="142" y="19" text-anchor="middle" font-size="12" font-weight="700" fill="#0369A1">2. Ключові параметри розрахунку</text>
+
+    <!-- Item A -->
+    <g transform="translate(14, 38)">
+      <rect width="257" height="52" rx="6" fill="#F0F9FF" stroke="#BAE6FD"/>
+      <text x="10" y="18" font-size="11" font-weight="700" fill="#0369A1">Глибина пройми (точка розширення):</text>
+      <text x="10" y="34" font-size="10.5" fill="#334155">• Класична: <tspan font-weight="700" fill="#0F172A">19–21 см</tspan> | Вільна: <tspan font-weight="700" fill="#0F172A">22–24 см</tspan></text>
+      <text x="10" y="47" font-size="10" fill="#64748B">• Глибока (від лінії талії): 25–28 см</text>
+    </g>
+
+    <!-- Item B -->
+    <g transform="translate(14, 98)">
+      <rect width="257" height="52" rx="6" fill="#F0F9FF" stroke="#BAE6FD"/>
+      <text x="10" y="18" font-size="11" font-weight="700" fill="#0369A1">Ритм добавок по внутрішньому скосу:</text>
+      <text x="10" y="34" font-size="10.5" fill="#334155">• Рівномірний крок: <tspan font-weight="700" fill="#0F172A">у кожному 4–6 ряду</tspan></text>
+      <text x="10" y="47" font-size="10" fill="#64748B">• Біля пахви: прискорені добавки (в кожному 2 р.)</text>
+    </g>
+
+    <!-- Item C -->
+    <g transform="translate(14, 158)">
+      <rect width="257" height="58" rx="6" fill="#F0F9FF" stroke="#BAE6FD"/>
+      <text x="10" y="18" font-size="11" font-weight="700" fill="#0369A1">Свобода та витрата пряжі:</text>
+      <text x="10" y="34" font-size="10.5" fill="#334155">• Свобода облягання: <tspan font-weight="700" fill="#0F172A">+15–25 см</tspan> до ОГ</text>
+      <text x="10" y="49" font-size="10" font-weight="600" fill="#0284C7">• Витрата: на 40–60% більша за базовий светр</text>
+    </g>
+  </g>
+
+  <!-- Bottom Panel: Technology and Direction -->
+  <g transform="translate(30, 310)">
+    <rect width="620" height="100" rx="8" fill="#FFFFFF" stroke="#E2DCD2" stroke-width="1.2"/>
+    <rect x="0" y="0" width="620" height="26" rx="8" fill="#F5F3EF"/>
+    <text x="310" y="18" text-anchor="middle" font-size="11.5" font-weight="700" fill="#2C2C2A">3. НАПРЯМКИ В'ЯЗАННЯ ТА СТАБІЛІЗАЦІЯ КРОЮ</text>
+
+    <g transform="translate(20, 36)">
+      <text x="0" y="18" font-size="11" font-weight="700" fill="#B45309">Варіант 1: Знизу вгору (класика)</text>
+      <text x="0" y="34" font-size="10.5" fill="#475569">• В'яжеться резинка корпусу, потім поступовий набір петель рукавів.</text>
+      <text x="0" y="49" font-size="10" fill="#64748B">• Перевага: легше регулювати довжину тіла та форму вирізу горловини.</text>
+    </g>
+
+    <g transform="translate(330, 36)">
+      <text x="0" y="18" font-size="11" font-weight="700" fill="#0F766E">Варіант 2: Поперечне в'язання (від манжети до манжети)</text>
+      <text x="0" y="34" font-size="10.5" fill="#475569">• В'язання йде суцільним полотном від лівого рукава до правого.</text>
+      <text x="0" y="49" font-size="10" fill="#64748B">• Вертикальні доріжки петель візуально витягують фігуру та не провисають.</text>
+    </g>
+  </g>
+</svg>`,
+  },
+  "letucha-mysha": {
+    title: "Конструкція рукава «летюча миша»",
+    caption: "Схема суцільнокроєного рукава «летюча миша»: розмах зап'ясть, кут розширення, глибина пройми та напрямки в'язання.",
+    svg: `<svg viewBox="0 0 680 430" role="img" aria-labelledby="diagram-dolman-pattern-title" xmlns="http://www.w3.org/2000/svg" font-family="sans-serif">
+  <title id="diagram-dolman-pattern-title">Схема крою рукава «летюча миша»: суцільнокроєна конструкція, кут нахилу, розширення та манжети</title>
+  <defs>
+    <marker id="dolman-arrow" viewBox="0 0 10 10" refX="6" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M 0 1 L 8 5 L 0 9 z" fill="#D97706" />
+    </marker>
+  </defs>
+
+  <!-- Background -->
+  <rect width="680" height="430" fill="#FCFAF7" rx="12"/>
+
+  <!-- Top Header Title -->
+  <rect x="25" y="16" width="630" height="34" rx="6" fill="#FEF3C7" stroke="#FDE68A" stroke-width="1"/>
+  <text x="340" y="38" text-anchor="middle" font-size="13" font-weight="700" fill="#92400E">КОНСТРУКЦІЯ РУКАВА «ЛЕТЮЧА МИША»: СУЦІЛЬНОКРОЄНЕ РОЗШИРЕННЯ ТА ПРОПОРЦІЇ</text>
+
+  <!-- Left: Visual Silhouette Shape -->
+  <g transform="translate(30, 66)">
+    <rect width="320" height="230" rx="8" fill="#FFFFFF" stroke="#D97706" stroke-width="1.3"/>
+    <rect x="0" y="0" width="320" height="28" rx="8" fill="#FEF3C7"/>
+    <text x="160" y="19" text-anchor="middle" font-size="12" font-weight="700" fill="#92400E">1. Викрійка: цільне полотно (рукав + корпус)</text>
+
+    <!-- Dolman silhouette path -->
+    <!-- Neckline -->
+    <path d="M 130 50 Q 160 62 190 50 L 300 85 L 290 120 L 220 125 Q 185 140 185 210 L 135 210 Q 135 140 100 125 L 30 120 L 20 85 Z" fill="#FFFBEB" stroke="#D97706" stroke-width="1.6"/>
+
+    <!-- Labels on shape -->
+    <text x="160" y="58" text-anchor="middle" font-size="10" font-weight="600" fill="#B45309">Горловина</text>
+    <text x="160" y="190" text-anchor="middle" font-size="11" font-weight="700" fill="#92400E">½ ОГ + свобода</text>
+    <text x="25" y="105" font-size="9.5" font-weight="600" fill="#B45309">Манжета</text>
+    <text x="260" y="105" font-size="9.5" font-weight="600" fill="#B45309">Манжета</text>
+
+    <!-- Dimension annotations -->
+    <line x1="20" y1="42" x2="300" y2="42" stroke="#B45309" stroke-width="1.2" stroke-dasharray="3 3"/>
+    <text x="160" y="38" text-anchor="middle" font-size="10" font-weight="700" fill="#B45309">Розмах від зап'ястя до зап'ястя: 140–155 см</text>
+
+    <!-- Angle indicator -->
+    <path d="M 185 210 Q 185 155 220 125" fill="none" stroke="#DC2626" stroke-width="1.8" stroke-dasharray="2 2"/>
+    <text x="215" y="165" font-size="10.5" font-weight="700" fill="#DC2626">Кут: 28–35°</text>
+  </g>
+
+  <!-- Right: 3 Key Parameters Cards -->
+  <g transform="translate(365, 66)">
+    <rect width="285" height="230" rx="8" fill="#FFFFFF" stroke="#0284C7" stroke-width="1.3"/>
+    <rect x="0" y="0" width="285" height="28" rx="8" fill="#E0F2FE"/>
+    <text x="142" y="19" text-anchor="middle" font-size="12" font-weight="700" fill="#0369A1">2. Ключові параметри розрахунку</text>
+
+    <!-- Item A -->
+    <g transform="translate(14, 38)">
+      <rect width="257" height="52" rx="6" fill="#F0F9FF" stroke="#BAE6FD"/>
+      <text x="10" y="18" font-size="11" font-weight="700" fill="#0369A1">Глибина пройми (точка розширення):</text>
+      <text x="10" y="34" font-size="10.5" fill="#334155">• Класична: <tspan font-weight="700" fill="#0F172A">19–21 см</tspan> | Вільна: <tspan font-weight="700" fill="#0F172A">22–24 см</tspan></text>
+      <text x="10" y="47" font-size="10" fill="#64748B">• Глибока (від лінії талії): 25–28 см</text>
+    </g>
+
+    <!-- Item B -->
+    <g transform="translate(14, 98)">
+      <rect width="257" height="52" rx="6" fill="#F0F9FF" stroke="#BAE6FD"/>
+      <text x="10" y="18" font-size="11" font-weight="700" fill="#0369A1">Ритм добавок по внутрішньому скосу:</text>
+      <text x="10" y="34" font-size="10.5" fill="#334155">• Рівномірний крок: <tspan font-weight="700" fill="#0F172A">у кожному 4–6 ряду</tspan></text>
+      <text x="10" y="47" font-size="10" fill="#64748B">• Біля пахви: прискорені добавки (в кожному 2 р.)</text>
+    </g>
+
+    <!-- Item C -->
+    <g transform="translate(14, 158)">
+      <rect width="257" height="58" rx="6" fill="#F0F9FF" stroke="#BAE6FD"/>
+      <text x="10" y="18" font-size="11" font-weight="700" fill="#0369A1">Свобода та витрата пряжі:</text>
+      <text x="10" y="34" font-size="10.5" fill="#334155">• Свобода облягання: <tspan font-weight="700" fill="#0F172A">+15–25 см</tspan> до ОГ</text>
+      <text x="10" y="49" font-size="10" font-weight="600" fill="#0284C7">• Витрата: на 40–60% більша за базовий светр</text>
+    </g>
+  </g>
+
+  <!-- Bottom Panel: Technology and Direction -->
+  <g transform="translate(30, 310)">
+    <rect width="620" height="100" rx="8" fill="#FFFFFF" stroke="#E2DCD2" stroke-width="1.2"/>
+    <rect x="0" y="0" width="620" height="26" rx="8" fill="#F5F3EF"/>
+    <text x="310" y="18" text-anchor="middle" font-size="11.5" font-weight="700" fill="#2C2C2A">3. НАПРЯМКИ В'ЯЗАННЯ ТА СТАБІЛІЗАЦІЯ КРОЮ</text>
+
+    <g transform="translate(20, 36)">
+      <text x="0" y="18" font-size="11" font-weight="700" fill="#B45309">Варіант 1: Знизу вгору (класика)</text>
+      <text x="0" y="34" font-size="10.5" fill="#475569">• В'яжеться резинка корпусу, потім поступовий набір петель рукавів.</text>
+      <text x="0" y="49" font-size="10" fill="#64748B">• Перевага: легше регулювати довжину тіла та форму вирізу горловини.</text>
+    </g>
+
+    <g transform="translate(330, 36)">
+      <text x="0" y="18" font-size="11" font-weight="700" fill="#0F766E">Варіант 2: Поперечне в'язання (від манжети до манжети)</text>
+      <text x="0" y="34" font-size="10.5" fill="#475569">• В'язання йде суцільним полотном від лівого рукава до правого.</text>
+      <text x="0" y="49" font-size="10" fill="#64748B">• Вертикальні доріжки петель візуально витягують фігуру та не провисають.</text>
+    </g>
+  </g>
+</svg>`,
+  },
+  "mohair-calculation-guide": {
+    title: "Розрахунок светра з мохеру",
+    caption: "Особливості в'язання з мохеру: коефіцієнт розтягнення, вибір спиць, мікси з мериносом та золотий стандарт ВТО.",
+    svg: `<svg viewBox="0 0 680 430" role="img" aria-labelledby="diagram-mohair-calc-title" xmlns="http://www.w3.org/2000/svg" font-family="sans-serif">
+  <title id="diagram-mohair-calc-title">Розрахунок светра з мохеру: коефіцієнт розтягнення, вибір спиць, мікси пряжі та витрата</title>
+
+  <!-- Background -->
+  <rect width="680" height="430" fill="#FCFAF7" rx="12"/>
+
+  <!-- Top Title -->
+  <rect x="25" y="16" width="630" height="34" rx="6" fill="#FDF2F8" stroke="#FBCFE8" stroke-width="1"/>
+  <text x="340" y="38" text-anchor="middle" font-size="13" font-weight="700" fill="#9D174D">ОСОБЛИВОСТІ РОЗРАХУНКУ З МОХЕРУ: РОЗТЯГНЕННЯ, СПИЦІ ТА ВИТРАТА ПРЯЖІ</text>
+
+  <!-- Card 1: Gauge & Shrink/Stretch Factor -->
+  <g transform="translate(30, 66)">
+    <rect width="195" height="230" rx="8" fill="#FFFFFF" stroke="#DB2777" stroke-width="1.3"/>
+    <rect x="0" y="0" width="195" height="28" rx="8" fill="#FCE7F3"/>
+    <text x="97" y="19" text-anchor="middle" font-size="12" font-weight="700" fill="#9D174D">1. Коефіцієнт розтягу (K)</text>
+
+    <!-- Swatch illustration -->
+    <g transform="translate(25, 40)">
+      <rect width="145" height="85" rx="6" fill="#FFF1F2" stroke="#F43F5E" stroke-dasharray="3 3"/>
+      <text x="72" y="30" text-anchor="middle" font-size="11" font-weight="700" fill="#E11D48">Зразок 15 × 15 см</text>
+      <text x="72" y="48" text-anchor="middle" font-size="10" fill="#475569">ВТО: ручне прання 30°C</text>
+      <text x="72" y="64" text-anchor="middle" font-size="10" font-weight="600" fill="#BE123C">Сушіння вертикальне!</text>
+    </g>
+
+    <text x="15" y="148" font-size="11" font-weight="700" fill="#9D174D">Коефіцієнт петель:</text>
+    <text x="15" y="166" font-size="10.5" fill="#475569">• 100% кід-мохер: <tspan font-weight="700" fill="#0F172A">0.90 (−10%)</tspan></text>
+    <text x="15" y="184" font-size="10.5" fill="#475569">• Мохер + шовк: <tspan font-weight="700" fill="#0F172A">0.95 (−5%)</tspan></text>
+    <text x="15" y="202" font-size="10.5" fill="#475569">• Мохер + поліамід: <tspan font-weight="700" fill="#0F172A">0.96 (−4%)</tspan></text>
+    <text x="15" y="219" font-size="10" font-weight="600" fill="#BE123C">Петлі набору = Сантиметри × 0.9</text>
+  </g>
+
+  <!-- Card 2: Needles vs Transparency -->
+  <g transform="translate(242, 66)">
+    <rect width="195" height="230" rx="8" fill="#FFFFFF" stroke="#7C3AED" stroke-width="1.3"/>
+    <rect x="0" y="0" width="195" height="28" rx="8" fill="#EDE9FE"/>
+    <text x="97" y="19" text-anchor="middle" font-size="12" font-weight="700" fill="#6D28D9">2. Спиці та прозорість</text>
+
+    <!-- 3 Needle Modes -->
+    <g transform="translate(12, 38)">
+      <rect width="171" height="52" rx="5" fill="#F5F3FF" stroke="#DDD6FE"/>
+      <text x="8" y="18" font-size="10.5" font-weight="700" fill="#6D28D9">Павутинка (Lace halo):</text>
+      <text x="8" y="33" font-size="10" fill="#334155">• Спиці: <tspan font-weight="700" fill="#4C1D95">4.5–5.5 мм</tspan> (дерево)</text>
+      <text x="8" y="46" font-size="9.5" fill="#64748B">• Невагоме полотно, напівпрозоре</text>
+    </g>
+
+    <g transform="translate(12, 98)">
+      <rect width="171" height="52" rx="5" fill="#F5F3FF" stroke="#DDD6FE"/>
+      <text x="8" y="18" font-size="10.5" font-weight="700" fill="#6D28D9">Зимовий джемпер:</text>
+      <text x="8" y="33" font-size="10" fill="#334155">• Спиці: <tspan font-weight="700" fill="#4C1D95">3.0–3.5 мм</tspan></text>
+      <text x="8" y="46" font-size="9.5" fill="#64748B">• Щільніше, майже без просвіту</text>
+    </g>
+
+    <g transform="translate(12, 158)">
+      <rect width="171" height="58" rx="5" fill="#F5F3FF" stroke="#DDD6FE"/>
+      <text x="8" y="18" font-size="10.5" font-weight="700" fill="#6D28D9">Манжети та резинки:</text>
+      <text x="8" y="33" font-size="10" fill="#334155">• Спиці на <tspan font-weight="700" fill="#4C1D95">0.5–1.0 мм тонші</tspan></text>
+      <text x="8" y="48" font-size="9.5" fill="#64748B">• Захищає край від розтягування</text>
+    </g>
+  </g>
+
+  <!-- Card 3: Mohair Mixes & Yarn Weight -->
+  <g transform="translate(455, 66)">
+    <rect width="195" height="230" rx="8" fill="#FFFFFF" stroke="#059669" stroke-width="1.3"/>
+    <rect x="0" y="0" width="195" height="28" rx="8" fill="#D1FAE5"/>
+    <text x="97" y="19" text-anchor="middle" font-size="12" font-weight="700" fill="#065F46">3. Мікси та витрата</text>
+
+    <!-- Mixes item -->
+    <g transform="translate(12, 38)">
+      <rect width="171" height="74" rx="5" fill="#ECFDF5" stroke="#A7F3D0"/>
+      <text x="8" y="17" font-size="10.5" font-weight="700" fill="#047857">Комбінування (в 2 нитки):</text>
+      <text x="8" y="33" font-size="10" fill="#334155">• <tspan font-weight="600">Мохер + Меринос (400м):</tspan></text>
+      <text x="8" y="47" font-size="9.5" fill="#475569">розтягнення падає на 50%</text>
+      <text x="8" y="62" font-size="9.5" font-weight="600" fill="#065F46">• Економія мохеру: до 35%</text>
+    </g>
+
+    <!-- Consumption item -->
+    <g transform="translate(12, 122)">
+      <rect width="171" height="94" rx="5" fill="#ECFDF5" stroke="#A7F3D0"/>
+      <text x="8" y="17" font-size="10.5" font-weight="700" fill="#047857">Витрата (светр 44–48):</text>
+      <text x="8" y="33" font-size="10" fill="#334155">• Павутинка в 1 нитку:</text>
+      <text x="8" y="47" font-size="10" font-weight="700" fill="#065F46">100–125 г (4–5 мотків)</text>
+      <text x="8" y="63" font-size="10" fill="#334155">• Оверсайз / коси:</text>
+      <text x="8" y="77" font-size="10" font-weight="700" fill="#065F46">150–175 г (6–7 мотків)</text>
+      <text x="8" y="89" font-size="9" fill="#64748B">+1 моток обов'язково в запас</text>
+    </g>
+  </g>
+
+  <!-- Bottom Panel: Washing and Blocking Protocol -->
+  <g transform="translate(30, 310)">
+    <rect width="620" height="100" rx="8" fill="#FFFFFF" stroke="#E2DCD2" stroke-width="1.2"/>
+    <rect x="0" y="0" width="620" height="26" rx="8" fill="#F5F3EF"/>
+    <text x="310" y="18" text-anchor="middle" font-size="11.5" font-weight="700" fill="#2C2C2A">4. ЗОЛОТИЙ СТАНДАРТ ВТО ДЛЯ МОХЕРОВИХ ВИРОБІВ</text>
+
+    <g transform="translate(20, 36)">
+      <text x="0" y="18" font-size="11" font-weight="700" fill="#E11D48">Прання та полоскання:</text>
+      <text x="0" y="34" font-size="10.5" fill="#475569">• Вода суворо 30°C, без перепаду температури між ваннами.</text>
+      <text x="0" y="49" font-size="10" fill="#64748B">• Засіб для вовни/шовку. Не терти і не крутити руками!</text>
+    </g>
+
+    <g transform="translate(330, 36)">
+      <text x="0" y="18" font-size="11" font-weight="700" fill="#0D9488">Сушіння та блокування:</text>
+      <text x="0" y="34" font-size="10.5" fill="#475569">• Віджим у рушнику. Горизонтальне блокування на маті.</text>
+      <text x="0" y="49" font-size="10" fill="#64748B">• Легке струшування після висихання піднімає пухнастий німб ворсу.</text>
+    </g>
+  </g>
+</svg>`,
+  },
+  "mokher": {
+    title: "Розрахунок светра з мохеру",
+    caption: "Особливості в'язання з мохеру: коефіцієнт розтягнення, вибір спиць, мікси з мериносом та золотий стандарт ВТО.",
+    svg: `<svg viewBox="0 0 680 430" role="img" aria-labelledby="diagram-mohair-calc-title" xmlns="http://www.w3.org/2000/svg" font-family="sans-serif">
+  <title id="diagram-mohair-calc-title">Розрахунок светра з мохеру: коефіцієнт розтягнення, вибір спиць, мікси пряжі та витрата</title>
+
+  <!-- Background -->
+  <rect width="680" height="430" fill="#FCFAF7" rx="12"/>
+
+  <!-- Top Title -->
+  <rect x="25" y="16" width="630" height="34" rx="6" fill="#FDF2F8" stroke="#FBCFE8" stroke-width="1"/>
+  <text x="340" y="38" text-anchor="middle" font-size="13" font-weight="700" fill="#9D174D">ОСОБЛИВОСТІ РОЗРАХУНКУ З МОХЕРУ: РОЗТЯГНЕННЯ, СПИЦІ ТА ВИТРАТА ПРЯЖІ</text>
+
+  <!-- Card 1: Gauge & Shrink/Stretch Factor -->
+  <g transform="translate(30, 66)">
+    <rect width="195" height="230" rx="8" fill="#FFFFFF" stroke="#DB2777" stroke-width="1.3"/>
+    <rect x="0" y="0" width="195" height="28" rx="8" fill="#FCE7F3"/>
+    <text x="97" y="19" text-anchor="middle" font-size="12" font-weight="700" fill="#9D174D">1. Коефіцієнт розтягу (K)</text>
+
+    <!-- Swatch illustration -->
+    <g transform="translate(25, 40)">
+      <rect width="145" height="85" rx="6" fill="#FFF1F2" stroke="#F43F5E" stroke-dasharray="3 3"/>
+      <text x="72" y="30" text-anchor="middle" font-size="11" font-weight="700" fill="#E11D48">Зразок 15 × 15 см</text>
+      <text x="72" y="48" text-anchor="middle" font-size="10" fill="#475569">ВТО: ручне прання 30°C</text>
+      <text x="72" y="64" text-anchor="middle" font-size="10" font-weight="600" fill="#BE123C">Сушіння вертикальне!</text>
+    </g>
+
+    <text x="15" y="148" font-size="11" font-weight="700" fill="#9D174D">Коефіцієнт петель:</text>
+    <text x="15" y="166" font-size="10.5" fill="#475569">• 100% кід-мохер: <tspan font-weight="700" fill="#0F172A">0.90 (−10%)</tspan></text>
+    <text x="15" y="184" font-size="10.5" fill="#475569">• Мохер + шовк: <tspan font-weight="700" fill="#0F172A">0.95 (−5%)</tspan></text>
+    <text x="15" y="202" font-size="10.5" fill="#475569">• Мохер + поліамід: <tspan font-weight="700" fill="#0F172A">0.96 (−4%)</tspan></text>
+    <text x="15" y="219" font-size="10" font-weight="600" fill="#BE123C">Петлі набору = Сантиметри × 0.9</text>
+  </g>
+
+  <!-- Card 2: Needles vs Transparency -->
+  <g transform="translate(242, 66)">
+    <rect width="195" height="230" rx="8" fill="#FFFFFF" stroke="#7C3AED" stroke-width="1.3"/>
+    <rect x="0" y="0" width="195" height="28" rx="8" fill="#EDE9FE"/>
+    <text x="97" y="19" text-anchor="middle" font-size="12" font-weight="700" fill="#6D28D9">2. Спиці та прозорість</text>
+
+    <!-- 3 Needle Modes -->
+    <g transform="translate(12, 38)">
+      <rect width="171" height="52" rx="5" fill="#F5F3FF" stroke="#DDD6FE"/>
+      <text x="8" y="18" font-size="10.5" font-weight="700" fill="#6D28D9">Павутинка (Lace halo):</text>
+      <text x="8" y="33" font-size="10" fill="#334155">• Спиці: <tspan font-weight="700" fill="#4C1D95">4.5–5.5 мм</tspan> (дерево)</text>
+      <text x="8" y="46" font-size="9.5" fill="#64748B">• Невагоме полотно, напівпрозоре</text>
+    </g>
+
+    <g transform="translate(12, 98)">
+      <rect width="171" height="52" rx="5" fill="#F5F3FF" stroke="#DDD6FE"/>
+      <text x="8" y="18" font-size="10.5" font-weight="700" fill="#6D28D9">Зимовий джемпер:</text>
+      <text x="8" y="33" font-size="10" fill="#334155">• Спиці: <tspan font-weight="700" fill="#4C1D95">3.0–3.5 мм</tspan></text>
+      <text x="8" y="46" font-size="9.5" fill="#64748B">• Щільніше, майже без просвіту</text>
+    </g>
+
+    <g transform="translate(12, 158)">
+      <rect width="171" height="58" rx="5" fill="#F5F3FF" stroke="#DDD6FE"/>
+      <text x="8" y="18" font-size="10.5" font-weight="700" fill="#6D28D9">Манжети та резинки:</text>
+      <text x="8" y="33" font-size="10" fill="#334155">• Спиці на <tspan font-weight="700" fill="#4C1D95">0.5–1.0 мм тонші</tspan></text>
+      <text x="8" y="48" font-size="9.5" fill="#64748B">• Захищає край від розтягування</text>
+    </g>
+  </g>
+
+  <!-- Card 3: Mohair Mixes & Yarn Weight -->
+  <g transform="translate(455, 66)">
+    <rect width="195" height="230" rx="8" fill="#FFFFFF" stroke="#059669" stroke-width="1.3"/>
+    <rect x="0" y="0" width="195" height="28" rx="8" fill="#D1FAE5"/>
+    <text x="97" y="19" text-anchor="middle" font-size="12" font-weight="700" fill="#065F46">3. Мікси та витрата</text>
+
+    <!-- Mixes item -->
+    <g transform="translate(12, 38)">
+      <rect width="171" height="74" rx="5" fill="#ECFDF5" stroke="#A7F3D0"/>
+      <text x="8" y="17" font-size="10.5" font-weight="700" fill="#047857">Комбінування (в 2 нитки):</text>
+      <text x="8" y="33" font-size="10" fill="#334155">• <tspan font-weight="600">Мохер + Меринос (400м):</tspan></text>
+      <text x="8" y="47" font-size="9.5" fill="#475569">розтягнення падає на 50%</text>
+      <text x="8" y="62" font-size="9.5" font-weight="600" fill="#065F46">• Економія мохеру: до 35%</text>
+    </g>
+
+    <!-- Consumption item -->
+    <g transform="translate(12, 122)">
+      <rect width="171" height="94" rx="5" fill="#ECFDF5" stroke="#A7F3D0"/>
+      <text x="8" y="17" font-size="10.5" font-weight="700" fill="#047857">Витрата (светр 44–48):</text>
+      <text x="8" y="33" font-size="10" fill="#334155">• Павутинка в 1 нитку:</text>
+      <text x="8" y="47" font-size="10" font-weight="700" fill="#065F46">100–125 г (4–5 мотків)</text>
+      <text x="8" y="63" font-size="10" fill="#334155">• Оверсайз / коси:</text>
+      <text x="8" y="77" font-size="10" font-weight="700" fill="#065F46">150–175 г (6–7 мотків)</text>
+      <text x="8" y="89" font-size="9" fill="#64748B">+1 моток обов'язково в запас</text>
+    </g>
+  </g>
+
+  <!-- Bottom Panel: Washing and Blocking Protocol -->
+  <g transform="translate(30, 310)">
+    <rect width="620" height="100" rx="8" fill="#FFFFFF" stroke="#E2DCD2" stroke-width="1.2"/>
+    <rect x="0" y="0" width="620" height="26" rx="8" fill="#F5F3EF"/>
+    <text x="310" y="18" text-anchor="middle" font-size="11.5" font-weight="700" fill="#2C2C2A">4. ЗОЛОТИЙ СТАНДАРТ ВТО ДЛЯ МОХЕРОВИХ ВИРОБІВ</text>
+
+    <g transform="translate(20, 36)">
+      <text x="0" y="18" font-size="11" font-weight="700" fill="#E11D48">Прання та полоскання:</text>
+      <text x="0" y="34" font-size="10.5" fill="#475569">• Вода суворо 30°C, без перепаду температури між ваннами.</text>
+      <text x="0" y="49" font-size="10" fill="#64748B">• Засіб для вовни/шовку. Не терти і не крутити руками!</text>
+    </g>
+
+    <g transform="translate(330, 36)">
+      <text x="0" y="18" font-size="11" font-weight="700" fill="#0D9488">Сушіння та блокування:</text>
+      <text x="0" y="34" font-size="10.5" fill="#475569">• Віджим у рушнику. Горизонтальне блокування на маті.</text>
+      <text x="0" y="49" font-size="10" fill="#64748B">• Легке струшування після висихання піднімає пухнастий німб ворсу.</text>
+    </g>
+  </g>
+</svg>`,
+  },
 };
 
 function escapeHtml(value: string) {
