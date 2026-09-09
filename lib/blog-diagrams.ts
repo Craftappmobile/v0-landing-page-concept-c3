@@ -5,6 +5,53 @@ type BlogDiagramDefinition = {
 }
 
 const BLOG_DIAGRAMS: Record<string, BlogDiagramDefinition> = {
+  "sock-anatomy-diagram": {
+    title: "Анатомічна будова шкарпетки спицями: зони та пропорції",
+    caption: "Класична схема шкарпетки зверху вниз: манжета, паголінок, стінка п'ятки (½ петель), клин підйому, стопа та стрічковий мисок.",
+    svg: `<svg viewBox="0 0 680 400" xmlns="http://www.w3.org/2000/svg" font-family="sans-serif" role="img" aria-labelledby="diagram-sock-title diagram-sock-desc">
+  <title id="diagram-sock-title">Схема анатомічних зон класичної шкарпетки спицями</title>
+  <desc id="diagram-sock-desc">Послідовність в'язання шкарпетки зверху вниз: від манжети через п'ятку з клином до миска.</desc>
+  
+  <!-- Контур шкарпетки (профіль) -->
+  <!-- Паголінок -->
+  <path d="M220 50 L340 50 L340 200 L490 200 Q540 200 550 230 L550 270 Q530 290 480 290 L270 290 Q220 290 220 230 Z" fill="#F8F6F0" stroke="#5F5E5A" stroke-width="2"/>
+  
+  <!-- Манжета -->
+  <rect x="220" y="50" width="120" height="35" fill="#E8F4F0" stroke="#0F6E56" stroke-width="2"/>
+  <text x="280" y="72" text-anchor="middle" font-size="12" font-weight="700" fill="#0F6E56">1. Манжета (гумка)</text>
+  
+  <!-- Паголінок (зона) -->
+  <line x1="220" y1="130" x2="340" y2="130" stroke="#D3D1C7" stroke-width="1.5" stroke-dasharray="4,4"/>
+  <text x="280" y="120" text-anchor="middle" font-size="13" font-weight="600" fill="#2C2C2A">2. Паголінок</text>
+  <text x="280" y="145" text-anchor="middle" font-size="11" fill="#5F5E5A">12–18 см (всі петлі)</text>
+  
+  <!-- Стінка п'ятки -->
+  <path d="M220 130 L220 230 Q220 275 250 275 L250 200 Z" fill="#FFEFE6" stroke="#D85A30" stroke-width="2"/>
+  <text x="140" y="210" text-anchor="end" font-size="13" font-weight="700" fill="#D85A30">3. Стінка п'ятки →</text>
+  <text x="140" y="228" text-anchor="end" font-size="11" fill="#5F5E5A">½ петель (квадрат)</text>
+  
+  <!-- Чашечка (поворот) п'ятки -->
+  <path d="M220 230 Q220 290 270 290 L270 260 Z" fill="#FCE8DE" stroke="#D85A30" stroke-width="1.5"/>
+  <text x="210" y="325" text-anchor="middle" font-size="12" font-weight="600" fill="#D85A30">4. Поворот п'ятки (1/3 : 1/3 : 1/3)</text>
+  
+  <!-- Клин підйому -->
+  <path d="M250 200 L340 200 L270 260 Z" fill="#EBF3F8" stroke="#185FA5" stroke-width="1.5" stroke-dasharray="3,3"/>
+  <text x="335" y="240" text-anchor="middle" font-size="12" font-weight="600" fill="#185FA5">5. Клин підйому</text>
+  <text x="335" y="255" text-anchor="middle" font-size="11" fill="#5F5E5A">(-2 п. через ряд)</text>
+  
+  <!-- Стопа -->
+  <text x="430" y="245" text-anchor="middle" font-size="13" font-weight="700" fill="#2C2C2A">6. Стопа</text>
+  <text x="430" y="265" text-anchor="middle" font-size="11" fill="#5F5E5A">довжина до мізинця</text>
+  
+  <!-- Мисок -->
+  <path d="M490 200 Q540 200 550 230 L550 270 Q530 290 480 290 Z" fill="#E8F4F0" stroke="#0F6E56" stroke-width="2"/>
+  <text x="520" y="325" text-anchor="middle" font-size="12" font-weight="700" fill="#0F6E56">7. Мисок (-4 п. через ряд)</text>
+  
+  <!-- Легенда внизу -->
+  <rect x="50" y="355" width="580" height="30" rx="6" fill="#F1EFE8"/>
+  <text x="340" y="375" text-anchor="middle" font-size="12" font-weight="600" fill="#2C2C2A">Формула набору: Обхват стопи × щільність × 0.9 (округлено до кратного 4)</text>
+</svg>`,
+  },
   "cardigan-panels": {
     title: "Схема розрахунку поличок і планки кардигана з нахльостом",
     caption: "Спинка (ширина S) та дві симетричні полички: кожна поличка ширша за половину спинки на половину планки (S/2 + ШП/2) для точного нахльосту під ґудзики.",
