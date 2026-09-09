@@ -222,6 +222,18 @@ export const KNOWN_VIDEOS: Record<string, YouTubeVideoData> = {
     channel: "ВʼЯЗАННЯ Людмила Тарсукова",
     image: "/images/videos/yt-8By17UJwIDE.jpg",
   },
+  "_14V3Sd7E2E": {
+    id: "_14V3Sd7E2E",
+    title: "Ажурний жакет спицями: Докладний майстер-клас та розбір викрійки",
+    channel: "Candy-Yarn",
+    image: "/images/videos/yt-_14V3Sd7E2E.jpg",
+  },
+  "148W3fcYSrk": {
+    id: "148W3fcYSrk",
+    title: "В'язаний жакет: Розрахунок кокетки з цільнов'язаною планкою",
+    channel: "В'язання від Світлани Заєць",
+    image: "/images/videos/yt-148W3fcYSrk.jpg",
+  },
 };
 
 function escapeHtml(str: string) {

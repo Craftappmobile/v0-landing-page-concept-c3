@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+  <meta charset="UTF-8">
+  <title>Схема викрійки жакета</title>
+  <style>
+    body { font-family: system-ui, sans-serif; background: #f1f5f9; padding: 40px; display: flex; justify-content: center; }
+    .card { background: white; padding: 20px; border-radius: 16px; box-shadow: 0 10px 25px rgba(0,0,0,0.08); max-width: 720px; width: 100%; }
+  </style>
+</head>
+<body>
+  <div class="card">
+    <svg viewBox="0 0 680 430" role="img" aria-labelledby="diagram-jacket-pattern-title" xmlns="http://www.w3.org/2000/svg" font-family="sans-serif">
+  <title id="diagram-jacket-pattern-title">Схема розрахунку викрійки жакета: спинка, полички, планка, вшивний рукав та комір</title>
+  <defs>
+    <marker id="jacket-arrow" viewBox="0 0 10 10" refX="6" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M 0 1 L 8 5 L 0 9 z" fill="#4338CA" />
+    </marker>
+  </defs>
+
+  <!-- Background -->
+  <rect width="680" height="430" fill="#FCFAF7" rx="12"/>
+
+  <!-- Top Title -->
+  <rect x="25" y="16" width="630" height="34" rx="6" fill="#EEF2FF" stroke="#C7D2FE" stroke-width="1"/>
+  <text x="340" y="38" text-anchor="middle" font-size="13" font-weight="700" fill="#3730A3">КОНСТРУКЦІЯ ЖАКЕТА: СПИНКА, ПОЛИЧКИ З ПЛАНКОЮ ТА ВШИВНИЙ РУКАВ</text>
+
+  <!-- Box 1: Back (Спинка) -->
+  <g transform="translate(30, 66)">
+    <rect width="195" height="195" rx="8" fill="#FFFFFF" stroke="#4338CA" stroke-width="1.3"/>
+    <rect x="0" y="0" width="195" height="28" rx="8" fill="#E0E7FF"/>
+    <text x="97" y="19" text-anchor="middle" font-size="12" font-weight="700" fill="#3730A3">1. Спинка</text>
+
+    <!-- Visual schematic shape -->
+    <path d="M 30 42 L 165 42 L 165 110 L 150 110 L 150 155 L 45 155 L 45 110 L 30 110 Z" fill="#EEF2FF" stroke="#4338CA" stroke-width="1.2"/>
+    <text x="97" y="138" text-anchor="middle" font-size="11" font-weight="700" fill="#4338CA">½ ОГ + 2–4 см</text>
+
+    <text x="15" y="174" font-size="11" fill="#475569">• Пройма: <tspan font-weight="700" fill="#3730A3">19–23 см</tspan></text>
+    <text x="15" y="190" font-size="11" fill="#475569">• Скіс плеча: <tspan font-weight="600" fill="#1E1B4B">2–3 см</tspan></text>
+  </g>
+
+  <!-- Box 2: Fronts & Placket (Полички з планкою) -->
+  <g transform="translate(242, 66)">
+    <rect width="195" height="195" rx="8" fill="#FFFFFF" stroke="#0284C7" stroke-width="1.3"/>
+    <rect x="0" y="0" width="195" height="28" rx="8" fill="#E0F2FE"/>
+    <text x="97" y="19" text-anchor="middle" font-size="12" font-weight="700" fill="#0369A1">2. Полички з планкою</text>
+
+    <!-- Visual schematic shape with button placket -->
+    <path d="M 30 42 L 135 42 L 135 155 L 45 155 L 45 110 L 30 110 Z" fill="#F0F9FF" stroke="#0284C7" stroke-width="1.2"/>
+    <rect x="135" y="42" width="25" height="113" fill="#BAE6FD" stroke="#0284C7" stroke-width="1.2"/>
+    <circle cx="147" cy="65" r="3.5" fill="#0369A1"/>
+    <circle cx="147" cy="95" r="3.5" fill="#0369A1"/>
+    <circle cx="147" cy="125" r="3.5" fill="#0369A1"/>
+
+    <text x="97" y="138" text-anchor="middle" font-size="10.5" font-weight="700" fill="#0369A1">¼ ОГ + 2–3 см + Планка</text>
+
+    <text x="15" y="174" font-size="11" fill="#475569">• Планка: <tspan font-weight="700" fill="#0369A1">3–5 см</tspan> (петлі)</text>
+    <text x="15" y="190" font-size="11" fill="#475569">• Крок ґудзиків: <tspan font-weight="600" fill="#0F172A">8–10 см</tspan></text>
+  </g>
+
+  <!-- Box 3: Set-in Sleeve (Вшивний рукав з окатом) -->
+  <g transform="translate(455, 66)">
+    <rect width="195" height="195" rx="8" fill="#FFFFFF" stroke="#0D9488" stroke-width="1.3"/>
+    <rect x="0" y="0" width="195" height="28" rx="8" fill="#CCFBF1"/>
+    <text x="97" y="19" text-anchor="middle" font-size="12" font-weight="700" fill="#0F766E">3. Вшивний рукав</text>
+
+    <!-- Visual schematic sleeve cap -->
+    <path d="M 35 155 L 60 85 Q 97 42 135 85 L 160 155 Z" fill="#F0FDFA" stroke="#0D9488" stroke-width="1.2"/>
+    <text x="97" y="115" text-anchor="middle" font-size="11" font-weight="700" fill="#0F766E">Окат: 14–16 см</text>
+
+    <text x="15" y="174" font-size="11" fill="#475569">• Висота = Пройма − <tspan font-weight="700" fill="#0D9488">2–4 см</tspan></text>
+    <text x="15" y="190" font-size="11" fill="#475569">• Закриття: <tspan font-weight="600" fill="#0F172A">3–2–1–...–1–2–3</tspan></text>
+  </g>
+
+  <!-- Bottom Details: Collar, lapel, and placket construction -->
+  <g transform="translate(30, 276)">
+    <rect width="620" height="135" rx="8" fill="#FFFFFF" stroke="#E2DCD2" stroke-width="1.2"/>
+    <rect x="0" y="0" width="620" height="26" rx="8" fill="#F5F3EF"/>
+    <text x="310" y="18" text-anchor="middle" font-size="11.5" font-weight="700" fill="#2C2C2A">4. ТЕХНОЛОГІЯ ОБРОБКИ: КОМІР, ЛАЦКАНИ ТА СТАБІЛЬНІСТЬ КРАЇВ</text>
+
+    <!-- Sub-block A -->
+    <g transform="translate(20, 36)">
+      <rect width="280" height="85" rx="6" fill="#F8FAFC" stroke="#E2E8F0"/>
+      <text x="15" y="22" font-size="11.5" font-weight="700" fill="#4338CA">Комір (англійський або шалька):</text>
+      <text x="15" y="42" font-size="10.5" fill="#475569">• Набирається по краю горловини та лацканів</text>
+      <text x="15" y="58" font-size="10.5" fill="#475569">• Висота стійки: 6–8 см, розширення до кутів</text>
+      <text x="15" y="74" font-size="10.5" font-weight="600" fill="#3730A3">• Вкорочені ряди для бездоганного перегину</text>
+    </g>
+
+    <!-- Sub-block B -->
+    <g transform="translate(320, 36)">
+      <rect width="280" height="85" rx="6" fill="#F8FAFC" stroke="#E2E8F0"/>
+      <text x="15" y="22" font-size="11.5" font-weight="700" fill="#0D9488">Планка під ґудзики та стабільність:</text>
+      <text x="15" y="42" font-size="10.5" fill="#475569">• Спиці на 0.5–1.0 мм менші за основне полотно</text>
+      <text x="15" y="58" font-size="10.5" fill="#475569">• Подвійна резинка або платочна в'язка (не косить)</text>
+      <text x="15" y="74" font-size="10.5" font-weight="600" fill="#0F766E">• Витрата пряжі: 600–750 г для 48 розміру</text>
+    </g>
+  </g>
+</svg>
+  </div>
+</body>
+</html>
