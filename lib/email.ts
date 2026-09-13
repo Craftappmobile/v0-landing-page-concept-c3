@@ -149,3 +149,66 @@ export async function sendCancellationEmail(
   }
 }
 
+export async function sendRenewalFailedEmail(
+  to: string,
+  customerName: string,
+  planType: string,
+): Promise<{ success: boolean; error?: string }> {
+  try {
+    const resend = getResendClient();
+    const planName = isPlanId(planType) ? PLAN_CONFIG[planType].name : planType;
+
+    const { error } = await resend.emails.send({
+      from: FROM_EMAIL,
+      to: [to],
+      subject: "Не вдалося продовжити підписку",
+      html: `
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Не вдалося продовжити підписку</title>
+</head>
+<body>
+  <div style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; max-width: 560px; margin: 0 auto; padding: 32px 16px;">
+          <h1 style="font-size: 24px; color: #1a1a1a;">Привіт, ${customerName || ""}!</h1>
+          <p style="font-size: 16px; color: #333; line-height: 1.6;">
+            Ми не змогли продовжити вашу підписку <strong>«${planName}»</strong> — банк відхилив списання
+            з прив'язаної картки.
+          </p>
+          <p style="font-size: 15px; color: #333; line-height: 1.6;">
+            Найчастіше це трапляється, якщо картку перевипустили, вона закінчилась або її видалили
+            з Google&nbsp;Pay / Apple&nbsp;Pay. Автопродовження ми вимкнули, щоб не було зайвих спроб списання.
+          </p>
+          <p style="font-size: 15px; color: #333; line-height: 1.6;">
+            Щоб не втратити доступ, оформіть підписку заново — і, будь ласка, оплатіть
+            <strong>звичайною карткою</strong>, а не через Google&nbsp;Pay або Apple&nbsp;Pay:
+          </p>
+          <p style="margin: 24px 0;">
+            <a href="https://vjazhi.com.ua" style="display: inline-block; background: #7c3aed; color: #fff; text-decoration: none; font-size: 16px; padding: 12px 24px; border-radius: 8px;">Оформити підписку</a>
+          </p>
+          <hr style="border: none; border-top: 1px solid #eee; margin: 24px 0;" />
+          <p style="font-size: 12px; color: #999;">
+            Питання? Пишіть: <a href="mailto:craftappmobile@gmail.com" style="color: #7c3aed;">craftappmobile@gmail.com</a>
+          </p>
+  </div>
+</body>
+</html>
+      `,
+    });
+
+    if (error) {
+      console.error("[Email] Renewal failed email error:", error);
+      return { success: false, error: error.message };
+    }
+
+    console.log(`[Email] Renewal failed email sent to ${to}`);
+    return { success: true };
+  } catch (err) {
+    console.error("[Email] Renewal failed email exception:", err);
+    return { success: false, error: String(err) };
+  }
+}
+

@@ -102,6 +102,9 @@ const HUTKO_FAILURE_MESSAGE_KEYS = [
 
 const HUTKO_FAILURE_DISABLING_ORDER_STATUSES = new Set(["reversed"])
 
+// Hutko/issuer hard blocks: the stored rectoken can never authorize again, so retries are futile.
+const HUTKO_HARD_BLOCK_FAILURE_CODES = new Set(["1014", "1015", "1017", "1141"])
+
 function hasFutureSubscriptionAccess(expiresAt: string | null | undefined, now = Date.now()) {
   const expiryTime = expiresAt ? Date.parse(expiresAt) : Number.NaN
   return !Number.isNaN(expiryTime) && expiryTime > now
@@ -358,6 +361,25 @@ export function normalizeSubscriptionStatus({ status, expiresAt }: SubscriptionS
 
 export function shouldDisableAutoRenewalForFailedOrderStatus(status: unknown): boolean {
   return typeof status === "string" && HUTKO_FAILURE_DISABLING_ORDER_STATUSES.has(status.trim().toLowerCase())
+}
+
+export function isHutkoHardBlockFailureCode(code: unknown): boolean {
+  const normalizedCode = stringValue(code)
+  return normalizedCode ? HUTKO_HARD_BLOCK_FAILURE_CODES.has(normalizedCode) : false
+}
+
+export function listHutkoHardBlockFailureCodes(): string[] {
+  return [...HUTKO_HARD_BLOCK_FAILURE_CODES]
+}
+
+export function shouldDisableAutoRenewalAfterFailedPayment(args: {
+  orderStatus?: unknown
+  failureCode?: unknown
+}): boolean {
+  return (
+    shouldDisableAutoRenewalForFailedOrderStatus(args.orderStatus)
+    || isHutkoHardBlockFailureCode(args.failureCode)
+  )
 }
 
 export function shouldPreservePaidAccessOnFailedCallback(args: {

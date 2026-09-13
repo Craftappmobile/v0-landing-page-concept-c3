@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import crypto from "crypto";
 import { createAdminClient } from "@/lib/supabase";
-import { sendWelcomeEmail } from "@/lib/email";
+import { sendRenewalFailedEmail, sendWelcomeEmail } from "@/lib/email";
 import { generateSecurePassword } from "@/lib/password";
 import {
   getPlanInitialAccessDays,
@@ -21,7 +21,7 @@ import {
   resolveDirectPaymentAccessEmail,
   resolvePaymentAccessEmail,
   resolveDirectPaymentPlanId,
-  shouldDisableAutoRenewalForFailedOrderStatus,
+  shouldDisableAutoRenewalAfterFailedPayment,
   shouldPreservePaidAccessOnFailedCallback,
 } from "@/lib/payment-flow";
 
@@ -252,6 +252,41 @@ async function finalizeRequestedProviderCancellation(args: {
     provider: "hutko",
     recurring_mode: "hutko_schedule",
   }, { onConflict: "event_key", ignoreDuplicates: true });
+  return true;
+}
+
+/**
+ * Stop the provider-side recurring schedule after a permanently declined charge
+ * so Hutko never retries an unusable rectoken.
+ */
+async function stopRecurringScheduleAfterFailure(args: {
+  supabase: ReturnType<typeof createAdminClient>;
+  subscriptionId: string;
+  orderId: string;
+  now: string;
+}): Promise<boolean> {
+  try {
+    await stopHutkoSubscription({
+      orderId: args.orderId,
+      merchantId: MERCHANT_ID,
+      password: MERCHANT_PASSWORD,
+    });
+  } catch (stopError) {
+    console.error("[Hutko Callback] Failed to stop schedule after failed payment:", args.orderId, stopError);
+    await args.supabase.from("subscriptions").update({
+      recurring_mode_source: "payment_failure_stop_failed",
+      cancellation_last_error_code: "hutko_stop_failed_after_payment_failure",
+      updated_at: args.now,
+    }).eq("id", args.subscriptionId);
+    return false;
+  }
+
+  await args.supabase.from("subscriptions").update({
+    recurring_mode: "none",
+    recurring_mode_source: "payment_failure",
+    updated_at: args.now,
+  }).eq("id", args.subscriptionId);
+
   return true;
 }
 
@@ -816,7 +851,10 @@ export async function POST(request: NextRequest) {
       }
     } else {
       const failedAt = new Date().toISOString();
-      const shouldDisableAutoRenewal = shouldDisableAutoRenewalForFailedOrderStatus(order_status);
+      const shouldDisableAutoRenewal = shouldDisableAutoRenewalAfterFailedPayment({
+        orderStatus: order_status,
+        failureCode: failureDetails.code,
+      });
 
       if (isRenewal && parentOrder) {
         const updateData: Record<string, string | boolean | Record<string, string> | null> = {
@@ -831,12 +869,49 @@ export async function POST(request: NextRequest) {
           updateData.cancelled_at = failedAt;
         }
 
-        await supabase
+        const { data: failedRenewalRows } = await supabase
           .from("subscriptions")
           .update(updateData)
-          .eq("order_id", parentOrder);
+          .eq("order_id", parentOrder)
+          .select("id, email, customer_name, plan, plan_type");
 
         console.log("[Hutko Callback] Renewal payment failed:", parentOrder, order_status, "via", order_id);
+
+        if (shouldDisableAutoRenewal) {
+          for (const failedRenewal of failedRenewalRows || []) {
+            await stopRecurringScheduleAfterFailure({
+              supabase,
+              subscriptionId: failedRenewal.id,
+              orderId: parentOrder,
+              now: failedAt,
+            });
+
+            const renewalCustomerEmail = resolvePaymentAccessEmail({
+              subscriptionEmail: failedRenewal.email,
+              accessEmail: merchantAccessEmail,
+              payerEmail: payerEmailFromMerchant,
+            });
+
+            if (!renewalCustomerEmail) {
+              console.error("[Hutko Callback] No email to notify about failed renewal:", failedRenewal.id);
+              continue;
+            }
+
+            const emailResult = await sendRenewalFailedEmail(
+              renewalCustomerEmail,
+              failedRenewal.customer_name || customerNameFromMerchant || "",
+              failedRenewal.plan || failedRenewal.plan_type || "",
+            );
+
+            if (!emailResult.success) {
+              console.error(
+                "[Hutko Callback] Renewal failure email not sent:",
+                failedRenewal.id,
+                emailResult.error,
+              );
+            }
+          }
+        }
       } else {
         const targetSubscription = await findInitialSubscription(supabase, {
           orderId: order_id,

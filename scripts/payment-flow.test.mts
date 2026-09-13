@@ -20,6 +20,9 @@ import {
   resolveDirectPaymentPlanId,
   resolveCheckoutFlow,
   resolvePaymentStatusView,
+  isHutkoHardBlockFailureCode,
+  listHutkoHardBlockFailureCodes,
+  shouldDisableAutoRenewalAfterFailedPayment,
   shouldDisableAutoRenewalForFailedOrderStatus,
   shouldPreservePaidAccessOnFailedCallback,
 } from "../lib/payment-flow.ts"
@@ -238,6 +241,48 @@ test("reversed Hutko failures disable future auto-renewal cleanup", () => {
   assert.equal(shouldDisableAutoRenewalForFailedOrderStatus(" ReVeRsEd "), true)
   assert.equal(shouldDisableAutoRenewalForFailedOrderStatus("declined"), false)
   assert.equal(shouldDisableAutoRenewalForFailedOrderStatus(null), false)
+})
+
+test("Hutko hard-block failure codes are recognized regardless of value shape", () => {
+  assert.equal(isHutkoHardBlockFailureCode("1015"), true)
+  assert.equal(isHutkoHardBlockFailureCode(1015), true)
+  assert.equal(isHutkoHardBlockFailureCode(" 1141 "), true)
+  assert.equal(isHutkoHardBlockFailureCode("1014"), true)
+  assert.equal(isHutkoHardBlockFailureCode("1017"), true)
+  assert.equal(isHutkoHardBlockFailureCode("1024"), false)
+  assert.equal(isHutkoHardBlockFailureCode(null), false)
+})
+
+test("hard-block code list stays in sync with the predicate", () => {
+  const codes = listHutkoHardBlockFailureCodes()
+  assert.deepEqual([...codes].sort(), ["1014", "1015", "1017", "1141"])
+  for (const code of codes) {
+    assert.equal(isHutkoHardBlockFailureCode(code), true)
+  }
+})
+
+test("hard-block declines disable auto-renewal even when order_status is only declined", () => {
+  assert.equal(
+    shouldDisableAutoRenewalAfterFailedPayment({ orderStatus: "declined", failureCode: "1015" }),
+    true,
+  )
+  assert.equal(
+    shouldDisableAutoRenewalAfterFailedPayment({ orderStatus: "reversed", failureCode: null }),
+    true,
+  )
+  assert.equal(
+    shouldDisableAutoRenewalAfterFailedPayment({ orderStatus: "declined", failureCode: "1024" }),
+    false,
+  )
+  assert.equal(shouldDisableAutoRenewalAfterFailedPayment({}), false)
+})
+
+test("failed renewal callback stops the Hutko schedule and notifies the customer", () => {
+  const source = readFileSync(new URL("../app/api/payment/callback/route.ts", import.meta.url), "utf8")
+
+  assert.equal(source.includes("shouldDisableAutoRenewalAfterFailedPayment"), true)
+  assert.equal(source.includes("stopRecurringScheduleAfterFailure"), true)
+  assert.equal(source.includes("sendRenewalFailedEmail"), true)
 })
 
 test("failed callback guard preserves already-paid access for correlation-only declines", () => {
