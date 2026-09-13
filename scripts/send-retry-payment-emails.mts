@@ -10,15 +10,25 @@
  *
  * Запуск (dry-run, нічого не надсилає і не пише в БД):
  *   npm run send-retry-payment-emails
- * Реальна відправка:
- *   npm run send-retry-payment-emails -- --apply
+ * Реальна відправка (рекомендовано — прапорець уже вписаний у скрипт,
+ * нічого передавати не треба):
+ *   npm run send-retry-payment-emails:apply
+ * Альтернативи, якщо передаєте прапорець вручну (PowerShell з'їдає голий "--",
+ * тому npm run ... -- --apply може не спрацювати):
+ *   npm run send-retry-payment-emails -- --apply   (cmd/bash)
+ *   APPLY=1 npm run send-retry-payment-emails
  */
 
 import { createAdminClient } from "../lib/supabase.ts"
 import { sendAccessExpiredEmail } from "../lib/email.ts"
 import { selectRetryAudience, type CandidateRow } from "../lib/retry-payment-emails.ts"
 
-const APPLY = process.argv.includes("--apply")
+// PowerShell strips a bare "--" when invoking native commands, so
+// "npm run x -- --apply" may deliver no args at all. Accept several
+// spellings plus the APPLY env var as equivalent triggers.
+const argv = process.argv.slice(2).map((a) => a.trim().toLowerCase())
+const envApply = ["1", "true", "yes"].includes((process.env.APPLY ?? "").trim().toLowerCase())
+const APPLY = argv.includes("--apply") || argv.includes("apply") || argv.includes("--apply=true") || envApply
 const SEND_DELAY_MS = 600 // stay comfortably under Resend's rate limit
 
 const SELECT_COLUMNS =

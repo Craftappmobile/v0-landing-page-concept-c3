@@ -14,7 +14,8 @@
     "test:retry-payment-emails": "node --no-warnings --experimental-strip-types --test scripts/send-retry-payment-emails.test.mts",
     "indexnow": "node --no-warnings --experimental-strip-types scripts/indexnow-ping.mts",
     "cleanup:recurring": "node --no-warnings --experimental-strip-types --env-file-if-exists=.env.local scripts/cleanup-dead-recurring.mts",
-    "send-retry-payment-emails": "node --no-warnings --experimental-strip-types --env-file-if-exists=.env.local scripts/send-retry-payment-emails.mts"
+    "send-retry-payment-emails": "node --no-warnings --experimental-strip-types --env-file-if-exists=.env.local scripts/send-retry-payment-emails.mts",
+    "send-retry-payment-emails:apply": "node --no-warnings --experimental-strip-types --env-file-if-exists=.env.local scripts/send-retry-payment-emails.mts --apply"
   },
   "dependencies": {
     "@hookform/resolvers": "^3.9.1",
