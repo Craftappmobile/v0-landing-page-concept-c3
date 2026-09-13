@@ -1,7 +1,7 @@
 import assert from "node:assert/strict"
 import test from "node:test"
 
-import { normalizeEmail, selectRetryAudience, type CandidateRow } from "../lib/retry-payment-emails.ts"
+import { isExcludedEmail, normalizeEmail, selectRetryAudience, type CandidateRow } from "../lib/retry-payment-emails.ts"
 
 const NOW = new Date("2026-09-13T00:00:00.000Z")
 
@@ -101,4 +101,25 @@ test("normalizeEmail trims and lowercases, treating blank as absent", () => {
   assert.equal(normalizeEmail("  User@Example.com "), "user@example.com")
   assert.equal(normalizeEmail("   "), null)
   assert.equal(normalizeEmail(null), null)
+})
+
+test("selectRetryAudience excludes confirmed dev/QA/internal accounts even when otherwise eligible", () => {
+  const audience = selectRetryAudience(
+    [
+      row({ id: "dev", email: "craftappmobile@gmail.com" }),
+      row({ id: "internal", email: "sale@yarnpremium.com.ua" }),
+      row({ id: "qa", email: "qa-hutko-iframe+20260402@example.com" }),
+      row({ id: "real", email: "real-customer@example.com" }),
+    ],
+    NOW,
+  )
+  assert.equal(audience.length, 1)
+  assert.equal(audience[0].email, "real-customer@example.com")
+})
+
+test("isExcludedEmail matches only the confirmed dev/QA/internal addresses", () => {
+  assert.equal(isExcludedEmail("craftappmobile@gmail.com"), true)
+  assert.equal(isExcludedEmail("app@yarnpremium.com.ua"), true)
+  assert.equal(isExcludedEmail("debug@example.com"), true)
+  assert.equal(isExcludedEmail("real-customer@example.com"), false)
 })

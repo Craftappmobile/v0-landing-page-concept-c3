@@ -29,9 +29,29 @@ export type RetryAudienceEntry = {
 const DEFAULT_PLAN_ID: PlanId = "year"
 const ELIGIBLE_STATUSES = new Set(["expired", "failed"])
 
+// Internal/test accounts confirmed for exclusion from the one-off
+// send-retry-payment-emails run (dev/QA accounts and internal mailboxes).
+const EXCLUDED_EMAILS = new Set([
+  "craftappmobile@gmail.com",
+  "11111111111111@gmail.com",
+  "546@gmail.com",
+  "666@gmail.com",
+  "d2313691@gmail.com",
+  "sale@yarnpremium.com.ua",
+  "cancel@yarnpremium.com.ua",
+  "app@yarnpremium.com.ua",
+  "debug@example.com",
+  "qa-hutko-iframe+20260402@example.com",
+  "qa-hutko-iframe-live+20260402@example.com",
+])
+
 export function normalizeEmail(email: string | null | undefined): string | null {
   const trimmed = (email ?? "").trim().toLowerCase()
   return trimmed || null
+}
+
+export function isExcludedEmail(email: string): boolean {
+  return EXCLUDED_EMAILS.has(email)
 }
 
 function resolvePlanId(row: CandidateRow): PlanId {
@@ -67,7 +87,7 @@ export function selectRetryAudience(rows: CandidateRow[], now: Date = new Date()
 
   for (const row of rows) {
     const email = normalizeEmail(row.email)
-    if (!email) continue
+    if (!email || isExcludedEmail(email)) continue
     const group = byEmail.get(email)
     if (group) group.push(row)
     else byEmail.set(email, [row])
