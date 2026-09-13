@@ -12,6 +12,7 @@
     "test:cancel": "node --no-warnings --experimental-strip-types --test scripts/cancel-api.test.mts",
     "test:expire-subscriptions": "node --no-warnings --experimental-strip-types --test scripts/expire-subscriptions.test.mts",
     "test:retry-payment-emails": "node --no-warnings --experimental-strip-types --test scripts/send-retry-payment-emails.test.mts",
+    "test:email-validation": "node --no-warnings --experimental-strip-types --test scripts/email-validation.test.mts",
     "indexnow": "node --no-warnings --experimental-strip-types scripts/indexnow-ping.mts",
     "cleanup:recurring": "node --no-warnings --experimental-strip-types --env-file-if-exists=.env.local scripts/cleanup-dead-recurring.mts",
     "send-retry-payment-emails": "node --no-warnings --experimental-strip-types --env-file-if-exists=.env.local scripts/send-retry-payment-emails.mts",

@@ -7,6 +7,7 @@ import Link from "next/link"
 import { AlertCircle, ArrowLeft, CheckCircle2, Loader2, ShieldCheck } from "lucide-react"
 import type { HutkoButtonWidgetConfig } from "@/lib/hutko"
 import { isPlanId, PLAN_CONFIG } from "@/lib/plans"
+import { getEmailValidationError, sanitizeEmailInput, suggestEmailFix } from "@/lib/email-validation"
 import {
   getInitialPaymentView,
   normalizeCheckoutStatus,
@@ -68,6 +69,8 @@ function CheckoutForm() {
 
   const [name, setName] = useState("")
   const [email, setEmail] = useState("")
+  const [emailTouched, setEmailTouched] = useState(false)
+  const [showEmailFixSuggestion, setShowEmailFixSuggestion] = useState(false)
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
   const [paymentState, setPaymentState] = useState<PaymentState>("pending")
@@ -86,8 +89,24 @@ function CheckoutForm() {
   const shouldPollPaymentStatus = isRedirectProcessingState || paymentSession?.mode === "button"
   const activeOrderId = redirectOrderId ?? embeddedOrderId ?? paymentSession?.orderId ?? null
   const activeCorrelationId = redirectCorrelationId ?? paymentSession?.correlationId ?? null
+  const emailValidationError = emailTouched && email.trim() ? getEmailValidationError(email) : null
+  const emailFixSuggestion = showEmailFixSuggestion ? suggestEmailFix(email) : null
 
   useEffect(() => { setError(null) }, [name, email])
+
+  // Offer a one-click fix as soon as the typed email looks like a known typo
+  // (e.g. "gmail,com" or "@gmial.com"). Hidden again once the value changes.
+  useEffect(() => {
+    setShowEmailFixSuggestion(Boolean(suggestEmailFix(email)))
+  }, [email])
+
+  function applyEmailFixSuggestion() {
+    if (emailFixSuggestion) {
+      setEmail(emailFixSuggestion)
+      setEmailTouched(true)
+      setShowEmailFixSuggestion(false)
+    }
+  }
 
   useEffect(() => {
     if (typeof window !== "undefined" && typeof (window as HutkoWindow).hutko === "function") {
@@ -260,22 +279,36 @@ function CheckoutForm() {
   if (isRedirectProcessingState || (paymentSession?.mode === "button" && paymentState !== "pending")) {
     return (
       <Shell>
-        <PaymentStatusCard state={paymentState} message={paymentMessage} orderId={activeOrderId} />
+        <PaymentStatusCard
+          state={paymentState}
+          message={paymentMessage}
+          orderId={activeOrderId}
+          email={sanitizeEmailInput(email)}
+        />
       </Shell>
     )
   }
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault()
-    if (!name.trim() || !email.trim()) { setError("Заповніть усі поля"); return }
-      setLoading(true); setError(null); setWidgetError(null); setWidgetReady(false); setPaymentSession(null); setEmbeddedOrderId(null)
+    const sanitizedEmail = sanitizeEmailInput(email)
+    if (!name.trim() || !sanitizedEmail) { setError("Заповніть усі поля"); return }
+
+    const emailError = getEmailValidationError(sanitizedEmail)
+    if (emailError) {
+      setEmailTouched(true)
+      setError(emailError)
+      return
+    }
+
+    setLoading(true); setError(null); setWidgetError(null); setWidgetReady(false); setPaymentSession(null); setEmbeddedOrderId(null)
     try {
       const res = await fetch("/api/payment/create", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           plan: planId,
-          email: email.trim(),
+          email: sanitizedEmail,
           name: name.trim(),
         }),
       })
@@ -329,8 +362,35 @@ function CheckoutForm() {
         </div>
         <div>
           <label htmlFor="email" className="block text-sm font-medium mb-1">Email</label>
-          <input id="email" type="email" required disabled={loading || !!paymentSession} value={email} onChange={e => setEmail(e.target.value)}
-            placeholder="your@email.com" className="w-full rounded-lg border border-border bg-background px-4 py-2.5 text-sm outline-none focus:ring-2 focus:ring-primary/40" />
+          <input
+            id="email"
+            type="email"
+            required
+            disabled={loading || !!paymentSession}
+            value={email}
+            onChange={e => setEmail(sanitizeEmailInput(e.target.value))}
+            onBlur={() => setEmailTouched(true)}
+            autoComplete="email"
+            inputMode="email"
+            placeholder="your@email.com"
+            aria-invalid={emailValidationError ? true : undefined}
+            aria-describedby={emailValidationError ? "email-error" : undefined}
+            className={`w-full rounded-lg border bg-background px-4 py-2.5 text-sm outline-none focus:ring-2 focus:ring-primary/40 ${emailValidationError ? "border-red-400" : "border-border"}`}
+          />
+          {emailFixSuggestion && (
+            <button
+              type="button"
+              onClick={applyEmailFixSuggestion}
+              className="mt-1 block text-left text-xs text-primary underline hover:no-underline"
+            >
+              Мали на увазі {emailFixSuggestion}? Натисніть, щоб виправити
+            </button>
+          )}
+          {emailValidationError && (
+            <p id="email-error" role="alert" className="mt-1 text-xs text-red-600">
+              {emailValidationError}
+            </p>
+          )}
           <p className="mt-1 text-xs text-muted-foreground">
             Вкажіть email, з яким ви входите в додаток — підписка активується автоматично.
           </p>
@@ -414,10 +474,12 @@ function PaymentStatusCard({
   state,
   message,
   orderId,
+  email,
 }: {
   state: PaymentState
   message: string | null
   orderId: string | null
+  email: string | null
 }) {
   const isSuccess = state === "success"
   const isFailure = state === "failure"
@@ -439,6 +501,17 @@ function PaymentStatusCard({
       <p className="text-muted-foreground mb-3">
         {message || "Ми перевіряємо статус вашого платежу."}
       </p>
+
+      {email && !isSuccess && !isFailure && (
+        <p className="mb-3 text-xs text-muted-foreground">
+          Підтвердження надішлемо на <strong className="text-foreground break-all">{email}</strong>.
+          Якщо в адресі помилка — напишіть нам одразу на{" "}
+          <a href="mailto:craftappmobile@gmail.com" className="text-primary underline hover:no-underline">
+            craftappmobile@gmail.com
+          </a>
+          , поки платіж ще обробляється.
+        </p>
+      )}
 
       {orderId && (
         <p className="mb-6 text-xs text-muted-foreground">
