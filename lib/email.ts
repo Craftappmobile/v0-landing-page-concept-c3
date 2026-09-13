@@ -1,5 +1,5 @@
 import { Resend } from "resend";
-import { isPlanId, PLAN_CONFIG } from "@/lib/plans";
+import { isPlanId, PLAN_CONFIG } from "./plans.ts";
 
 function getResendClient(): Resend {
   const apiKey = process.env.RESEND_API_KEY?.trim();
@@ -208,6 +208,73 @@ export async function sendRenewalFailedEmail(
     return { success: true };
   } catch (err) {
     console.error("[Email] Renewal failed email exception:", err);
+    return { success: false, error: String(err) };
+  }
+}
+
+/**
+ * Win-back email for subscriptions whose access has already ended — either
+ * because a renewal payment failed, or because the subscription silently
+ * lapsed after the grace period without any Hutko callback at all. Unlike
+ * sendRenewalFailedEmail, this does not claim the bank declined a charge
+ * (that isn't always true), and links straight to checkout with the plan
+ * pre-selected to minimize clicks.
+ */
+export async function sendAccessExpiredEmail(
+  to: string,
+  customerName: string,
+  planType: string,
+): Promise<{ success: boolean; error?: string }> {
+  try {
+    const resend = getResendClient();
+    const planName = isPlanId(planType) ? PLAN_CONFIG[planType].name : planType;
+    const checkoutUrl = `https://vjazhi.com.ua/checkout?plan=${encodeURIComponent(planType)}`;
+
+    const { error } = await resend.emails.send({
+      from: FROM_EMAIL,
+      to: [to],
+      subject: "Ваш доступ закінчився — продовжіть підписку",
+      html: `
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Ваш доступ закінчився — продовжіть підписку</title>
+</head>
+<body>
+  <div style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; max-width: 560px; margin: 0 auto; padding: 32px 16px;">
+          <h1 style="font-size: 24px; color: #1a1a1a;">Привіт, ${customerName || ""}!</h1>
+          <p style="font-size: 16px; color: #333; line-height: 1.6;">
+            Ваш доступ до підписки <strong>«${planName}»</strong> закінчився — оплату не вдалося продовжити.
+          </p>
+          <p style="font-size: 15px; color: #333; line-height: 1.6;">
+            Щоб знову користуватися всіма можливостями додатку, оформіть підписку заново — це займе
+            менше хвилини.
+          </p>
+          <p style="margin: 24px 0;">
+            <a href="${checkoutUrl}" style="display: inline-block; background: #7c3aed; color: #fff; text-decoration: none; font-size: 16px; padding: 12px 24px; border-radius: 8px;">Продовжити підписку</a>
+          </p>
+          <hr style="border: none; border-top: 1px solid #eee; margin: 24px 0;" />
+          <p style="font-size: 12px; color: #999;">
+            Питання? Пишіть: <a href="mailto:craftappmobile@gmail.com" style="color: #7c3aed;">craftappmobile@gmail.com</a>
+          </p>
+  </div>
+</body>
+</html>
+      `,
+    });
+
+    if (error) {
+      console.error("[Email] Access expired email error:", error);
+      return { success: false, error: error.message };
+    }
+
+    console.log(`[Email] Access expired email sent to ${to}`);
+    return { success: true };
+  } catch (err) {
+    console.error("[Email] Access expired email exception:", err);
     return { success: false, error: String(err) };
   }
 }
