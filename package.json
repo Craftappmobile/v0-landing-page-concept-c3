@@ -10,6 +10,7 @@
     "check:plans": "node --no-warnings --experimental-strip-types scripts/check-plans.mts && tsc --noEmit",
     "test:payment": "node --no-warnings --experimental-strip-types --test scripts/payment-flow.test.mts",
     "test:cancel": "node --no-warnings --experimental-strip-types --test scripts/cancel-api.test.mts",
+    "test:create": "node --no-warnings --experimental-strip-types --test scripts/create-api.test.mts",
     "test:expire-subscriptions": "node --no-warnings --experimental-strip-types --test scripts/expire-subscriptions.test.mts",
     "test:retry-payment-emails": "node --no-warnings --experimental-strip-types --test scripts/send-retry-payment-emails.test.mts",
     "test:email-validation": "node --no-warnings --experimental-strip-types --test scripts/email-validation.test.mts",

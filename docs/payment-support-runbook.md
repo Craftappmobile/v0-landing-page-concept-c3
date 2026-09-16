@@ -167,6 +167,8 @@ https://vjazhi.com.ua/api/payment/callback
 
 Якщо direct payment callback прийде без `access_email`, бекенд не створить акаунт на `sender_email`. Такий callback буде прийнятий у режимі `manual_review` і записаний у `public.payment_callback_events` для ручного відновлення доступу.
 
+Те саме відбувається, якщо `access_email` є, але не проходить перевірку формату (наприклад, у ньому зайвий пробіл або пропущено `@`): подія записується з `reason = invalid_access_email`, підписка при цьому не створюється.
+
 ## 6. Що було виправлено технічно
 
 - Direct Hutko callback може створити `active` subscription без попереднього `pending` запису **лише** якщо має явний `access_email`.

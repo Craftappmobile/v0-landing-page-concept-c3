@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createAdminClient } from "@/lib/supabase";
 import { buildHutkoButtonWidgetConfig } from "@/lib/hutko";
+import { getEmailValidationError, sanitizeEmailInput } from "@/lib/email-validation";
 import { isPlanId, PLAN_CONFIG } from "@/lib/plans";
 import { resolveHutkoCheckoutRecurringMode } from "@/lib/recurring-mode";
 
@@ -15,12 +16,24 @@ export async function POST(request: NextRequest) {
       name: string;
     };
 
-    const trimmedEmail = email?.trim();
-    const trimmedName = name?.trim();
+    const trimmedEmail = sanitizeEmailInput(typeof email === "string" ? email : "");
+    const trimmedName = typeof name === "string" ? name.trim() : "";
 
     if (!plan || !trimmedEmail || !trimmedName) {
       return NextResponse.json(
         { error: "Заповніть всі поля" },
+        { status: 400 }
+      );
+    }
+
+    // The subscription row and the Hutko `access_email` are both written from
+    // this value, and the account is created on it after payment. A malformed
+    // address would only fail later, at Auth user creation, leaving a paid
+    // subscription with no access, so reject it before any payment starts.
+    const emailError = getEmailValidationError(trimmedEmail);
+    if (emailError) {
+      return NextResponse.json(
+        { error: emailError },
         { status: 400 }
       );
     }

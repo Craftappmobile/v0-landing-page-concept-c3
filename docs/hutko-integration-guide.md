@@ -49,12 +49,15 @@
 Route:
 
 1. читає `plan`, `email`, `name`;
-2. перевіряє план через `PLAN_CONFIG`;
-3. перевіряє Hutko credentials;
-4. формує `order_id`;
-5. вставляє `pending`-запис у `public.subscriptions`;
-6. **не продовжує checkout**, якщо insert у БД не вдався;
-7. викликає Hutko API і повертає `checkout_url`.
+2. нормалізує і перевіряє формат `email` (`sanitizeEmailInput` + `getEmailValidationError`):
+   невалідний email одразу повертає `400` з українським текстом помилки, бо саме на цей
+   email створюється акаунт після оплати;
+3. перевіряє план через `PLAN_CONFIG`;
+4. перевіряє Hutko credentials;
+5. формує `order_id`;
+6. вставляє `pending`-запис у `public.subscriptions`;
+7. **не продовжує checkout**, якщо insert у БД не вдався;
+8. викликає Hutko API і повертає `checkout_url`.
 
 ### Підпис Hutko
 

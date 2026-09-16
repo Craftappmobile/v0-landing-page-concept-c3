@@ -10,6 +10,7 @@ import {
   PLAN_CONFIG,
 } from "@/lib/plans";
 import type { PlanId } from "@/lib/plans";
+import { getEmailValidationError, isValidEmailFormat } from "@/lib/email-validation";
 import { resolveHutkoCheckoutRecurringMode } from "@/lib/recurring-mode";
 import { stopHutkoSubscription } from "@/lib/hutko";
 import {
@@ -350,6 +351,20 @@ async function provisionCustomerAccess(args: {
   const bgSupabase = createAdminClient();
 
   try {
+    // A malformed access email would make Auth user creation fail, leaving a
+    // paid subscription without access — mark it for reconciliation instead.
+    if (args.customerEmail && !isValidEmailFormat(args.customerEmail)) {
+      console.error("[Hutko Callback] Invalid customer email, skipping access provisioning:", args.customerEmail);
+      await bgSupabase
+        .from("subscriptions")
+        .update({
+          email_status: "no_email_found",
+          email_error: `Invalid email format: ${args.customerEmail}`,
+        })
+        .eq("id", args.subscriptionId);
+      return;
+    }
+
     if (args.customerEmail) {
       const { userId, generatedPassword } = await getOrCreateUser(
         bgSupabase, args.customerEmail, args.customerName,
@@ -694,14 +709,22 @@ export async function POST(request: NextRequest) {
           const directAccessEmail = resolveDirectPaymentAccessEmail({
             accessEmail: merchantAccessEmail,
           });
+          const directAccessEmailError = directAccessEmail
+            ? getEmailValidationError(directAccessEmail)
+            : null;
 
-          if (!directAccessEmail) {
-            console.error("[Hutko Callback] Direct payment is missing explicit access email:", order_id, {
+          if (!directAccessEmail || directAccessEmailError) {
+            const reason = directAccessEmail ? "invalid_access_email" : "missing_access_email";
+
+            console.error("[Hutko Callback] Direct payment has no usable access email:", order_id, {
+              accessEmail: directAccessEmail || null,
+              validationError: directAccessEmailError,
               payerEmail: payerEmailFromMerchant || null,
             });
+
             const recorded = await recordPaymentCallbackEvent(supabase, {
               eventType: "direct_payment_rejected",
-              reason: "missing_access_email",
+              reason,
               orderId: order_id,
               merchantOrderId,
               paymentId: payment_id || null,
@@ -721,7 +744,7 @@ export async function POST(request: NextRequest) {
               return NextResponse.json({ error: "Failed to record manual review event" }, { status: 500 });
             }
 
-            return NextResponse.json({ status: "manual_review", reason: "missing_access_email" });
+            return NextResponse.json({ status: "manual_review", reason });
           }
 
           logEmailMismatch({
