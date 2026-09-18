@@ -1,0 +1,42 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "Vjazhi Knitting API",
+    "description": "API for Vjazhi knitting calculators, pattern sizing, gauge calculation, and tutorials.",
+    "version": "1.0.0",
+    "contact": {
+      "name": "Vjazhi Support",
+      "url": "https://vjazhi.com.ua"
+    }
+  },
+  "servers": [
+    {
+      "url": "https://vjazhi.com.ua",
+      "description": "Production Server"
+    }
+  ],
+  "paths": {
+    "/api/health": {
+      "get": {
+        "summary": "Service health check",
+        "operationId": "getHealthStatus",
+        "responses": {
+          "200": {
+            "description": "API is operational",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": { "type": "string", "example": "ok" },
+                    "service": { "type": "string", "example": "vjazhi-api" }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

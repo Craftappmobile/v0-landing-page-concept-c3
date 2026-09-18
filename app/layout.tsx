@@ -3,6 +3,7 @@ import { DM_Sans, DM_Serif_Display } from 'next/font/google'
 import Script from 'next/script'
 import { Analytics } from '@vercel/analytics/react'
 import { SpeedInsights } from '@vercel/speed-insights/next'
+import { WebMcpProvider } from '@/components/WebMcpProvider'
 
 import './globals.css'
 
@@ -127,10 +128,14 @@ export default function RootLayout({
             alt=""
           />
         </noscript>
+        <link rel="ai-catalog" href="/.well-known/ai-catalog.json" />
+        <link rel="api-catalog" href="/.well-known/api-catalog" />
+        <link rel="service-doc" href="/auth.md" />
       </head>
       <body
         className={`${dmSans.variable} ${dmSerif.variable} font-sans antialiased`}
       >
+        <WebMcpProvider />
         <Script id="meta-pixel" strategy="afterInteractive">
           {`
             !function(f,b,e,v,n,t,s)

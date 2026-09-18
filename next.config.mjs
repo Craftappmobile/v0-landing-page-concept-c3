@@ -37,6 +37,37 @@ const nextConfig = {
       },
     ]
   },
+  async headers() {
+    return [
+      {
+        source: "/",
+        headers: [
+          {
+            key: "Link",
+            value: [
+              '</.well-known/api-catalog>; rel="api-catalog"',
+              '</.well-known/ai-catalog.json>; rel="ai-catalog"',
+              '</.well-known/agent-skills/index.json>; rel="agent-skills"',
+              '</auth.md>; rel="service-doc"',
+            ].join(", "),
+          },
+        ],
+      },
+      {
+        source: "/.well-known/:path*",
+        headers: [
+          {
+            key: "Access-Control-Allow-Origin",
+            value: "*",
+          },
+          {
+            key: "Access-Control-Allow-Methods",
+            value: "GET, HEAD, OPTIONS",
+          },
+        ],
+      },
+    ]
+  },
 }
 
 export default nextConfig
