@@ -51,7 +51,7 @@ export const metadata: Metadata = {
   verification: {
     google: 'eVRlAl_Z_sfg0u2ekhg6kfcbsRTqHGiCE0JPmh5kYpU',
     other: {
-      'msvalidate.01': '3C24BE13D7527F19D8FA8E15439B41E5',
+      'msvalidate.01': 'BACFA1598CD1A7255F2A3695BE0798AA',
     },
   },
   openGraph: {
