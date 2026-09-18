@@ -15,6 +15,7 @@
     "test:retry-payment-emails": "node --no-warnings --experimental-strip-types --test scripts/send-retry-payment-emails.test.mts",
     "test:email-validation": "node --no-warnings --experimental-strip-types --test scripts/email-validation.test.mts",
     "indexnow": "node --no-warnings --experimental-strip-types scripts/indexnow-ping.mts",
+    "gen:oauth-key": "node --no-warnings --experimental-strip-types scripts/gen-oauth-key.mts",
     "cleanup:recurring": "node --no-warnings --experimental-strip-types --env-file-if-exists=.env.local scripts/cleanup-dead-recurring.mts",
     "send-retry-payment-emails": "node --no-warnings --experimental-strip-types --env-file-if-exists=.env.local scripts/send-retry-payment-emails.mts",
     "send-retry-payment-emails:apply": "node --no-warnings --experimental-strip-types --env-file-if-exists=.env.local scripts/send-retry-payment-emails.mts --apply"
@@ -59,6 +60,7 @@
     "embla-carousel-react": "8.5.1",
     "gray-matter": "^4.0.3",
     "input-otp": "1.4.1",
+    "jose": "^6.2.12",
     "lucide-react": "^0.544.0",
     "next": "16.1.6",
     "next-themes": "^0.4.6",

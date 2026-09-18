@@ -7,9 +7,10 @@ export async function GET() {
 
   const metadata = {
     resource: siteUrl,
-    scopes_supported: ["read"],
+    authorization_servers: [siteUrl],
+    scopes_supported: ["knitting:calculators:read"],
     bearer_methods_supported: ["header"],
-    resource_documentation: `${siteUrl}/about`,
+    resource_documentation: `${siteUrl}/auth.md`,
   }
 
   return NextResponse.json(metadata, {
