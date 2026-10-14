@@ -1,5 +1,5 @@
 export const CANCELLATION_SUBSCRIPTION_SELECT =
-  "id, order_id, plan, customer_name, payment_provider, recurring_mode, status, auto_renewal, cancellation_state, cancellation_request_id";
+  "id, order_id, plan, plan_type, user_id, customer_name, payment_provider, recurring_mode, recurring_mode_source, status, auto_renewal, cancellation_state, cancellation_request_id, cancellation_completed_at";
 export const CANCELLABLE_SUBSCRIPTION_STATUSES = ["pending", "active", "failed"] as const;
 
 export type CancellableSubscription = {
@@ -13,6 +13,10 @@ export type CancellableSubscription = {
   auto_renewal: boolean | null;
   cancellation_state: string | null;
   cancellation_request_id: string | null;
+  plan_type?: string | null;
+  user_id?: string | null;
+  recurring_mode_source?: string | null;
+  cancellation_completed_at?: string | null;
 };
 
 export type SubscriptionCancellationAction =
@@ -28,10 +32,22 @@ export function isLegacyRecurringAttempt(subscription: CancellableSubscription):
     && subscription.order_id?.trim().toLowerCase().startsWith("recurring__") === true;
 }
 
+export function isNonRecurringSubscription(subscription: CancellableSubscription): boolean {
+  return [subscription.plan, subscription.plan_type]
+    .some((plan) => ["forever", "lifetime"].includes(plan?.trim().toLowerCase() || ""));
+}
+
+export function hasHutkoScheduleProvenance(subscription: CancellableSubscription): boolean {
+  return subscription.payment_provider === "hutko"
+    && (subscription.recurring_mode === "hutko_schedule"
+      || ["hutko", "cancelled_hutko_schedule", "legacy_recurring_callback"]
+        .includes(subscription.recurring_mode_source || ""));
+}
+
 export function getSubscriptionCancellationAction(
   subscription: CancellableSubscription,
 ): SubscriptionCancellationAction {
-  if (subscription.cancellation_state === "completed" || subscription.recurring_mode === "none") {
+  if (subscription.cancellation_state === "completed" || isNonRecurringSubscription(subscription)) {
     return "already_completed";
   }
 
@@ -39,15 +55,16 @@ export function getSubscriptionCancellationAction(
 
   if (isLegacyRecurringAttempt(subscription)) return "local_only";
   if (subscription.payment_provider !== "hutko") return "manual_review";
-  if (subscription.recurring_mode === "unknown") return "manual_review";
-  if (subscription.status === "pending") return "pending_activation";
-  if ((subscription.cancellation_state === "requested" || subscription.cancellation_state === "provider_failed")
-      && subscription.recurring_mode === "hutko_schedule") {
+  if (hasHutkoScheduleProvenance(subscription)) {
+    // A verified renewal proves an existing schedule even if the local row is pending.
+    if (subscription.status === "pending" && subscription.recurring_mode_source !== "legacy_recurring_callback") {
+      return "pending_activation";
+    }
     return "provider_stop";
   }
-  if (subscription.auto_renewal !== true) return "already_completed";
-  if (subscription.recurring_mode === "merchant_token") return "local_only";
-  if (subscription.recurring_mode === "hutko_schedule") return "provider_stop";
+  if (subscription.recurring_mode === "merchant_token") {
+    return subscription.status === "pending" ? "pending_activation" : "local_only";
+  }
   return "manual_review";
 }
 
@@ -55,15 +72,16 @@ export function getHutkoScheduleOrderIds(subscriptions: CancellableSubscription[
   const orderIds = new Set<string>();
 
   for (const subscription of subscriptions) {
+    if (isNonRecurringSubscription(subscription) || subscription.cancellation_state === "completed") continue;
     if (subscription.payment_provider !== "hutko") {
       throw new Error(`Unsupported cancellation provider for subscription ${subscription.id}`);
     }
 
-    if (subscription.recurring_mode === "merchant_token" || subscription.recurring_mode === "none") {
+    if (subscription.recurring_mode === "merchant_token" && !hasHutkoScheduleProvenance(subscription)) {
       continue;
     }
 
-    if (subscription.recurring_mode !== "hutko_schedule") {
+    if (!hasHutkoScheduleProvenance(subscription)) {
       throw new Error(`Unknown recurring mode for subscription ${subscription.id}`);
     }
 

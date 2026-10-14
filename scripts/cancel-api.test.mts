@@ -154,3 +154,26 @@ test("legacy recurring attempts do not block their parent schedule", () => {
     auto_renewal: true, cancellation_state: "none", cancellation_request_id: null,
   }), "provider_stop");
 });
+
+test("local none is not proof that a historical Hutko recurring plan was stopped", () => {
+  const legacy = {
+    id: "legacy", order_id: "parent", plan: "month", customer_name: null,
+    payment_provider: "hutko", recurring_mode: "none", status: "active",
+    auto_renewal: false, cancellation_state: "none", cancellation_request_id: null,
+    recurring_mode_source: "auto_renewal_disabled",
+  };
+  assert.equal(getSubscriptionCancellationAction(legacy), "manual_review");
+  assert.equal(getSubscriptionCancellationAction({ ...legacy, recurring_mode_source: "hutko" }), "provider_stop");
+  assert.equal(getSubscriptionCancellationAction({ ...legacy, cancellation_state: "completed" }), "already_completed");
+  assert.equal(getSubscriptionCancellationAction({ ...legacy, plan: "forever" }), "already_completed");
+  assert.equal(getSubscriptionCancellationAction({ ...legacy, plan: null, plan_type: "lifetime" }), "already_completed");
+  assert.throws(() => getHutkoScheduleOrderIds([legacy]), /Unknown recurring mode/);
+});
+
+test("a known schedule still requires provider stop when local renewal is disabled", () => {
+  assert.equal(getSubscriptionCancellationAction({
+    id: "disabled", order_id: "parent", plan: "month", customer_name: null,
+    payment_provider: "hutko", recurring_mode: "hutko_schedule", status: "active",
+    auto_renewal: false, cancellation_state: "none", cancellation_request_id: null,
+  }), "provider_stop");
+});

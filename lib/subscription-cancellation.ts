@@ -1,8 +1,10 @@
 import type { createAdminClient } from "./supabase.ts";
 import {
   getSubscriptionCancellationAction,
+  hasHutkoScheduleProvenance,
   type CancellableSubscription,
 } from "./cancel-subscription.ts";
+import { reconcileSubscriptionCancellation } from "./cancellation-reconciliation.ts";
 
 type AdminClient = ReturnType<typeof createAdminClient>;
 
@@ -66,7 +68,8 @@ export async function cancelOneSubscription(args: {
   now: string;
   stopProvider: (orderId: string) => Promise<unknown>;
 }): Promise<CancellationItemResult> {
-  const { supabase, subscription, now } = args;
+  const { supabase, now } = args;
+  const subscription = await reconcileSubscriptionCancellation(args);
   const requestId = subscription.cancellation_state !== "none"
     && subscription.cancellation_request_id
     ? subscription.cancellation_request_id
@@ -150,7 +153,7 @@ export async function cancelOneSubscription(args: {
   await updateSubscription(supabase, subscription.id, {
     auto_renewal: false,
     recurring_mode: "none",
-    recurring_mode_source: action === "provider_stop"
+    recurring_mode_source: hasHutkoScheduleProvenance(subscription)
       ? "cancelled_hutko_schedule"
       : "cancelled_local",
     cancellation_state: "completed",

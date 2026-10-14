@@ -3,6 +3,8 @@ import crypto from "crypto";
 import { createAdminClient } from "@/lib/supabase";
 import { getPlanRenewalAmount, isPlanId, PLAN_CONFIG } from "@/lib/plans";
 import { RECURRING_MODE } from "@/lib/recurring-mode";
+import { stopHutkoSubscription } from "@/lib/hutko";
+import { runSubscriptionCancellationJobs } from "@/lib/unlimited-subscriptions";
 
 const MERCHANT_ID = process.env.HUTKO_MERCHANT_ID || "";
 const MERCHANT_PASSWORD = process.env.HUTKO_MERCHANT_PASSWORD || "";
@@ -41,7 +43,10 @@ export async function GET(request: NextRequest) {
   // Verify cron secret (Vercel sends this automatically)
   const authHeader = request.headers.get("authorization");
   const cronSecret = process.env.CRON_SECRET;
-  if (cronSecret && authHeader !== `Bearer ${cronSecret}`) {
+  if (!cronSecret) {
+    return NextResponse.json({ error: "Recurring job is not configured" }, { status: 503 });
+  }
+  if (authHeader !== `Bearer ${cronSecret}`) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 
@@ -55,6 +60,15 @@ export async function GET(request: NextRequest) {
   }
 
   const supabase = createAdminClient();
+  let cancellations;
+  try {
+    cancellations = await runSubscriptionCancellationJobs({
+      supabase, now: new Date(),
+      stopProvider: (orderId) => stopHutkoSubscription({ orderId, merchantId: MERCHANT_ID, password: MERCHANT_PASSWORD }),
+    });
+  } catch {
+    return NextResponse.json({ error: "Cancellation queue unavailable; billing paused" }, { status: 503 });
+  }
 
   // Only merchant-managed token subscriptions may be charged here.
   // Hutko-scheduled and unclassified subscriptions must never be duplicated by this cron.
@@ -66,6 +80,7 @@ export async function GET(request: NextRequest) {
     .select("*")
     .eq("status", "active")
     .eq("auto_renewal", true)
+    .eq("cancellation_state", "none")
     .eq("recurring_mode", RECURRING_MODE.MERCHANT_TOKEN)
     .not("rectoken", "is", null)
     .lte("expires_at", tomorrow.toISOString());
@@ -76,7 +91,7 @@ export async function GET(request: NextRequest) {
   }
 
   if (!expiring || expiring.length === 0) {
-    return NextResponse.json({ message: "No subscriptions to renew", count: 0 });
+    return NextResponse.json({ message: "No subscriptions to renew", count: 0, cancellations });
   }
 
   const results: Array<{ order_id: string; status: string }> = [];
@@ -95,7 +110,15 @@ export async function GET(request: NextRequest) {
       continue;
     }
 
-    const newOrderId = `renew_${Date.now()}_${Math.random().toString(36).slice(2, 8)}`;
+    const chargeClaim = await supabase.rpc("claim_hutko_recurring_charge", { p_subscription_id: sub.id });
+    if (chargeClaim.error) {
+      return NextResponse.json({ error: "Billing claim unavailable; billing paused" }, { status: 503 });
+    }
+    const newOrderId = chargeClaim.data;
+    if (typeof newOrderId !== "string" || !newOrderId) {
+      results.push({ order_id: sub.order_id, status: "skipped_unlimited_cancelled_or_claimed" });
+      continue;
+    }
 
     const params: Record<string, string | number> = {
       order_id: newOrderId,
@@ -116,6 +139,7 @@ export async function GET(request: NextRequest) {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ request: params }),
+        signal: AbortSignal.timeout(15_000),
       });
 
       const data = await res.json();
@@ -128,13 +152,13 @@ export async function GET(request: NextRequest) {
       } else {
         results.push({ order_id: newOrderId, status: `failed_${orderStatus || responseStatus}` });
       }
-    } catch (err) {
-      console.error("[Recurring] Charge error for", sub.order_id, err);
-      results.push({ order_id: sub.order_id, status: "error" });
+    } catch {
+      // Keep the claim: an ambiguous network failure must not cause a second charge.
+      results.push({ order_id: newOrderId, status: "needs_provider_reconciliation" });
     }
   }
 
   console.log("[Recurring] Results:", results);
-  return NextResponse.json({ message: "Recurring billing complete", results });
+  return NextResponse.json({ message: "Recurring billing complete", results, cancellations });
 }
 

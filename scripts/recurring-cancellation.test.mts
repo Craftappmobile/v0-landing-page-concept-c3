@@ -24,6 +24,17 @@ function fakeSupabase(markers: string[] = []) {
     client: {
       from(table: string) {
         return {
+          select() {
+            const query = {
+              eq() { return query; },
+              in() { return query; },
+              like() { return query; },
+              gt() { return query; },
+              order() { return query; },
+              async limit() { return { data: [], error: null }; },
+            };
+            return query;
+          },
           update(values: Record<string, unknown>) {
             return {
               async eq() {
@@ -125,4 +136,32 @@ test("completed replay is idempotent", async () => {
   assert.equal(result.outcome, "completed");
   assert.equal(providerCalls, 0);
   assert.equal(db.updates.length, 0);
+});
+
+test("legacy locally-disabled rows cannot claim completed without driver evidence", async () => {
+  const db = fakeSupabase();
+  let providerCalls = 0;
+  const result = await cancelOneSubscription({
+    supabase: db.client as never,
+    subscription: subscription({ recurring_mode: "none", auto_renewal: false }),
+    requestId, now: "2026-10-14T00:00:00.000Z",
+    stopProvider: async () => { providerCalls += 1; },
+  });
+  assert.equal(result.outcome, "manual_review");
+  assert.equal(providerCalls, 0);
+  assert.equal(db.updates.some((update) => update.cancellation_state === "completed"), false);
+});
+
+test("manual lifetime access is never mutated by cancellation", async () => {
+  const db = fakeSupabase();
+  const result = await cancelOneSubscription({
+    supabase: db.client as never,
+    subscription: subscription({ plan: null, plan_type: "lifetime", payment_provider: "manual",
+      recurring_mode: "none", auto_renewal: false }),
+    requestId, now: "2026-10-14T00:00:00.000Z",
+    stopProvider: async () => { assert.fail("must not stop lifetime"); },
+  });
+  assert.equal(result.outcome, "completed");
+  assert.deepEqual(db.updates, []);
+  assert.deepEqual(db.events, []);
 });

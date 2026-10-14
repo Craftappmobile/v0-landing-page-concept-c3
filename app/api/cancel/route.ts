@@ -3,14 +3,12 @@ import { createAdminClient } from "@/lib/supabase";
 import { sendCancellationEmail } from "@/lib/email";
 import { stopHutkoSubscription } from "@/lib/hutko";
 import {
-  CANCELLABLE_SUBSCRIPTION_STATUSES,
-  CANCELLATION_SUBSCRIPTION_SELECT,
   getCancellationEmailPattern,
   normalizeCancellationEmail,
 } from "@/lib/cancel-subscription";
-import type { CancellableSubscription } from "@/lib/cancel-subscription";
 import { cancelOneSubscription } from "@/lib/subscription-cancellation";
 import { cancelOrphanHutkoSchedules } from "@/lib/orphan-subscription-cancellation";
+import { findCancellationSubscriptions } from "@/lib/cancellation-reconciliation";
 
 const MERCHANT_ID = process.env.HUTKO_MERCHANT_ID || "";
 const MERCHANT_PASSWORD = process.env.HUTKO_MERCHANT_PASSWORD || "";
@@ -38,23 +36,9 @@ export async function POST(request: NextRequest) {
     const supabase = createAdminClient();
     const emailPattern = getCancellationEmailPattern(normalizedEmail);
 
-    // Find subscriptions that still have auto-renewal enabled for this email.
-    // Includes legacy failed rows left behind by reversed Hutko callbacks.
-    const { data: subs, error } = await supabase
-      .from("subscriptions")
-      .select(CANCELLATION_SUBSCRIPTION_SELECT)
-      .ilike("email", emailPattern)
-      .in("status", CANCELLABLE_SUBSCRIPTION_STATUSES)
-      .or(
-        `auto_renewal.eq.true,cancellation_request_id.eq.${requestId},cancellation_state.in.(requested,provider_stopped,provider_failed,needs_review,completed)`,
-      );
+    const subscriptions = await findCancellationSubscriptions({ supabase, emailPattern, requestId });
 
-    if (error) {
-      console.error("[Cancel] DB error:", error);
-      return NextResponse.json({ error: "Помилка сервера" }, { status: 500 });
-    }
-
-    if (!subs || subs.length === 0) {
+    if (subscriptions.length === 0) {
       const orphanResult = await cancelOrphanHutkoSchedules({
         supabase,
         emailPattern,
@@ -89,7 +73,6 @@ export async function POST(request: NextRequest) {
       }, { status: 404 });
     }
 
-    const subscriptions = subs as CancellableSubscription[];
     const now = new Date().toISOString();
     const results = [];
 
