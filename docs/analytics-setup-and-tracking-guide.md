@@ -21,7 +21,7 @@ flowchart TD
     
     MidCTA -->|utm_content=mid_app_cta| Pricing["/#pricing / /checkout"]
     WidgetHub -->|utm_content=widget_pro_btn| Pricing
-    WidgetHub -->|utm_content=widget_test_btn| Checkout["/checkout?plan=month"]
+    WidgetHub -->|utm_content=widget_test_btn| Checkout["/checkout?plan=quarter"]
     WidgetHub -->|utm_content=widget_web_calc| WebCalc["/kalkuliatory/{slug}"]
     
     Pricing -->|Оплата підписки| KeyCRM["KeyCRM / Платіжний шлюз Hutko"]
@@ -123,9 +123,9 @@ export const metadata: Metadata = {
 | Блок / Елемент | Призначення | Приклад URL із мітками |
 |----------------|-------------|-------------------------|
 | **Mid-Article Banner** (`{{app-cta}}`) | Заклик після складних розрахунків | `/#pricing?utm_source=blog&utm_medium=article&utm_campaign=A05-rahlan&utm_content=mid_app_cta` |
-| **Тест за 100 грн** (у банері) | Швидка пробна покупка | `/checkout?plan=month&utm_source=blog&utm_medium=article&utm_campaign=A05-rahlan&utm_content=mid_test_plan` |
+| **Пакет «Старт», 454 грн** (у банері) | Найдешевший вхід (замість «Тесту», знятого з продажу) | `/checkout?plan=quarter&utm_source=blog&utm_medium=article&utm_campaign=A05-rahlan&utm_content=mid_test_plan` |
 | **PRO-кнопка у віджеті** (Tier 2) | Основна конверсія наприкінці статті | `/#pricing?utm_source=blog&utm_medium=article&utm_campaign=A05-rahlan&utm_content=widget_pro_btn` |
-| **Тест за 100 грн** (у віджеті) | Альтернатива річному тарифу | `/checkout?plan=month&utm_source=blog&utm_medium=article&utm_campaign=A05-rahlan&utm_content=widget_test_btn` |
+| **Пакет «Старт», 454 грн** (у віджеті) | Альтернатива річному тарифу | `/checkout?plan=quarter&utm_source=blog&utm_medium=article&utm_campaign=A05-rahlan&utm_content=widget_test_btn` |
 | **Веб-калькулятор** (Tier 1) | Залучення у безкоштовний онлайн-інструмент | `/kalkuliatory/rahlan?utm_source=blog&utm_medium=article&utm_campaign=A05-rahlan&utm_content=widget_web_calc` |
 
 ### 4.3. Технічна реалізація віджета

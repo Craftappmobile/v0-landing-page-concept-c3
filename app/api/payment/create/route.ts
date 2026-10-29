@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { createAdminClient } from "@/lib/supabase";
 import { buildHutkoButtonWidgetConfig } from "@/lib/hutko";
 import { getEmailValidationError, sanitizeEmailInput } from "@/lib/email-validation";
-import { isPlanId, PLAN_CONFIG } from "@/lib/plans";
+import { isPlanId, isPlanPurchasable, PLAN_CONFIG } from "@/lib/plans";
 import { resolveHutkoCheckoutRecurringMode } from "@/lib/recurring-mode";
 
 const MERCHANT_PASSWORD = process.env.HUTKO_MERCHANT_PASSWORD || "";
@@ -45,6 +45,15 @@ export async function POST(request: NextRequest) {
       );
     }
 
+    // Plans off sale (month) or without a Hutko button yet (club) are kept in
+    // PLAN_CONFIG only for renewals and callbacks; never start a new checkout.
+    if (!isPlanPurchasable(plan)) {
+      return NextResponse.json(
+        { error: "Цей тариф зараз недоступний. Оберіть інший пакет на сторінці тарифів." },
+        { status: 400 }
+      );
+    }
+
     const planConfig = PLAN_CONFIG[plan];
 
     if (!MERCHANT_PASSWORD) {
@@ -75,7 +84,8 @@ export async function POST(request: NextRequest) {
       email: trimmedEmail,
       customer_name: trimmedName,
       plan,
-      plan_type: plan,
+      // The mobile app and apply_hutko_renewal read plan_type: club is stored as 'year'.
+      plan_type: planConfig.planType,
       amount: planConfig.amount,
       currency: "UAH",
       status: "pending",

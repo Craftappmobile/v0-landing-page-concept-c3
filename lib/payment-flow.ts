@@ -7,7 +7,7 @@ export type PaymentViewModel = {
   message: string
 }
 
-export type DirectPaymentPlanId = "month" | "quarter" | "half" | "year" | "forever"
+export type DirectPaymentPlanId = "month" | "quarter" | "half" | "year" | "club" | "forever"
 
 export type HutkoFailureDetails = {
   code: string | null
@@ -51,6 +51,7 @@ const DIRECT_PAYMENT_PLAN_CODE_TO_PLAN_ID: Record<string, DirectPaymentPlanId> =
   "3": "quarter",
   "6": "half",
   "12": "year",
+  "club": "club",
   "9999": "forever",
 }
 

@@ -18,8 +18,8 @@
 | `order_id` | migration + code | ключовий зовнішній identifier для create / callback / status |
 | `email` | migration + code | email покупця, lookup для cancel і follow-up |
 | `customer_name` | migration + code | ім'я з checkout-форми |
-| `plan` | migration + code | plan id (`quarter`, `half`, `year`, `forever`) |
-| `plan_type` | code | зараз дублює `plan` у create flow |
+| `plan` | migration + code | plan id (`month`, `quarter`, `half`, `year`, `club`, `forever`) |
+| `plan_type` | code | значення для мобільного додатку й `apply_hutko_renewal` (`PLAN_CONFIG[plan].planType`): дублює `plan`, крім клубу (`plan = 'club'`, `plan_type = 'year'`) |
 | `amount` | migration + code | сума в minor units |
 | `currency` | migration + code | зараз `UAH` |
 | `status` | code | `pending` / `active` / `failed`; код також толерує `cancelled` |

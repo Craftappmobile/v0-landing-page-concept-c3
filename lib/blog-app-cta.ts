@@ -1,3 +1,8 @@
+import { PLAN_CONFIG } from "./plans"
+
+// «Тест» is no longer sold; the entry offer is the cheapest package on sale.
+const ENTRY_PLAN = { id: "quarter", ...PLAN_CONFIG.quarter } as const
+
 export interface AppCtaOptions {
   badge?: string
   title?: string
@@ -31,10 +36,11 @@ export function renderBlogAppCta(options?: AppCtaOptions): string {
   const primaryHref =
     options?.primaryButtonHref ||
     `/#pricing?utm_source=blog&utm_medium=article&utm_campaign=${slug}&utm_content=mid_app_cta`
-  const secondaryText = options?.secondaryText || "Спробувати пакет «Тест» за 100 грн ➔"
+  const secondaryText =
+    options?.secondaryText || `Почати з пакета «${ENTRY_PLAN.pricingTabLabel}» — ${ENTRY_PLAN.priceWithCurrency} ➔`
   const secondaryHref =
     options?.secondaryHref ||
-    `/checkout?plan=month&utm_source=blog&utm_medium=article&utm_campaign=${slug}&utm_content=mid_test_plan`
+    `/checkout?plan=${ENTRY_PLAN.id}&utm_source=blog&utm_medium=article&utm_campaign=${slug}&utm_content=mid_test_plan`
   const freeCalcText = options?.freeCalcText || "Потрібна лише одна цифра? Безкоштовний веб-калькулятор"
   const freeCalcHref =
     options?.freeCalcHref ||
@@ -57,7 +63,7 @@ export function renderBlogAppCta(options?: AppCtaOptions): string {
       <div class="inline-flex flex-wrap items-center gap-2 rounded-full border border-primary/30 bg-primary/15 px-3.5 py-1 text-xs font-semibold uppercase tracking-wider text-primary">
         <span>📱 ${safeBadge}</span>
         <span class="inline-block w-1.5 h-1.5 rounded-full bg-primary"></span>
-        <span class="text-foreground font-bold">Від 100 грн / міс</span>
+        <span class="text-foreground font-bold">Від ${escapeHtml(ENTRY_PLAN.priceWithCurrency)} / ${escapeHtml(ENTRY_PLAN.pricingPeriodLabel)}</span>
       </div>
 
       <h3 class="font-serif text-2xl sm:text-3xl font-bold tracking-tight text-foreground leading-snug">

@@ -40,6 +40,7 @@ async function invoke(options: {
   const writes: Write[] = [];
   const rpcs: Array<{ name: string; args: Row }> = [];
   const providerStops: Row[] = [];
+  const welcomePlans: unknown[] = [];
   let emails = 0;
   // All fluent operations terminate in local fixtures, never a Supabase client.
   const client = {
@@ -83,7 +84,7 @@ async function invoke(options: {
     "@/lib/email-validation": emailValidation,
     "@/lib/password": { generateSecurePassword: () => { throw new Error("Unexpected Auth creation"); } },
     "@/lib/email": {
-      sendWelcomeEmail: async () => { emails++; return { success: true }; },
+      sendWelcomeEmail: async (...args: unknown[]) => { emails++; welcomePlans.push(args[2]); return { success: true }; },
       sendRenewalFailedEmail: async () => { throw new Error("Unexpected failure email"); },
     },
     "@/lib/hutko": { stopHutkoSubscription: async (args: Row) => { providerStops.push(args); } },
@@ -107,7 +108,7 @@ async function invoke(options: {
   body.signature = crypto.createHash("sha1").update(["", ...values].join("|")).digest("hex");
   assert.ok(exports.POST);
   const response = await exports.POST({ json: async () => body });
-  return { response, body: await response.json(), writes, rpcs, providerStops, emails };
+  return { response, body: await response.json(), writes, rpcs, providerStops, emails, welcomePlans };
 }
 
 test("renewal review commits via one RPC and never stops Hutko in the callback", async () => {
@@ -174,8 +175,10 @@ test("active approval replay retries unsent welcome without access or profile wr
 
 for (const plan of plans.PLAN_IDS) {
   test(`initial ${plan} approval uses the stored plan's initial duration without callback metadata`, async () => {
+    // Rows as /api/payment/create writes them: club is plan 'club', plan_type 'year'.
+    const planType = plans.PLAN_CONFIG[plan].planType;
     const result = await invoke({
-      subscription: { ...fixture, plan, plan_type: plan, status: "pending", auto_renewal: plans.PLAN_CONFIG[plan].isRecurring, cancellation_state: "none" },
+      subscription: { ...fixture, plan, plan_type: planType, status: "pending", auto_renewal: plans.PLAN_CONFIG[plan].isRecurring, cancellation_state: "none" },
       body: { order_id: fixture.order_id },
     });
     assert.equal(result.body.status, "ok");
@@ -184,9 +187,31 @@ for (const plan of plans.PLAN_IDS) {
     const start = new Date(String(activation.values.started_at));
     start.setDate(start.getDate() + plans.getPlanInitialAccessDays(plan));
     assert.equal(activation.values.expires_at, start.toISOString());
+    assert.equal(activation.values.auto_renewal, plans.PLAN_CONFIG[plan].isRecurring);
+    // Activation never rewrites the package: a club must not become plan 'year'.
+    for (const write of result.writes) {
+      assert.equal("plan" in write.values, false);
+      assert.equal("plan_type" in write.values, false);
+    }
+    assert.deepEqual(result.welcomePlans, [plan]);
     assert.equal(result.providerStops.length, 0);
   });
 }
+
+test("initial club approval gives 365 days even when merchant_data names another plan", async () => {
+  const result = await invoke({
+    subscription: { ...fixture, plan: "club", plan_type: "year", status: "pending", auto_renewal: true, cancellation_state: "none" },
+    body: { order_id: fixture.order_id, merchant_data: { plan: "year", plan_code: "12" } },
+  });
+  assert.equal(result.body.status, "ok");
+  const activation = result.writes.find((write) => write.values.status === "active");
+  assert.ok(activation);
+  const start = new Date(String(activation.values.started_at));
+  start.setDate(start.getDate() + 365);
+  assert.equal(activation.values.expires_at, start.toISOString());
+  assert.equal(activation.values.recurring_mode, "hutko_schedule");
+  assert.deepEqual(result.welcomePlans, ["club"]);
+});
 
 test("initial pending cancellation still finalizes provider stop after approval", async () => {
   const result = await invoke({

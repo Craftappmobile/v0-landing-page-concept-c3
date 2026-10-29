@@ -1,11 +1,21 @@
-export const PLAN_IDS = ["month", "quarter", "half", "year", "forever"] as const
+export const PLAN_IDS = ["month", "quarter", "half", "year", "club", "forever"] as const
 
 export type PlanId = (typeof PLAN_IDS)[number]
+
+/**
+ * Values the mobile app and the SQL renewal (`apply_hutko_renewal`) understand
+ * in `subscriptions.plan_type`. An unknown value breaks access in the app.
+ */
+export type SubscriptionPlanType = "month" | "quarter" | "half" | "year" | "forever"
 
 export type PlanConfig = {
   id: PlanId
   name: string
   hutkoButtonId: string
+  /** Written to `subscriptions.plan_type`; `subscriptions.plan` keeps the exact plan id. */
+  planType: SubscriptionPlanType
+  /** false — no new purchases; subscriptions bought earlier keep renewing as before. */
+  isForSale: boolean
   checkoutLabel: string
   pricingTabLabel: string
   pricingPeriodLabel: string
@@ -13,6 +23,8 @@ export type PlanConfig = {
   priceWithCurrency: string
   perMonthLabel: string
   badge: string | null
+  /** Master-class gifts and discounts; yarnmk.com.ua grants them, this site only describes them. */
+  masterClassBenefits: string[]
   amount: number
   renewalAmount: number | null
   initialDays: number
@@ -24,10 +36,21 @@ export type PlanConfig = {
   termsLabel: string
 }
 
+/**
+ * Hutko payment-link button for the Club package. The charged amount and the
+ * renewal schedule live in the Hutko cabinet (merchant 1702587), not in code.
+ * While this is empty the Club is hidden from pricing and checkout and
+ * /api/payment/create rejects it, so this code can ship before the button exists.
+ */
+const CLUB_HUTKO_BUTTON_ID = ""
+
 const PLAN_DETAILS = {
   month: {
     name: "Пакет «Тест»",
     hutkoButtonId: "4a0596b9b6f16656dd620a8981c0de28978d5236",
+    planType: "month",
+    // No longer sold; ~61 monthly subscribers still renew at 100 грн every 30 days.
+    isForSale: false,
     checkoutLabel: "Тест — 1 міс",
     pricingTabLabel: "Тест",
     pricingPeriodLabel: "1 міс",
@@ -35,6 +58,7 @@ const PLAN_DETAILS = {
     priceWithCurrency: "100 грн",
     perMonthLabel: "1 місяць повного PRO-доступу",
     badge: null,
+    masterClassBenefits: [],
     amount: 10000,
     renewalAmount: 10000,
     initialDays: 30,
@@ -48,81 +72,135 @@ const PLAN_DETAILS = {
   quarter: {
     name: "Пакет «Старт»",
     hutkoButtonId: "4042eadb25ce283bb871bccd2c0a594bd15d1a71",
-    checkoutLabel: "Старт — 3+1 міс",
+    planType: "quarter",
+    isForSale: true,
+    checkoutLabel: "Старт — 3 міс",
     pricingTabLabel: "Старт",
-    pricingPeriodLabel: "3+1 міс",
+    pricingPeriodLabel: "3 міс",
     priceValue: "454",
     priceWithCurrency: "454 грн",
-    perMonthLabel: "4 місяці доступу за ціною 3",
-    badge: "1 місяць у подарунок 🎁",
+    perMonthLabel: "3 місяці повного PRO-доступу",
+    badge: null,
+    masterClassBenefits: [
+      "Майстер-класи по 390 грн замість 590 (–34%)",
+    ],
     amount: 45400,
     renewalAmount: 45400,
-    initialDays: 120,
+    initialDays: 90,
     renewalDays: 90,
     isRecurring: true,
-    paymentDescription: "Пакет «Старт» — 3 місяці + 1 місяць у подарунок",
+    paymentDescription: "Пакет «Старт» — 3 місяці PRO-доступу",
     recurringDescription: "Пакет «Старт» — автопродовження на 3 місяці",
-    renewalNotice: "Перший платіж відкриває 4 місяці PRO-доступу. Далі автопродовження кожні 3 місяці — 454 грн.",
-    termsLabel: "Преміум Старт на 3+1 місяці",
+    renewalNotice: "Перший платіж відкриває 3 місяці PRO-доступу. Далі автопродовження кожні 3 місяці — 454 грн.",
+    termsLabel: "Преміум Старт на 3 місяці",
   },
   half: {
     name: "Пакет «Оптимальний»",
     hutkoButtonId: "aa0d547477ca4e5b7a7e46a16e589a6b7dbf698b",
-    checkoutLabel: "Оптимальний — 6+3 міс",
+    planType: "half",
+    isForSale: true,
+    checkoutLabel: "Оптимальний — 6 міс",
     pricingTabLabel: "Оптимальний",
-    pricingPeriodLabel: "6+3 міс",
+    pricingPeriodLabel: "6 міс",
     priceValue: "599",
     priceWithCurrency: "599 грн",
-    perMonthLabel: "9 місяців доступу за ціною 6",
-    badge: "3 місяці у подарунок 🎁",
+    perMonthLabel: "6 місяців повного PRO-доступу",
+    badge: null,
+    masterClassBenefits: [
+      "Майстер-класи по 350 грн замість 590 (–41%)",
+    ],
     amount: 59900,
     renewalAmount: 59900,
-    initialDays: 270,
+    initialDays: 180,
     renewalDays: 180,
     isRecurring: true,
-    paymentDescription: "Пакет «Оптимальний» — 6 місяців + 3 місяці у подарунок",
+    paymentDescription: "Пакет «Оптимальний» — 6 місяців PRO-доступу",
     recurringDescription: "Пакет «Оптимальний» — автопродовження на 6 місяців",
-    renewalNotice: "Перший платіж відкриває 9 місяців PRO-доступу. Далі автопродовження кожні 6 місяців — 599 грн.",
-    termsLabel: "Преміум Оптимальний на 6+3 місяці",
+    renewalNotice: "Перший платіж відкриває 6 місяців PRO-доступу. Далі автопродовження кожні 6 місяців — 599 грн.",
+    termsLabel: "Преміум Оптимальний на 6 місяців",
   },
   year: {
     name: "Пакет «Рік спокою»",
     hutkoButtonId: "6fe48cdf6aa487af5da4801a24a6bf0ae8adf5a7",
-    checkoutLabel: "Рік спокою — 12+6 міс",
+    planType: "year",
+    isForSale: true,
+    checkoutLabel: "Рік спокою — 12 міс",
     pricingTabLabel: "Рік спокою",
-    pricingPeriodLabel: "12+6 міс",
+    pricingPeriodLabel: "12 міс",
     priceValue: "918",
     priceWithCurrency: "918 грн",
-    perMonthLabel: "18 місяців доступу за ціною 12",
-    badge: "6 місяців у подарунок 🎁",
+    perMonthLabel: "12 місяців повного PRO-доступу",
+    badge: "Майстер-клас у подарунок 🎁",
+    masterClassBenefits: [
+      "1 майстер-клас на вибір у подарунок — і знову при кожному подовженні",
+      "Майстер-класи по 290 грн замість 590 (–51%)",
+      "Подарунків на 590 грн",
+    ],
     amount: 91800,
     renewalAmount: 91800,
-    initialDays: 545,
+    initialDays: 365,
     renewalDays: 365,
     isRecurring: true,
-    paymentDescription: "Пакет «Рік спокою» — 12 місяців + 6 місяців у подарунок",
+    paymentDescription: "Пакет «Рік спокою» — 12 місяців PRO-доступу",
     recurringDescription: "Пакет «Рік спокою» — автопродовження на 12 місяців",
-    renewalNotice: "Перший платіж відкриває 18 місяців PRO-доступу. Далі автопродовження кожні 12 місяців — 918 грн.",
-    termsLabel: "Преміум Рік спокою на 12+6 місяців",
+    renewalNotice: "Перший платіж відкриває 12 місяців PRO-доступу. Далі автопродовження кожні 12 місяців — 918 грн.",
+    termsLabel: "Преміум Рік спокою на 12 місяців",
+  },
+  club: {
+    name: "Клуб «Розрахуй і в'яжи»",
+    hutkoButtonId: CLUB_HUTKO_BUTTON_ID,
+    // Stored as plan = 'club', plan_type = 'year' (same contract as yarnmk.com.ua).
+    planType: "year",
+    isForSale: true,
+    checkoutLabel: "Клуб — 12 міс",
+    pricingTabLabel: "Клуб",
+    pricingPeriodLabel: "12 міс",
+    priceValue: "2490",
+    priceWithCurrency: "2490 грн",
+    perMonthLabel: "12 місяців повного PRO-доступу",
+    badge: "8 майстер-класів у подарунок 🎁",
+    masterClassBenefits: [
+      "2 майстер-класи на вибір одразу",
+      "6 нових майстер-класів — по одному раз на 2 місяці (і знову при подовженні)",
+      "Майстер-класи по 250 грн замість 590 (–58%)",
+      "Подарунків на 4720 грн за рік",
+    ],
+    amount: 249000,
+    renewalAmount: 249000,
+    initialDays: 365,
+    renewalDays: 365,
+    isRecurring: true,
+    paymentDescription: "Клуб «Розрахуй і в'яжи» — 12 місяців PRO-доступу",
+    recurringDescription: "Клуб «Розрахуй і в'яжи» — автопродовження на 12 місяців",
+    renewalNotice: "Перший платіж відкриває 12 місяців PRO-доступу. Далі автопродовження кожні 12 місяців — 2490 грн.",
+    termsLabel: "Клуб «Розрахуй і в'яжи» на 12 місяців",
   },
   forever: {
     name: "Пакет «V.I.P. Назавжди»",
     hutkoButtonId: "5b168b28848835eae67acaab72d8e47b3aec3d9d",
+    planType: "forever",
+    isForSale: true,
     checkoutLabel: "V.I.P. Назавжди",
     pricingTabLabel: "V.I.P.",
     pricingPeriodLabel: "назавжди",
-    priceValue: "3680",
-    priceWithCurrency: "3680 грн",
-    perMonthLabel: "Замість 4680 грн — економія 1000 грн",
-    badge: "Знижка -1000 грн 🔥",
-    amount: 368000,
+    priceValue: "5490",
+    priceWithCurrency: "5490 грн",
+    perMonthLabel: "Одноразовий платіж, можна частинами (розстрочка ПУМБ)",
+    badge: "15 майстер-класів у подарунок 🎁",
+    masterClassBenefits: [
+      "3 майстер-класи на вибір одразу",
+      "12 нових майстер-класів у перший рік — по одному щомісяця",
+      "Майстер-класи по 200 грн замість 590 (–66%) назавжди",
+      "Подарунків на 8850 грн у перший рік",
+    ],
+    amount: 549000,
     renewalAmount: null,
     initialDays: 36500,
     renewalDays: null,
     isRecurring: false,
-    paymentDescription: "Пакет «V.I.P. Назавжди» — довічний доступ зі знижкою",
+    paymentDescription: "Пакет «V.I.P. Назавжди» — довічний PRO-доступ",
     recurringDescription: null,
-    renewalNotice: "Одноразовий платіж 3680 грн без автопродовження.",
+    renewalNotice: "Одноразовий платіж 5490 грн без автопродовження. Можна оплатити частинами — розстрочка ПУМБ.",
     termsLabel: "V.I.P. довічний доступ",
   },
 } satisfies Record<PlanId, Omit<PlanConfig, "id">>
@@ -135,7 +213,31 @@ export const PLAN_LIST: PlanConfig[] = PLAN_IDS.map((id) => ({
 }))
 
 export function isPlanId(value: string): value is PlanId {
-  return value in PLAN_DETAILS
+  return Object.prototype.hasOwnProperty.call(PLAN_DETAILS, value)
+}
+
+/** New purchases are allowed only for plans on sale that have a Hutko button. */
+export function isPlanPurchasable(planId: PlanId): boolean {
+  const plan: Pick<PlanConfig, "isForSale" | "hutkoButtonId"> = PLAN_CONFIG[planId]
+  return plan.isForSale && plan.hutkoButtonId.trim().length > 0
+}
+
+/** Plans shown on pricing, checkout and terms. Renewals use PLAN_CONFIG, not this list. */
+export const PURCHASABLE_PLAN_LIST: PlanConfig[] = PLAN_LIST.filter((plan) => isPlanPurchasable(plan.id))
+
+/**
+ * Resolves a stored subscription row to a plan id. `plan` wins only when it
+ * refines `plan_type` (club → year); otherwise `plan_type` keeps precedence
+ * as before, then `plan`.
+ */
+export function resolveSubscriptionPlanId(
+  plan: string | null | undefined,
+  planType: string | null | undefined,
+): PlanId | null {
+  if (plan && isPlanId(plan) && PLAN_CONFIG[plan].planType === planType) return plan
+  if (planType && isPlanId(planType)) return planType
+  if (plan && isPlanId(plan)) return plan
+  return null
 }
 
 export function getPlanRenewalAmount(planId: PlanId): number {

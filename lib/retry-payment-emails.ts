@@ -1,4 +1,4 @@
-import { isPlanId, type PlanId } from "./plans.ts"
+import { resolveSubscriptionPlanId, type PlanId } from "./plans.ts"
 
 /**
  * Pure audience-selection logic for the one-off "access expired" win-back
@@ -55,9 +55,7 @@ export function isExcludedEmail(email: string): boolean {
 }
 
 function resolvePlanId(row: CandidateRow): PlanId {
-  if (row.plan_type && isPlanId(row.plan_type)) return row.plan_type
-  if (row.plan && isPlanId(row.plan)) return row.plan
-  return DEFAULT_PLAN_ID
+  return resolveSubscriptionPlanId(row.plan, row.plan_type) ?? DEFAULT_PLAN_ID
 }
 
 function latestTimestamp(row: CandidateRow): number {

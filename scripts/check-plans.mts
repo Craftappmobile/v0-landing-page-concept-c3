@@ -1,6 +1,9 @@
 import assert from "node:assert/strict"
 
-import { PLAN_CONFIG, PLAN_IDS, PLAN_LIST } from "../lib/plans.ts"
+import { isPlanId, isPlanPurchasable, PLAN_CONFIG, PLAN_IDS, PLAN_LIST, PURCHASABLE_PLAN_LIST } from "../lib/plans.ts"
+
+// plan_type values the mobile app and apply_hutko_renewal understand.
+const APP_PLAN_TYPES = new Set(["month", "quarter", "half", "year", "forever"])
 
 function priceValueToKopecks(priceValue) {
   const normalized = priceValue.replace(/\s+/g, "").replace(",", ".")
@@ -56,7 +59,28 @@ for (const id of PLAN_IDS) {
   )
   assert.ok(plan.initialDays > 0, `${id}.initialDays must be greater than 0`)
 
+  assert.ok(APP_PLAN_TYPES.has(plan.planType), `${id}.planType must be a value the mobile app understands`)
+  assert.equal(plan.isRecurring, plan.planType !== "forever", `${id}.planType must match isRecurring`)
+  if (isPlanId(plan.planType) && plan.planType !== id) {
+    // apply_hutko_renewal extends by plan_type, so both plans must renew for the same period.
+    assert.equal(
+      plan.renewalDays,
+      PLAN_CONFIG[plan.planType].renewalDays,
+      `${id}.renewalDays must match its stored plan_type ${plan.planType}`,
+    )
+  }
+  for (const benefit of plan.masterClassBenefits) {
+    requireText(`${id}.masterClassBenefits[]`, benefit)
+  }
+  if (isPlanPurchasable(id)) {
+    requireText(`${id}.hutkoButtonId`, plan.hutkoButtonId)
+  } else if (plan.isForSale) {
+    console.warn(`⚠️  ${id} is for sale but has no hutkoButtonId yet — hidden from pricing and checkout`)
+  }
+
   if (plan.isRecurring) {
+    // No gift months: the first payment opens exactly one renewal period.
+    assert.equal(plan.initialDays, plan.renewalDays, `${id}.initialDays must equal renewalDays`)
     assert.ok(plan.renewalAmount !== null, `${id}.renewalAmount must be set for recurring plans`)
     assert.ok(plan.renewalAmount > 0, `${id}.renewalAmount must be greater than 0`)
     assert.ok(plan.renewalDays !== null, `${id}.renewalDays must be set for recurring plans`)
@@ -68,5 +92,12 @@ for (const id of PLAN_IDS) {
     assert.equal(plan.recurringDescription, null, `${id} must not have recurringDescription`)
   }
 }
+
+assert.deepEqual(
+  PURCHASABLE_PLAN_LIST.map((plan) => plan.id),
+  PLAN_IDS.filter((id) => isPlanPurchasable(id)),
+  "PURCHASABLE_PLAN_LIST must contain exactly the purchasable plans",
+)
+assert.equal(isPlanPurchasable("month"), false, "month is no longer sold, only renewed")
 
 console.log("✅ lib/plans.ts passed consistency checks")

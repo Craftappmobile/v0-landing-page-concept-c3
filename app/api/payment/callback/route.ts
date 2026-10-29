@@ -7,6 +7,7 @@ import {
   getPlanInitialAccessDays,
   isPlanId,
   PLAN_CONFIG,
+  resolveSubscriptionPlanId,
 } from "@/lib/plans";
 import type { PlanId } from "@/lib/plans";
 import { getEmailValidationError, isValidEmailFormat } from "@/lib/email-validation";
@@ -437,7 +438,7 @@ async function createDirectPaymentSubscription(
     email: args.customerEmail,
     customer_name: args.customerName,
     plan: args.plan,
-    plan_type: args.plan,
+    plan_type: planConfig.planType,
     amount: planConfig.amount,
     currency: "UAH",
     status: "active",
@@ -761,7 +762,10 @@ export async function POST(request: NextRequest) {
             subscriptionId: directSubscription.id,
           });
         } else {
-          const subscriptionPlan = resolveKnownPlanId(targetSubscription.plan_type, targetSubscription.plan, plan) ?? directPaymentPlan;
+          // A club row is plan = 'club', plan_type = 'year'; the helper keeps it a club.
+          const subscriptionPlan = resolveSubscriptionPlanId(targetSubscription.plan, targetSubscription.plan_type)
+            ?? resolveKnownPlanId(plan)
+            ?? directPaymentPlan;
 
           if (!subscriptionPlan) {
             console.error("[Hutko Callback] Subscription activation is missing valid plan:", order_id, targetSubscription.id);

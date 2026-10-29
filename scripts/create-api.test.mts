@@ -1,6 +1,13 @@
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import test from "node:test";
+import { runInNewContext } from "node:vm";
+import ts from "typescript";
+
+import * as emailValidation from "../lib/email-validation.ts";
+import * as hutko from "../lib/hutko.ts";
+import * as plans from "../lib/plans.ts";
+import * as recurringMode from "../lib/recurring-mode.ts";
 
 import {
   getEmailValidationError,
@@ -18,6 +25,9 @@ const callbackRouteSource = readFileSync(
   new URL("../app/api/payment/callback/route.ts", import.meta.url),
   "utf8",
 );
+const compiledCreateRoute = ts.transpileModule(createRouteSource, {
+  compilerOptions: { module: ts.ModuleKind.CommonJS, target: ts.ScriptTarget.ES2022, esModuleInterop: true },
+}).outputText;
 
 test("/api/payment/create validates the email before creating a payment", () => {
   assert.equal(
@@ -124,3 +134,93 @@ test("/api/payment/callback sends direct payments with a malformed access email 
   );
   assert.equal(callbackRouteSource.includes('status: "manual_review", reason'), true);
 });
+
+// --- Plan contract: executes the real route with local fixtures, no network or DB. ---
+type Row = Record<string, unknown>;
+
+async function invokeCreate(plan: string, options: { clubButtonId?: string } = {}) {
+  const inserts: Row[] = [];
+  // A copy of lib/plans with a fixture Club button, as after the owner sets it.
+  const plansModule = options.clubButtonId
+    ? {
+        ...plans,
+        PLAN_CONFIG: { ...plans.PLAN_CONFIG, club: { ...plans.PLAN_CONFIG.club, hutkoButtonId: options.clubButtonId } },
+        isPlanPurchasable: (id: plans.PlanId) => id === "club" || plans.isPlanPurchasable(id),
+      }
+    : plans;
+  const client = {
+    from(table: string) {
+      assert.equal(table, "subscriptions");
+      return { async insert(values: Row) { inserts.push(values); return { error: null }; } };
+    },
+  };
+  const modules: Record<string, unknown> = {
+    "next/server": { NextResponse: { json: (body: unknown, init?: ResponseInit) => Response.json(body, init) } },
+    "@/lib/supabase": { createAdminClient: () => client },
+    "@/lib/hutko": hutko,
+    "@/lib/email-validation": emailValidation,
+    "@/lib/plans": plansModule,
+    "@/lib/recurring-mode": recurringMode,
+  };
+  const exports: { POST?: (request: unknown) => Promise<Response> } = {};
+  runInNewContext(compiledCreateRoute, {
+    exports,
+    process: { env: { HUTKO_MERCHANT_PASSWORD: "synthetic-signing-fixture" } },
+    console: { log() {}, warn() {}, error() {} },
+    require(name: string) { assert.ok(name in modules, `Unexpected import: ${name}`); return modules[name]; },
+    fetch: () => { throw new Error("Network is forbidden in create tests"); },
+    Date, Math, JSON,
+  });
+  assert.ok(exports.POST);
+  const response = await exports.POST({
+    json: async () => ({ plan, email: "knit@example.com", name: "Оксана" }),
+    headers: { get: () => "https://vjazhi.com.ua" },
+    nextUrl: { origin: "https://vjazhi.com.ua" },
+  });
+  return { response, body: await response.json() as Row, inserts };
+}
+
+test("/api/payment/create rejects month (no longer sold) before any DB write or payment", async () => {
+  const result = await invokeCreate("month");
+  assert.equal(result.response.status, 400);
+  assert.equal(result.inserts.length, 0);
+  assert.equal("hutko_config" in result.body, false);
+});
+
+test("/api/payment/create rejects club while its Hutko button id is empty", async () => {
+  assert.equal(plans.PLAN_CONFIG.club.hutkoButtonId, "", "update this test once the Club button exists");
+  const result = await invokeCreate("club");
+  assert.equal(result.response.status, 400);
+  assert.equal(result.inserts.length, 0);
+});
+
+test("/api/payment/create stores club as plan 'club', plan_type 'year', 249000", async () => {
+  const result = await invokeCreate("club", { clubButtonId: "fixture_club_button" });
+  assert.equal(result.response.status, 200);
+  assert.equal(result.inserts.length, 1);
+  const row = result.inserts[0];
+  assert.equal(row.plan, "club");
+  assert.equal(row.plan_type, "year");
+  assert.equal(row.amount, 249000);
+  assert.equal(row.status, "pending");
+  assert.equal(row.auto_renewal, true);
+  assert.equal(row.recurring_mode, recurringMode.RECURRING_MODE.HUTKO_SCHEDULE);
+  const config = result.body.hutko_config as { params: Row };
+  assert.equal(config.params.button, "fixture_club_button");
+  assert.equal(config.params.required_rectoken, "Y");
+  assert.equal(JSON.parse(String(config.params.merchant_data)).plan, "club");
+});
+
+for (const [plan, amount] of [["quarter", 45400], ["half", 59900], ["year", 91800], ["forever", 549000]] as const) {
+  test(`/api/payment/create keeps ${plan} as plan = plan_type with amount ${amount}`, async () => {
+    const result = await invokeCreate(plan);
+    assert.equal(result.response.status, 200);
+    assert.equal(result.inserts.length, 1);
+    assert.equal(result.inserts[0].plan, plan);
+    assert.equal(result.inserts[0].plan_type, plan);
+    assert.equal(result.inserts[0].amount, amount);
+    assert.equal(result.inserts[0].auto_renewal, plan !== "forever");
+    const config = result.body.hutko_config as { params: Row };
+    assert.equal(config.params.button, plans.PLAN_CONFIG[plan].hutkoButtonId);
+  });
+}

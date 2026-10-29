@@ -2,8 +2,8 @@
 
 import { useState } from "react"
 import Link from "next/link"
-import { Check } from "lucide-react"
-import { PLAN_LIST } from "@/lib/plans"
+import { Check, Gift } from "lucide-react"
+import { PURCHASABLE_PLAN_LIST } from "@/lib/plans"
 import { Button } from "@/components/ui/button"
 
 /**
@@ -18,7 +18,7 @@ const features = [
   "Генератор візерунків (beta)",
 ]
 
-const plans = PLAN_LIST
+const plans = PURCHASABLE_PLAN_LIST
 const DEFAULT_PLAN_ID = "half"
 
 /**
@@ -99,6 +99,31 @@ export function PricingSection() {
               </li>
             ))}
           </ul>
+
+          {plan.masterClassBenefits.length > 0 && (
+            <div className="mb-6 rounded-2xl border border-border bg-secondary/40 p-4 text-sm leading-6 text-foreground">
+              <p className="font-semibold">{"Бонуси на майстер-класи"}</p>
+              <ul className="mt-2 flex flex-col gap-2">
+                {plan.masterClassBenefits.map((benefit) => (
+                  <li key={benefit} className="flex items-start gap-2.5">
+                    <Gift className="mt-1 h-4 w-4 shrink-0 text-primary" />
+                    <span>{benefit}</span>
+                  </li>
+                ))}
+              </ul>
+              <p className="mt-3 text-xs text-muted-foreground">
+                {"Майстер-класи — на сайті "}
+                <a
+                  href="https://yarnmk.com.ua"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-primary underline hover:no-underline"
+                >
+                  {"yarnmk.com.ua"}
+                </a>
+              </p>
+            </div>
+          )}
 
           {plan.renewalNotice && (
             <div className="mb-6 rounded-2xl border border-primary/20 bg-primary/5 p-4 text-sm leading-6 text-foreground">
