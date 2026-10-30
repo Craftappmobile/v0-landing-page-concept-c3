@@ -31,6 +31,7 @@ import {
   getPlanRenewalAccessDays,
   getPlanRenewalAmount,
   isPlanId,
+  getPackageCheckoutUrl,
   isPlanPurchasable,
   PLAN_CONFIG,
   PURCHASABLE_PLAN_LIST,
@@ -230,16 +231,16 @@ test("month is not sold but stays a known recurring plan for renewals", () => {
   assert.equal(PURCHASABLE_PLAN_LIST.some((plan) => plan.id === "month"), false)
 })
 
-test("club stays hidden from sale until its Hutko button id is set", () => {
-  assert.equal(isPlanId("club"), true)
-  assert.equal(isPlanPurchasable("club"), PLAN_CONFIG.club.hutkoButtonId.trim().length > 0)
-  assert.equal(
-    PURCHASABLE_PLAN_LIST.some((plan) => plan.id === "club"),
-    PLAN_CONFIG.club.hutkoButtonId.trim().length > 0,
-  )
-  for (const id of ["quarter", "half", "year", "forever"] as const) {
+test("packages are sold on yarnmk.com.ua, club included; month is not", () => {
+  for (const id of ["quarter", "half", "year", "club", "forever"] as const) {
     assert.equal(isPlanPurchasable(id), true, `${id} must stay on sale`)
+    const url = new URL(getPackageCheckoutUrl(id, { utm_source: "vjazhi" }))
+    assert.equal(url.origin + url.pathname, "https://yarnmk.com.ua/oplata/pidpyska")
+    assert.equal(url.searchParams.get("plan"), id)
+    assert.equal(url.searchParams.get("utm_source"), "vjazhi")
   }
+  assert.equal(new URL(getPackageCheckoutUrl("month")).searchParams.has("plan"), false)
+  assert.equal(new URL(getPackageCheckoutUrl(null)).searchParams.has("plan"), false)
 })
 
 test("isPlanId ignores Object prototype keys", () => {
@@ -526,10 +527,9 @@ test("app recurring cron charges only explicitly merchant-managed token subscrip
 })
 
 test("Hutko checkout persistence classifies provider-managed schedules", () => {
-  const createSource = readFileSync(new URL("../app/api/payment/create/route.ts", import.meta.url), "utf8")
+  // New checkouts moved to yarnmk.com.ua; direct payment links still land in the callback.
   const callbackSource = readFileSync(new URL("../app/api/payment/callback/route.ts", import.meta.url), "utf8")
 
-  assert.equal(createSource.includes("recurring_mode: resolveHutkoCheckoutRecurringMode(isRecurring)"), true)
   assert.equal(callbackSource.includes("recurring_mode: resolveHutkoCheckoutRecurringMode(planConfig.isRecurring)"), true)
 })
 

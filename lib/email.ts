@@ -1,5 +1,5 @@
 import { Resend } from "resend";
-import { isPlanId, isPlanPurchasable, PLAN_CONFIG } from "./plans.ts";
+import { getPackageCheckoutUrl, isPlanId, PLAN_CONFIG } from "./plans.ts";
 
 function getResendClient(): Resend {
   const apiKey = process.env.RESEND_API_KEY?.trim();
@@ -239,9 +239,7 @@ export async function sendAccessExpiredEmail(
     const resend = getResendClient();
     const planName = isPlanId(planType) ? PLAN_CONFIG[planType].name : planType;
     // A plan that is no longer sold (month) sends the customer to choose a current package.
-    const checkoutUrl = isPlanId(planType) && isPlanPurchasable(planType)
-      ? `https://vjazhi.com.ua/checkout?plan=${encodeURIComponent(planType)}`
-      : "https://vjazhi.com.ua/#pricing";
+    const checkoutUrl = getPackageCheckoutUrl(isPlanId(planType) ? planType : null);
 
     const { error } = await resend.emails.send({
       from: FROM_EMAIL,

@@ -1,126 +1,28 @@
 import { NextRequest, NextResponse } from "next/server";
-import { createAdminClient } from "@/lib/supabase";
-import { buildHutkoButtonWidgetConfig } from "@/lib/hutko";
-import { getEmailValidationError, sanitizeEmailInput } from "@/lib/email-validation";
-import { isPlanId, isPlanPurchasable, PLAN_CONFIG } from "@/lib/plans";
-import { resolveHutkoCheckoutRecurringMode } from "@/lib/recurring-mode";
+import { getPackageCheckoutUrl, isPlanId } from "@/lib/plans";
 
-const MERCHANT_PASSWORD = process.env.HUTKO_MERCHANT_PASSWORD || "";
-
+// Since 30.10.2026 packages are paid on yarnmk.com.ua (one checkout for both sites, with the
+// master-class discounts and gifts that live there). This site no longer starts payments:
+// it only renews existing subscriptions (/api/payment/recurring, /api/payment/callback).
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
-    const { plan, email, name } = body as {
-      plan: string;
-      email: string;
-      name: string;
-    };
+    const { plan } = body as { plan?: unknown };
 
-    const trimmedEmail = sanitizeEmailInput(typeof email === "string" ? email : "");
-    const trimmedName = typeof name === "string" ? name.trim() : "";
-
-    if (!plan || !trimmedEmail || !trimmedName) {
-      return NextResponse.json(
-        { error: "Заповніть всі поля" },
-        { status: 400 }
-      );
-    }
-
-    // The subscription row and the Hutko `access_email` are both written from
-    // this value, and the account is created on it after payment. A malformed
-    // address would only fail later, at Auth user creation, leaving a paid
-    // subscription with no access, so reject it before any payment starts.
-    const emailError = getEmailValidationError(trimmedEmail);
-    if (emailError) {
-      return NextResponse.json(
-        { error: emailError },
-        { status: 400 }
-      );
-    }
-
-    if (!isPlanId(plan)) {
+    if (typeof plan !== "string" || !isPlanId(plan)) {
       return NextResponse.json(
         { error: "Невідомий тарифний план" },
         { status: 400 }
       );
     }
 
-    // Plans off sale (month) or without a Hutko button yet (club) are kept in
-    // PLAN_CONFIG only for renewals and callbacks; never start a new checkout.
-    if (!isPlanPurchasable(plan)) {
-      return NextResponse.json(
-        { error: "Цей тариф зараз недоступний. Оберіть інший пакет на сторінці тарифів." },
-        { status: 400 }
-      );
-    }
-
-    const planConfig = PLAN_CONFIG[plan];
-
-    if (!MERCHANT_PASSWORD) {
-      return NextResponse.json(
-        { error: "Платіжна система тимчасово недоступна. Спробуйте пізніше." },
-        { status: 503 }
-      );
-    }
-
-    const origin = request.headers.get("origin") || request.nextUrl.origin;
-    const orderId = `order_${Date.now()}_${Math.random().toString(36).slice(2, 8)}`;
-    const checkoutCorrelationId = `chk_${Date.now()}_${Math.random().toString(36).slice(2, 10)}`;
-
-    const isRecurring = planConfig.isRecurring;
-    const merchantData = JSON.stringify({
-      plan,
-      name: trimmedName,
-      email: trimmedEmail,
-      access_email: trimmedEmail,
-      order_id: orderId,
-      checkout_correlation_id: checkoutCorrelationId,
-    });
-
-    const supabase = createAdminClient();
-    const now = new Date().toISOString();
-    const { error: dbError } = await supabase.from("subscriptions").insert({
-      order_id: orderId,
-      email: trimmedEmail,
-      customer_name: trimmedName,
-      plan,
-      // The mobile app and apply_hutko_renewal read plan_type: club is stored as 'year'.
-      plan_type: planConfig.planType,
-      amount: planConfig.amount,
-      currency: "UAH",
-      status: "pending",
-      payment_provider: "hutko",
-      checkout_correlation_id: checkoutCorrelationId,
-      platform: "web",
-      auto_renewal: isRecurring,
-      recurring_mode: resolveHutkoCheckoutRecurringMode(isRecurring),
-      started_at: now,
-      expires_at: now, // will be updated by callback on successful payment
-    });
-
-    if (dbError) {
-      console.error("[Payment Create] DB insert error:", dbError);
-      return NextResponse.json(
-        { error: "Не вдалося підготувати платіж. Спробуйте пізніше." },
-        { status: 500 }
-      );
-    }
-
-    const hutkoConfig = buildHutkoButtonWidgetConfig({
-      buttonId: planConfig.hutkoButtonId,
-      orderId,
-      serverCallbackUrl: `${origin}/api/payment/callback`,
-      senderEmail: trimmedEmail,
-      lang: "uk",
-      merchantData,
-      requiredRectoken: isRecurring ? "Y" : undefined,
-    });
-
-    return NextResponse.json({
-      order_id: orderId,
-      checkout_correlation_id: checkoutCorrelationId,
-      hutko_config: hutkoConfig,
-    });
+    return NextResponse.json(
+      {
+        error: "Пакети тепер оформлюються на yarnmk.com.ua — там же знижки й подарункові майстер-класи.",
+        checkout_url: getPackageCheckoutUrl(plan),
+      },
+      { status: 410 }
+    );
   } catch {
     return NextResponse.json(
       { error: "Внутрішня помилка сервера" },
@@ -128,4 +30,3 @@ export async function POST(request: NextRequest) {
     );
   }
 }
-

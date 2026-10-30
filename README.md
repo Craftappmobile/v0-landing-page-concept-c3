@@ -53,6 +53,7 @@
 - `plan` — точний пакет, `plan_type` — значення, яке розуміють мобільний додаток і `apply_hutko_renewal`. Клуб записується як `plan = 'club'`, `plan_type = 'year'` (так само пише yarnmk.com.ua).
 - Нова покупка можлива лише для `isPlanPurchasable`: пакет у продажу (`isForSale`) і має `hutkoButtonId`. Клуб прихований, доки порожній `CLUB_HUTKO_BUTTON_ID`.
 - Сума списання через Hutko button задається в кабінеті Hutko, а не в коді; `amount` у коді має збігатися з кнопкою.
+- З 30.10.2026 нові пакети оплачуються на yarnmk.com.ua (`PACKAGE_CHECKOUT_URL` у `lib/plans.ts`): `/checkout` без `order_id` переадресовує туди (`next.config.mjs`), `/api/payment/create` повертає 410 з посиланням. Цей сайт лише подовжує чинні підписки: cron `/api/payment/recurring` (у т. ч. підписки з yarnmk.com.ua — мерчанти 1702587 і 1705405 об'єднані в Hutko для токенів) і `/api/payment/callback`.
 - Бонуси на майстер-класи (`masterClassBenefits`) лише описуються тут, видає їх yarnmk.com.ua.
 
 ## Поточний платіжний flow

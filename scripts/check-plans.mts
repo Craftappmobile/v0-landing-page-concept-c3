@@ -72,11 +72,6 @@ for (const id of PLAN_IDS) {
   for (const benefit of plan.masterClassBenefits) {
     requireText(`${id}.masterClassBenefits[]`, benefit)
   }
-  if (isPlanPurchasable(id)) {
-    requireText(`${id}.hutkoButtonId`, plan.hutkoButtonId)
-  } else if (plan.isForSale) {
-    console.warn(`⚠️  ${id} is for sale but has no hutkoButtonId yet — hidden from pricing and checkout`)
-  }
 
   if (plan.isRecurring) {
     // No gift months: the first payment opens exactly one renewal period.

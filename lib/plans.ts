@@ -36,13 +36,6 @@ export type PlanConfig = {
   termsLabel: string
 }
 
-/**
- * Hutko payment-link button for the Club package. The charged amount and the
- * renewal schedule live in the Hutko cabinet (merchant 1702587), not in code.
- * While this is empty the Club is hidden from pricing and checkout and
- * /api/payment/create rejects it, so this code can ship before the button exists.
- */
-const CLUB_HUTKO_BUTTON_ID = ""
 
 const PLAN_DETAILS = {
   month: {
@@ -82,7 +75,7 @@ const PLAN_DETAILS = {
     perMonthLabel: "3 місяці повного PRO-доступу",
     badge: null,
     masterClassBenefits: [
-      "Майстер-класи по 390 грн замість 590 (–34%)",
+      "Майстер-класи по 390 грн замість 500 (–22%)",
     ],
     amount: 45400,
     renewalAmount: 45400,
@@ -107,7 +100,7 @@ const PLAN_DETAILS = {
     perMonthLabel: "6 місяців повного PRO-доступу",
     badge: null,
     masterClassBenefits: [
-      "Майстер-класи по 350 грн замість 590 (–41%)",
+      "Майстер-класи по 350 грн замість 500 (–30%)",
     ],
     amount: 59900,
     renewalAmount: 59900,
@@ -133,8 +126,8 @@ const PLAN_DETAILS = {
     badge: "Майстер-клас у подарунок 🎁",
     masterClassBenefits: [
       "1 майстер-клас на вибір у подарунок — і знову при кожному подовженні",
-      "Майстер-класи по 290 грн замість 590 (–51%)",
-      "Подарунків на 590 грн",
+      "Майстер-класи по 290 грн замість 500 (–42%)",
+      "Подарунків на 500 грн",
     ],
     amount: 91800,
     renewalAmount: 91800,
@@ -148,7 +141,8 @@ const PLAN_DETAILS = {
   },
   club: {
     name: "Клуб «Розрахуй і в'яжи»",
-    hutkoButtonId: CLUB_HUTKO_BUTTON_ID,
+    // Paid only on yarnmk.com.ua (see PACKAGE_CHECKOUT_URL): no Hutko button on this site.
+    hutkoButtonId: "",
     // Stored as plan = 'club', plan_type = 'year' (same contract as yarnmk.com.ua).
     planType: "year",
     isForSale: true,
@@ -162,8 +156,8 @@ const PLAN_DETAILS = {
     masterClassBenefits: [
       "2 майстер-класи на вибір одразу",
       "6 нових майстер-класів — по одному раз на 2 місяці (і знову при подовженні)",
-      "Майстер-класи по 250 грн замість 590 (–58%)",
-      "Подарунків на 4720 грн за рік",
+      "Майстер-класи по 250 грн замість 500 (–50%)",
+      "Подарунків на 4000 грн за рік",
     ],
     amount: 249000,
     renewalAmount: 249000,
@@ -190,8 +184,8 @@ const PLAN_DETAILS = {
     masterClassBenefits: [
       "3 майстер-класи на вибір одразу",
       "12 нових майстер-класів у перший рік — по одному щомісяця",
-      "Майстер-класи по 200 грн замість 590 (–66%) назавжди",
-      "Подарунків на 8850 грн у перший рік",
+      "Майстер-класи по 200 грн замість 500 (–60%) назавжди",
+      "Подарунків на 7500 грн у перший рік",
     ],
     amount: 549000,
     renewalAmount: null,
@@ -216,13 +210,27 @@ export function isPlanId(value: string): value is PlanId {
   return Object.prototype.hasOwnProperty.call(PLAN_DETAILS, value)
 }
 
-/** New purchases are allowed only for plans on sale that have a Hutko button. */
-export function isPlanPurchasable(planId: PlanId): boolean {
-  const plan: Pick<PlanConfig, "isForSale" | "hutkoButtonId"> = PLAN_CONFIG[planId]
-  return plan.isForSale && plan.hutkoButtonId.trim().length > 0
+/**
+ * Since 30.10.2026 packages are paid on yarnmk.com.ua: one checkout for both sites, with the
+ * master-class discounts, gift master classes and upgrades that live there. It accepts these
+ * plan ids (quarter, half, year, club, forever) as aliases of its own package codes.
+ * This site keeps renewing existing subscriptions (cron and Hutko callbacks) with PLAN_CONFIG.
+ */
+export const PACKAGE_CHECKOUT_URL = "https://yarnmk.com.ua/oplata/pidpyska"
+
+export function getPackageCheckoutUrl(planId?: PlanId | null, params?: Record<string, string>): string {
+  const url = new URL(PACKAGE_CHECKOUT_URL)
+  if (planId && isPlanPurchasable(planId)) url.searchParams.set("plan", planId)
+  for (const [key, value] of Object.entries(params ?? {})) url.searchParams.set(key, value)
+  return url.toString()
 }
 
-/** Plans shown on pricing, checkout and terms. Renewals use PLAN_CONFIG, not this list. */
+/** Plans offered to customers (paid on yarnmk.com.ua). Renewals use PLAN_CONFIG, not this. */
+export function isPlanPurchasable(planId: PlanId): boolean {
+  return PLAN_CONFIG[planId].isForSale
+}
+
+/** Plans shown on pricing and terms. */
 export const PURCHASABLE_PLAN_LIST: PlanConfig[] = PLAN_LIST.filter((plan) => isPlanPurchasable(plan.id))
 
 /**

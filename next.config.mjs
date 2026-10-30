@@ -5,6 +5,18 @@ const nextConfig = {
   },
   async redirects() {
     return [
+      // Since 30.10.2026 packages are paid on yarnmk.com.ua (lib/plans.ts, PACKAGE_CHECKOUT_URL); the query
+      // (?plan=quarter, utm_*) is passed through. Returns from Hutko for payments started earlier still carry
+      // order_id / correlation_id and keep the old /checkout status page.
+      {
+        source: "/checkout",
+        missing: [
+          { type: "query", key: "order_id" },
+          { type: "query", key: "correlation_id" },
+        ],
+        destination: "https://yarnmk.com.ua/oplata/pidpyska",
+        permanent: false,
+      },
       {
         source: "/kalkuliatory/kardygan",
         destination: "/kalkuliatory/kardyhan",

@@ -1,9 +1,8 @@
 "use client"
 
 import { useState } from "react"
-import Link from "next/link"
 import { Check, Gift } from "lucide-react"
-import { PURCHASABLE_PLAN_LIST } from "@/lib/plans"
+import { getPackageCheckoutUrl, PURCHASABLE_PLAN_LIST } from "@/lib/plans"
 import { Button } from "@/components/ui/button"
 
 /**
@@ -137,10 +136,10 @@ export function PricingSection() {
 
           {/* CTA */}
           <Button className="w-full" size="lg" asChild>
-            <Link href={`/checkout?plan=${plan.id}`}>{"Придбати підписку"}</Link>
+            <a href={getPackageCheckoutUrl(plan.id, { utm_source: "vjazhi", utm_medium: "pricing" })}>{"Придбати пакет"}</a>
           </Button>
           <p className="mt-3 text-center text-xs text-muted-foreground">
-            {"Оплата на сайті. Premium активується автоматично в додатку."}
+            {"Оплата на yarnmk.com.ua тим самим акаунтом. Premium активується автоматично в додатку."}
           </p>
         </div>
       </div>
