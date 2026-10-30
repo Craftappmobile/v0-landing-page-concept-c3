@@ -31,14 +31,13 @@ import {
   getPlanRenewalAccessDays,
   getPlanRenewalAmount,
   isPlanId,
-  getPackageCheckoutUrl,
   isPlanPurchasable,
   PLAN_CONFIG,
   PURCHASABLE_PLAN_LIST,
   resolveSubscriptionPlanId,
 } from "../lib/plans.ts"
 import { buildHutkoButtonWidgetConfig, generateHutkoSignature } from "../lib/hutko.ts"
-import { RECURRING_MODE, resolveHutkoCheckoutRecurringMode } from "../lib/recurring-mode.ts"
+import { RECURRING_MODE, resolveApiCheckoutRecurringMode, resolveHutkoCheckoutRecurringMode } from "../lib/recurring-mode.ts"
 
 test("normalizeSubscriptionStatus maps subscription states for payment polling", () => {
   assert.equal(normalizeSubscriptionStatus({ status: "active" }), "active")
@@ -231,16 +230,11 @@ test("month is not sold but stays a known recurring plan for renewals", () => {
   assert.equal(PURCHASABLE_PLAN_LIST.some((plan) => plan.id === "month"), false)
 })
 
-test("packages are sold on yarnmk.com.ua, club included; month is not", () => {
+test("every package is on sale, club included (no Hutko button needed); month is not", () => {
   for (const id of ["quarter", "half", "year", "club", "forever"] as const) {
     assert.equal(isPlanPurchasable(id), true, `${id} must stay on sale`)
-    const url = new URL(getPackageCheckoutUrl(id, { utm_source: "vjazhi" }))
-    assert.equal(url.origin + url.pathname, "https://yarnmk.com.ua/oplata/pidpyska")
-    assert.equal(url.searchParams.get("plan"), id)
-    assert.equal(url.searchParams.get("utm_source"), "vjazhi")
   }
-  assert.equal(new URL(getPackageCheckoutUrl("month")).searchParams.has("plan"), false)
-  assert.equal(new URL(getPackageCheckoutUrl(null)).searchParams.has("plan"), false)
+  assert.equal(isPlanPurchasable("month"), false)
 })
 
 test("isPlanId ignores Object prototype keys", () => {
@@ -408,12 +402,12 @@ test("checkout status normalization keeps backward compatibility for done", () =
   assert.equal(normalizeCheckoutStatus(null), null)
 })
 
-test("resolveCheckoutFlow uses Hutko button-link checkout for every plan", () => {
-  assert.equal(resolveCheckoutFlow("quarter"), "button")
-  assert.equal(resolveCheckoutFlow("half"), "button")
-  assert.equal(resolveCheckoutFlow("year"), "button")
-  assert.equal(resolveCheckoutFlow("club"), "button")
-  assert.equal(resolveCheckoutFlow("forever"), "button")
+test("resolveCheckoutFlow opens the Hutko hosted page (API checkout) for every plan", () => {
+  assert.equal(resolveCheckoutFlow("quarter"), "redirect")
+  assert.equal(resolveCheckoutFlow("half"), "redirect")
+  assert.equal(resolveCheckoutFlow("year"), "redirect")
+  assert.equal(resolveCheckoutFlow("club"), "redirect")
+  assert.equal(resolveCheckoutFlow("forever"), "redirect")
 })
 
 test("buildHutkoButtonWidgetConfig supports payment-link params without forcing generic checkout fields", () => {
@@ -526,11 +520,15 @@ test("app recurring cron charges only explicitly merchant-managed token subscrip
   assert.equal(source.includes('.not("rectoken", "is", null)'), true)
 })
 
-test("Hutko checkout persistence classifies provider-managed schedules", () => {
-  // New checkouts moved to yarnmk.com.ua; direct payment links still land in the callback.
+test("Hutko checkout persistence: API checkouts renew by token, payment links keep the Hutko schedule", () => {
+  const createSource = readFileSync(new URL("../app/api/payment/create/route.ts", import.meta.url), "utf8")
   const callbackSource = readFileSync(new URL("../app/api/payment/callback/route.ts", import.meta.url), "utf8")
 
+  assert.equal(createSource.includes("recurring_mode: resolveApiCheckoutRecurringMode(isRecurring)"), true)
   assert.equal(callbackSource.includes("recurring_mode: resolveHutkoCheckoutRecurringMode(planConfig.isRecurring)"), true)
+  assert.equal(callbackSource.includes("targetSubscription.recurring_mode === RECURRING_MODE.MERCHANT_TOKEN"), true)
+  assert.equal(resolveApiCheckoutRecurringMode(true), RECURRING_MODE.MERCHANT_TOKEN)
+  assert.equal(resolveApiCheckoutRecurringMode(false), RECURRING_MODE.NONE)
 })
 
 test("renewal callback uses atomic dedupe before direct-payment flow", () => {

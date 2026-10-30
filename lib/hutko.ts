@@ -13,6 +13,14 @@ type HutkoSubscriptionActionResponse = {
 }
 
 const HUTKO_SUBSCRIPTION_URL = "https://pay.hutko.org/api/subscription/"
+const HUTKO_CHECKOUT_URL = "https://pay.hutko.org/api/checkout/url/"
+
+type HutkoCheckoutUrlResponse = {
+  response?: {
+    checkout_url?: string
+    error_code?: string | number
+  }
+}
 
 export type HutkoButtonCheckoutParams = {
   button: string
@@ -180,4 +188,45 @@ export function buildHutkoButtonWidgetConfig(args: {
       hide_button_title: true,
     },
   }
+}
+/**
+ * Hutko hosted payment page for one order (POST /api/checkout/url/). The amount comes from
+ * our code, not from a payment-link button in the Hutko cabinet. Returns the page to redirect to.
+ */
+export async function createHutkoCheckoutUrl(args: {
+  merchantId: string
+  password: string
+  params: HutkoRequestParams
+  fetchImpl?: typeof fetch
+}): Promise<string> {
+  const merchantId = Number(args.merchantId)
+  if (!Number.isSafeInteger(merchantId) || merchantId <= 0) {
+    throw new Error("HUTKO_MERCHANT_ID is invalid")
+  }
+  if (!args.password) throw new Error("HUTKO_MERCHANT_PASSWORD is not set")
+
+  const params: HutkoRequestParams = { ...args.params, merchant_id: merchantId }
+  const request = { ...params, signature: generateHutkoSignature(args.password, params) }
+  const fetchImpl = args.fetchImpl ?? fetch
+  const response = await fetchImpl(HUTKO_CHECKOUT_URL, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ request }),
+    signal: AbortSignal.timeout(15_000),
+  })
+
+  let payload: HutkoCheckoutUrlResponse
+  try {
+    payload = await response.json() as HutkoCheckoutUrlResponse
+  } catch {
+    throw new Error(`Hutko checkout API returned invalid JSON (${response.status})`)
+  }
+
+  const checkoutUrl = payload.response?.checkout_url
+  if (!response.ok || typeof checkoutUrl !== "string" || !checkoutUrl.startsWith("https://")) {
+    const errorCode = payload.response?.error_code
+    throw new Error(`Hutko checkout failed (${response.status}${errorCode ? `, code ${errorCode}` : ""})`)
+  }
+
+  return checkoutUrl
 }

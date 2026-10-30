@@ -334,9 +334,10 @@ export function extractHutkoReservationCustomer(additionalInfo: unknown): Pick<H
   }
 }
 
+// Since 30.10.2026 every plan opens the Hutko hosted page via /api/payment/create (amount from lib/plans.ts).
 export function resolveCheckoutFlow(planId: string): CheckoutFlow {
   void planId
-  return "button"
+  return "redirect"
 }
 
 export function normalizeSubscriptionStatus({ status, expiresAt }: SubscriptionStatusInput): PaymentStatus {

@@ -141,7 +141,7 @@ const PLAN_DETAILS = {
   },
   club: {
     name: "Клуб «Розрахуй і в'яжи»",
-    // Paid only on yarnmk.com.ua (see PACKAGE_CHECKOUT_URL): no Hutko button on this site.
+    // New checkouts go through the Hutko API (/api/payment/create); no payment-link button.
     hutkoButtonId: "",
     // Stored as plan = 'club', plan_type = 'year' (same contract as yarnmk.com.ua).
     planType: "year",
@@ -211,21 +211,9 @@ export function isPlanId(value: string): value is PlanId {
 }
 
 /**
- * Since 30.10.2026 packages are paid on yarnmk.com.ua: one checkout for both sites, with the
- * master-class discounts, gift master classes and upgrades that live there. It accepts these
- * plan ids (quarter, half, year, club, forever) as aliases of its own package codes.
- * This site keeps renewing existing subscriptions (cron and Hutko callbacks) with PLAN_CONFIG.
+ * Plans offered to customers. Since 30.10.2026 checkout uses the Hutko API with the amount from this
+ * file (/api/payment/create), not the payment-link buttons; renewals use PLAN_CONFIG, not this.
  */
-export const PACKAGE_CHECKOUT_URL = "https://yarnmk.com.ua/oplata/pidpyska"
-
-export function getPackageCheckoutUrl(planId?: PlanId | null, params?: Record<string, string>): string {
-  const url = new URL(PACKAGE_CHECKOUT_URL)
-  if (planId && isPlanPurchasable(planId)) url.searchParams.set("plan", planId)
-  for (const [key, value] of Object.entries(params ?? {})) url.searchParams.set(key, value)
-  return url.toString()
-}
-
-/** Plans offered to customers (paid on yarnmk.com.ua). Renewals use PLAN_CONFIG, not this. */
 export function isPlanPurchasable(planId: PlanId): boolean {
   return PLAN_CONFIG[planId].isForSale
 }

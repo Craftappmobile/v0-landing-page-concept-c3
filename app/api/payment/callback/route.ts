@@ -11,7 +11,7 @@ import {
 } from "@/lib/plans";
 import type { PlanId } from "@/lib/plans";
 import { getEmailValidationError, isValidEmailFormat } from "@/lib/email-validation";
-import { resolveHutkoCheckoutRecurringMode } from "@/lib/recurring-mode";
+import { RECURRING_MODE, resolveHutkoCheckoutRecurringMode } from "@/lib/recurring-mode";
 import { stopHutkoSubscription } from "@/lib/hutko";
 import {
   extractLegacyRecurringParentOrder,
@@ -790,14 +790,24 @@ export async function POST(request: NextRequest) {
               || targetSubscription.cancellation_state === "provider_failed"
               || targetSubscription.cancellation_state === "needs_review";
             const cancellationCompleted = targetSubscription.cancellation_state === "completed";
-            const checkoutRecurringMode = resolveHutkoCheckoutRecurringMode(
-              PLAN_CONFIG[subscriptionPlan].isRecurring,
-            );
+            // Checkouts through the Hutko API (/api/payment/create, recurring_mode merchant_token) are renewed
+            // by /api/payment/recurring with the saved card token, so they can renew only with a rectoken.
+            // Payment-link buttons keep the Hutko schedule as before.
+            const apiCheckout = targetSubscription.recurring_mode === RECURRING_MODE.MERCHANT_TOKEN;
+            const renewable = PLAN_CONFIG[subscriptionPlan].isRecurring && (!apiCheckout || Boolean(rectoken));
+            const checkoutRecurringMode = !renewable
+              ? RECURRING_MODE.NONE
+              : apiCheckout
+                ? RECURRING_MODE.MERCHANT_TOKEN
+                : resolveHutkoCheckoutRecurringMode(true);
+            if (apiCheckout && PLAN_CONFIG[subscriptionPlan].isRecurring && !rectoken) {
+              console.warn("[Hutko Callback] API checkout approved without rectoken; auto-renewal off:", order_id);
+            }
             const updateData: Record<string, string | boolean | null | number | Record<string, string>> = {
               status: "active",
               auto_renewal: cancellationPending || cancellationCompleted
                 ? false
-                : PLAN_CONFIG[subscriptionPlan].isRecurring,
+                : renewable,
               recurring_mode: cancellationCompleted ? "none" : checkoutRecurringMode,
               hutko_payment_id: payment_id || null,
               started_at: nowIso,
@@ -831,7 +841,8 @@ export async function POST(request: NextRequest) {
               return NextResponse.json({ error: "Subscription activation failed" }, { status: 500 });
             }
 
-            if (cancellationPending && PLAN_CONFIG[subscriptionPlan].isRecurring
+            // A Hutko schedule exists only for button checkouts; API checkouts just stay without auto-renewal.
+            if (cancellationPending && PLAN_CONFIG[subscriptionPlan].isRecurring && !apiCheckout
                 && targetSubscription.cancellation_request_id) {
               await finalizeRequestedProviderCancellation({
                 supabase,
