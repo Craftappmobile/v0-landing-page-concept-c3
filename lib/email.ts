@@ -1,5 +1,5 @@
 import { Resend } from "resend";
-import { isPlanId, PLAN_CONFIG } from "./plans.ts";
+import { isPlanId, isPlanPurchasable, PLAN_CONFIG } from "./plans.ts";
 
 function getResendClient(): Resend {
   const apiKey = process.env.RESEND_API_KEY?.trim();
@@ -18,6 +18,15 @@ export async function sendWelcomeEmail(
   try {
     const resend = getResendClient();
     const planName = isPlanId(planType) ? PLAN_CONFIG[planType].name : planType;
+    const masterClassBenefits: string[] = isPlanId(planType) ? PLAN_CONFIG[planType].masterClassBenefits : [];
+    const masterClassBlock = masterClassBenefits.length > 0
+      ? `
+          <p style="font-size: 15px; color: #333; line-height: 1.8;">
+            <strong>🎁 Бонуси вашого пакета на майстер-класи:</strong><br/>
+            ${masterClassBenefits.map((benefit) => `• ${benefit}`).join("<br/>\n            ")}<br/>
+            Майстер-класи — на сайті <a href="https://yarnmk.com.ua" style="color: #7c3aed;">yarnmk.com.ua</a>
+          </p>`
+      : "";
 
     const credentialsBlock = password
       ? `
@@ -60,6 +69,7 @@ export async function sendWelcomeEmail(
             <strong>Посилання на огляд функціоналу додатка:</strong><br/>
             🎬 <a href="https://youtube.com/playlist?list=PLSmx4tJAAQh4RZY2wRqBHFEhaoCyFZkFG&si=texahJ8RvAxPrsca" style="color: #7c3aed;">YouTube — огляд</a>
           </p>
+${masterClassBlock}
 
           <p style="font-size: 14px; color: #555; line-height: 1.6;">
             Якщо у вас виникнуть питання, ви завжди можете звернутися до технічної підтримки:<br/>
@@ -228,7 +238,10 @@ export async function sendAccessExpiredEmail(
   try {
     const resend = getResendClient();
     const planName = isPlanId(planType) ? PLAN_CONFIG[planType].name : planType;
-    const checkoutUrl = `https://vjazhi.com.ua/checkout?plan=${encodeURIComponent(planType)}`;
+    // A plan that is no longer sold (month) sends the customer to choose a current package.
+    const checkoutUrl = isPlanId(planType) && isPlanPurchasable(planType)
+      ? `https://vjazhi.com.ua/checkout?plan=${encodeURIComponent(planType)}`
+      : "https://vjazhi.com.ua/#pricing";
 
     const { error } = await resend.emails.send({
       from: FROM_EMAIL,

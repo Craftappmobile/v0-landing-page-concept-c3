@@ -26,9 +26,18 @@ import {
   shouldDisableAutoRenewalForFailedOrderStatus,
   shouldPreservePaidAccessOnFailedCallback,
 } from "../lib/payment-flow.ts"
-import { getPlanInitialAccessDays, getPlanRenewalAccessDays, getPlanRenewalAmount } from "../lib/plans.ts"
+import {
+  getPlanInitialAccessDays,
+  getPlanRenewalAccessDays,
+  getPlanRenewalAmount,
+  isPlanId,
+  isPlanPurchasable,
+  PLAN_CONFIG,
+  PURCHASABLE_PLAN_LIST,
+  resolveSubscriptionPlanId,
+} from "../lib/plans.ts"
 import { buildHutkoButtonWidgetConfig, generateHutkoSignature } from "../lib/hutko.ts"
-import { RECURRING_MODE, resolveHutkoCheckoutRecurringMode } from "../lib/recurring-mode.ts"
+import { RECURRING_MODE, resolveApiCheckoutRecurringMode, resolveHutkoCheckoutRecurringMode } from "../lib/recurring-mode.ts"
 
 test("normalizeSubscriptionStatus maps subscription states for payment polling", () => {
   assert.equal(normalizeSubscriptionStatus({ status: "active" }), "active")
@@ -170,6 +179,7 @@ test("direct payment plan codes map to internal plans", () => {
   assert.equal(resolveDirectPaymentPlanId("3"), "quarter")
   assert.equal(resolveDirectPaymentPlanId(6), "half")
   assert.equal(resolveDirectPaymentPlanId("12"), "year")
+  assert.equal(resolveDirectPaymentPlanId("club"), "club")
   assert.equal(resolveDirectPaymentPlanId("9999"), "forever")
   assert.equal(resolveDirectPaymentPlanId("227480"), null)
 })
@@ -186,18 +196,63 @@ test("getPlanRenewalAmount returns full recurring price without affecting lifeti
   assert.equal(getPlanRenewalAmount("quarter"), 45400)
   assert.equal(getPlanRenewalAmount("half"), 59900)
   assert.equal(getPlanRenewalAmount("year"), 91800)
-  assert.equal(getPlanRenewalAmount("forever"), 368000)
+  assert.equal(getPlanRenewalAmount("club"), 249000)
+  assert.equal(PLAN_CONFIG.forever.amount, 549000)
+  assert.equal(PLAN_CONFIG.forever.renewalAmount, null)
+  assert.equal(PLAN_CONFIG.forever.isRecurring, false)
 })
 
-test("gift months apply only to first payment while renewals use standard durations", () => {
+test("no gift months: access lasts exactly 3 / 6 / 12 months and renewals repeat it", () => {
   assert.equal(getPlanInitialAccessDays("month"), 30)
   assert.equal(getPlanRenewalAccessDays("month"), 30)
-  assert.equal(getPlanInitialAccessDays("quarter"), 120)
+  assert.equal(getPlanInitialAccessDays("quarter"), 90)
   assert.equal(getPlanRenewalAccessDays("quarter"), 90)
-  assert.equal(getPlanInitialAccessDays("half"), 270)
+  assert.equal(getPlanInitialAccessDays("half"), 180)
   assert.equal(getPlanRenewalAccessDays("half"), 180)
-  assert.equal(getPlanInitialAccessDays("year"), 545)
+  assert.equal(getPlanInitialAccessDays("year"), 365)
   assert.equal(getPlanRenewalAccessDays("year"), 365)
+  assert.equal(getPlanInitialAccessDays("club"), 365)
+  assert.equal(getPlanRenewalAccessDays("club"), 365)
+})
+
+test("club is stored as plan_type year; other plans keep plan_type = plan", () => {
+  assert.equal(PLAN_CONFIG.club.planType, "year")
+  for (const id of ["month", "quarter", "half", "year", "forever"] as const) {
+    assert.equal(PLAN_CONFIG[id].planType, id)
+  }
+})
+
+test("month is not sold but stays a known recurring plan for renewals", () => {
+  assert.equal(isPlanId("month"), true)
+  assert.equal(isPlanPurchasable("month"), false)
+  assert.equal(PLAN_CONFIG.month.isRecurring, true)
+  assert.equal(getPlanRenewalAmount("month"), 10000)
+  assert.equal(PURCHASABLE_PLAN_LIST.some((plan) => plan.id === "month"), false)
+})
+
+test("every package is on sale, club included (no Hutko button needed); month is not", () => {
+  for (const id of ["quarter", "half", "year", "club", "forever"] as const) {
+    assert.equal(isPlanPurchasable(id), true, `${id} must stay on sale`)
+  }
+  assert.equal(isPlanPurchasable("month"), false)
+})
+
+test("isPlanId ignores Object prototype keys", () => {
+  assert.equal(isPlanId("constructor"), false)
+  assert.equal(isPlanId("toString"), false)
+  assert.equal(isPlanId("__proto__"), false)
+})
+
+test("resolveSubscriptionPlanId keeps a club row a club and old rows unchanged", () => {
+  assert.equal(resolveSubscriptionPlanId("club", "year"), "club")
+  assert.equal(resolveSubscriptionPlanId("club", null), "club")
+  assert.equal(resolveSubscriptionPlanId("year", "year"), "year")
+  assert.equal(resolveSubscriptionPlanId("month", "month"), "month")
+  assert.equal(resolveSubscriptionPlanId(null, "quarter"), "quarter")
+  assert.equal(resolveSubscriptionPlanId("forever", null), "forever")
+  // Mismatched legacy rows keep the previous plan_type-first precedence.
+  assert.equal(resolveSubscriptionPlanId("quarter", "half"), "half")
+  assert.equal(resolveSubscriptionPlanId("premium", "lifetime"), null)
 })
 
 test("Hutko payment-link checkout uses provider-managed recurring schedules", () => {
@@ -347,11 +402,12 @@ test("checkout status normalization keeps backward compatibility for done", () =
   assert.equal(normalizeCheckoutStatus(null), null)
 })
 
-test("resolveCheckoutFlow uses Hutko button-link checkout for every plan", () => {
-  assert.equal(resolveCheckoutFlow("quarter"), "button")
-  assert.equal(resolveCheckoutFlow("half"), "button")
-  assert.equal(resolveCheckoutFlow("year"), "button")
-  assert.equal(resolveCheckoutFlow("forever"), "button")
+test("resolveCheckoutFlow opens the Hutko hosted page (API checkout) for every plan", () => {
+  assert.equal(resolveCheckoutFlow("quarter"), "redirect")
+  assert.equal(resolveCheckoutFlow("half"), "redirect")
+  assert.equal(resolveCheckoutFlow("year"), "redirect")
+  assert.equal(resolveCheckoutFlow("club"), "redirect")
+  assert.equal(resolveCheckoutFlow("forever"), "redirect")
 })
 
 test("buildHutkoButtonWidgetConfig supports payment-link params without forcing generic checkout fields", () => {
@@ -464,12 +520,15 @@ test("app recurring cron charges only explicitly merchant-managed token subscrip
   assert.equal(source.includes('.not("rectoken", "is", null)'), true)
 })
 
-test("Hutko checkout persistence classifies provider-managed schedules", () => {
+test("Hutko checkout persistence: API checkouts renew by token, payment links keep the Hutko schedule", () => {
   const createSource = readFileSync(new URL("../app/api/payment/create/route.ts", import.meta.url), "utf8")
   const callbackSource = readFileSync(new URL("../app/api/payment/callback/route.ts", import.meta.url), "utf8")
 
-  assert.equal(createSource.includes("recurring_mode: resolveHutkoCheckoutRecurringMode(isRecurring)"), true)
+  assert.equal(createSource.includes("recurring_mode: resolveApiCheckoutRecurringMode(isRecurring)"), true)
   assert.equal(callbackSource.includes("recurring_mode: resolveHutkoCheckoutRecurringMode(planConfig.isRecurring)"), true)
+  assert.equal(callbackSource.includes("targetSubscription.recurring_mode === RECURRING_MODE.MERCHANT_TOKEN"), true)
+  assert.equal(resolveApiCheckoutRecurringMode(true), RECURRING_MODE.MERCHANT_TOKEN)
+  assert.equal(resolveApiCheckoutRecurringMode(false), RECURRING_MODE.NONE)
 })
 
 test("renewal callback uses atomic dedupe before direct-payment flow", () => {

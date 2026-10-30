@@ -1,10 +1,11 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createAdminClient } from "@/lib/supabase";
-import { buildHutkoButtonWidgetConfig } from "@/lib/hutko";
+import { createHutkoCheckoutUrl } from "@/lib/hutko";
 import { getEmailValidationError, sanitizeEmailInput } from "@/lib/email-validation";
-import { isPlanId, PLAN_CONFIG } from "@/lib/plans";
-import { resolveHutkoCheckoutRecurringMode } from "@/lib/recurring-mode";
+import { isPlanId, isPlanPurchasable, PLAN_CONFIG } from "@/lib/plans";
+import { resolveApiCheckoutRecurringMode } from "@/lib/recurring-mode";
 
+const MERCHANT_ID = process.env.HUTKO_MERCHANT_ID || "";
 const MERCHANT_PASSWORD = process.env.HUTKO_MERCHANT_PASSWORD || "";
 
 export async function POST(request: NextRequest) {
@@ -45,9 +46,18 @@ export async function POST(request: NextRequest) {
       );
     }
 
+    // Plans off sale (month) are kept in PLAN_CONFIG only for renewals and callbacks;
+    // never start a new checkout.
+    if (!isPlanPurchasable(plan)) {
+      return NextResponse.json(
+        { error: "Цей тариф зараз недоступний. Оберіть інший пакет на сторінці тарифів." },
+        { status: 400 }
+      );
+    }
+
     const planConfig = PLAN_CONFIG[plan];
 
-    if (!MERCHANT_PASSWORD) {
+    if (!MERCHANT_ID || !MERCHANT_PASSWORD) {
       return NextResponse.json(
         { error: "Платіжна система тимчасово недоступна. Спробуйте пізніше." },
         { status: 503 }
@@ -75,7 +85,8 @@ export async function POST(request: NextRequest) {
       email: trimmedEmail,
       customer_name: trimmedName,
       plan,
-      plan_type: plan,
+      // The mobile app and apply_hutko_renewal read plan_type: club is stored as 'year'.
+      plan_type: planConfig.planType,
       amount: planConfig.amount,
       currency: "UAH",
       status: "pending",
@@ -83,7 +94,8 @@ export async function POST(request: NextRequest) {
       checkout_correlation_id: checkoutCorrelationId,
       platform: "web",
       auto_renewal: isRecurring,
-      recurring_mode: resolveHutkoCheckoutRecurringMode(isRecurring),
+      // Card token saved at checkout; /api/payment/recurring charges renewals with the amount from lib/plans.ts.
+      recurring_mode: resolveApiCheckoutRecurringMode(isRecurring),
       started_at: now,
       expires_at: now, // will be updated by callback on successful payment
     });
@@ -96,20 +108,38 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    const hutkoConfig = buildHutkoButtonWidgetConfig({
-      buttonId: planConfig.hutkoButtonId,
-      orderId,
-      serverCallbackUrl: `${origin}/api/payment/callback`,
-      senderEmail: trimmedEmail,
-      lang: "uk",
-      merchantData,
-      requiredRectoken: isRecurring ? "Y" : undefined,
-    });
+    // Hutko hosted payment page with the amount from lib/plans.ts (no payment-link button).
+    // After payment Hutko returns the customer to /api/payment/redirect → /checkout status page.
+    let checkoutUrl: string;
+    try {
+      checkoutUrl = await createHutkoCheckoutUrl({
+        merchantId: MERCHANT_ID,
+        password: MERCHANT_PASSWORD,
+        params: {
+          order_id: orderId,
+          order_desc: planConfig.paymentDescription,
+          amount: planConfig.amount,
+          currency: "UAH",
+          lang: "uk",
+          sender_email: trimmedEmail,
+          merchant_data: merchantData,
+          server_callback_url: `${origin}/api/payment/callback`,
+          response_url: `${origin}/api/payment/redirect?order_id=${encodeURIComponent(orderId)}&correlation_id=${encodeURIComponent(checkoutCorrelationId)}`,
+          ...(isRecurring ? { required_rectoken: "Y" } : {}),
+        },
+      });
+    } catch (error) {
+      console.error("[Payment Create] Hutko checkout error:", error instanceof Error ? error.message : "unknown");
+      return NextResponse.json(
+        { error: "Не вдалося відкрити сторінку оплати. Спробуйте ще раз за хвилину." },
+        { status: 502 }
+      );
+    }
 
     return NextResponse.json({
       order_id: orderId,
       checkout_correlation_id: checkoutCorrelationId,
-      hutko_config: hutkoConfig,
+      checkout_url: checkoutUrl,
     });
   } catch {
     return NextResponse.json(

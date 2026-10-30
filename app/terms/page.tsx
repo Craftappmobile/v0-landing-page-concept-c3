@@ -2,7 +2,10 @@ import type { Metadata } from "next"
 import Link from "next/link"
 import Image from "next/image"
 import { ArrowLeft } from "lucide-react"
-import { PLAN_LIST } from "@/lib/plans"
+import { PLAN_LIST, PURCHASABLE_PLAN_LIST } from "@/lib/plans"
+
+// Off-sale plans (month) still renew for subscribers who bought them earlier.
+const RENEWAL_ONLY_PLANS = PLAN_LIST.filter((plan) => !plan.isForSale && plan.isRecurring)
 
 export const metadata: Metadata = {
   title: "Умови використання — Розрахуй і В'яжи",
@@ -44,7 +47,7 @@ export default function TermsPage() {
           {"Умови використання"}
         </h1>
         <p className="mt-2 text-sm text-muted-foreground">
-          {"Дата останнього оновлення: 3 березня 2026 року"}
+          {"Дата останнього оновлення: 29 жовтня 2026 року"}
         </p>
 
         {/* Important notice */}
@@ -163,14 +166,31 @@ export default function TermsPage() {
               {"Тарифні плани та умови доступу:"}
             </p>
             <ul className="mt-2 flex flex-col gap-1.5 pl-5">
-              {PLAN_LIST.map((plan) => (
+              {PURCHASABLE_PLAN_LIST.map((plan) => (
                 <li key={plan.id} className="list-disc text-sm text-muted-foreground">
                   {plan.isRecurring
                     ? `${plan.termsLabel} — ${plan.priceWithCurrency} (перша оплата активує доступ на ${plan.initialDays} днів, далі автопродовження на ${plan.renewalDays ?? plan.initialDays} днів)`
                     : `${plan.termsLabel} — ${plan.priceWithCurrency} (одноразовий платіж, безстроковий доступ без обмежень)`}
+                  {plan.masterClassBenefits.length > 0 && (
+                    <ul className="mt-1 flex flex-col gap-1 pl-5">
+                      {plan.masterClassBenefits.map((benefit) => (
+                        <li key={benefit} className="list-[circle]">
+                          {benefit}
+                        </li>
+                      ))}
+                    </ul>
+                  )}
                 </li>
               ))}
             </ul>
+            <p className="mt-3 text-sm leading-relaxed text-muted-foreground">
+              {"Бонуси на майстер-класи (майстер-класи у подарунок і знижки на них), що входять до пакетів, надаються на сайті yarnmk.com.ua."}
+            </p>
+            {RENEWAL_ONLY_PLANS.map((plan) => (
+              <p key={plan.id} className="mt-3 text-sm leading-relaxed text-muted-foreground">
+                {`${plan.name} більше не продається. Підписки, оформлені раніше, продовжуються на попередніх умовах: ${plan.priceWithCurrency} кожні ${plan.renewalDays ?? plan.initialDays} днів, доки ви не скасуєте автопродовження.`}
+              </p>
+            ))}
 
             <h3 className="mt-4 text-base font-semibold text-foreground">
               {"4.2. Як оплатити підписку на сайті"}
@@ -184,7 +204,7 @@ export default function TermsPage() {
             <ol className="mt-2 flex flex-col gap-2 pl-5">
               {[
                 "Перейдіть до розділу «Підписка» на головній сторінці сайту (розрахуй-вяжи.com/#pricing).",
-                "Оберіть тарифний план (6 місяців, Річна або Назавжди).",
+                `Оберіть пакет (${PURCHASABLE_PLAN_LIST.map((plan) => plan.pricingTabLabel).join(", ")}).`,
                 "Натисніть кнопку «Придбати підписку».",
                 "На сторінці оплати платіжного сервісу Hutko (hutko.org) введіть email та платіжні дані картки.",
                 "Підтримуються: Visa, Mastercard, Apple Pay, Google Pay.",

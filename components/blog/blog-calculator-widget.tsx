@@ -2,6 +2,10 @@ import Link from "next/link"
 import { ArrowRight, Calculator, Sparkles, CheckCircle2, Crown } from "lucide-react"
 
 import type { CalculatorDefinition } from "@/lib/calculators"
+import { PLAN_CONFIG } from "@/lib/plans"
+
+// «Тест» is no longer sold; the entry offer is the cheapest package on sale.
+const ENTRY_PLAN = { id: "quarter", ...PLAN_CONFIG.quarter } as const
 
 export function BlogCalculatorWidget({
   calculator,
@@ -15,7 +19,7 @@ export function BlogCalculatorWidget({
   const campaign = articleSlug || "A05-rahlan"
   const calcHref = `/kalkuliatory/${calculator.slug}?utm_source=blog&utm_medium=article&utm_campaign=${campaign}&utm_content=widget_web_calc`
   const pricingHref = `/#pricing?utm_source=blog&utm_medium=article&utm_campaign=${campaign}&utm_content=widget_pro_btn`
-  const testPlanHref = `/checkout?plan=month&utm_source=blog&utm_medium=article&utm_campaign=${campaign}&utm_content=widget_test_btn`
+  const testPlanHref = `/checkout?plan=${ENTRY_PLAN.id}&utm_source=blog&utm_medium=article&utm_campaign=${campaign}&utm_content=widget_test_btn`
 
   if (variant === "sidebar") {
     return (
@@ -42,7 +46,7 @@ export function BlogCalculatorWidget({
             style={{ color: "#ffffff" }}
             className="inline-flex w-full items-center justify-center gap-2 rounded-2xl bg-gradient-to-r from-red-600 to-rose-600 px-4 py-2.5 text-xs font-semibold !text-white text-white shadow-sm shadow-red-500/20 transition-all hover:from-red-700 hover:to-rose-700"
           >
-            <Crown className="h-3.5 w-3.5 text-white" /> <span className="text-white">Додаток PRO (від 100 грн)</span>
+            <Crown className="h-3.5 w-3.5 text-white" /> <span className="text-white">Додаток PRO (від {ENTRY_PLAN.priceWithCurrency})</span>
           </Link>
         </div>
       </aside>
@@ -123,7 +127,7 @@ export function BlogCalculatorWidget({
                 <span className="text-white">Мобільний додаток PRO</span>
               </span>
               <span className="rounded-full bg-amber-500/15 border border-amber-500/30 px-2.5 py-0.5 text-xs font-medium text-amber-700 dark:text-amber-400">
-                1 міс у подарунок 🎁
+                Майстер-класи зі знижкою 🎁
               </span>
             </div>
 
@@ -162,9 +166,9 @@ export function BlogCalculatorWidget({
             </Link>
 
             <div className="flex h-5 items-center justify-between px-1 text-xs text-muted-foreground">
-              <span>Пакет «Тест» — всього 100 грн</span>
+              <span>Пакет «{ENTRY_PLAN.pricingTabLabel}» — {ENTRY_PLAN.priceWithCurrency} / {ENTRY_PLAN.pricingPeriodLabel}</span>
               <Link href={testPlanHref} className="font-semibold text-red-600 dark:text-red-400 hover:text-red-700 hover:underline">
-                Спробувати за 100 грн ➔
+                Обрати «{ENTRY_PLAN.pricingTabLabel}» ➔
               </Link>
             </div>
           </div>

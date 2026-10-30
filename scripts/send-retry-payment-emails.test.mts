@@ -97,6 +97,14 @@ test("selectRetryAudience falls back to the legacy plan column, then to the defa
   assert.equal(fallbackToDefault[0].planId, "year")
 })
 
+test("selectRetryAudience keeps a club row (plan 'club', plan_type 'year') a club", () => {
+  const audience = selectRetryAudience(
+    [row({ id: "club", email: "club@example.com", plan: "club", plan_type: "year" })],
+    NOW,
+  )
+  assert.equal(audience[0].planId, "club")
+})
+
 test("normalizeEmail trims and lowercases, treating blank as absent", () => {
   assert.equal(normalizeEmail("  User@Example.com "), "user@example.com")
   assert.equal(normalizeEmail("   "), null)

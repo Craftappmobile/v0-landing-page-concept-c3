@@ -6,7 +6,7 @@ import { useSearchParams } from "next/navigation"
 import Link from "next/link"
 import { AlertCircle, ArrowLeft, CheckCircle2, Loader2, ShieldCheck } from "lucide-react"
 import type { HutkoButtonWidgetConfig } from "@/lib/hutko"
-import { isPlanId, PLAN_CONFIG } from "@/lib/plans"
+import { isPlanId, isPlanPurchasable, PLAN_CONFIG } from "@/lib/plans"
 import { getEmailValidationError, sanitizeEmailInput, suggestEmailFix } from "@/lib/email-validation"
 import {
   getInitialPaymentView,
@@ -60,7 +60,8 @@ export default function CheckoutPage() {
 function CheckoutForm() {
   const searchParams = useSearchParams()
   const requestedPlanId = searchParams.get("plan") || "year"
-  const planId = isPlanId(requestedPlanId) ? requestedPlanId : "year"
+  // Old links to a plan that is off sale (e.g. ?plan=month) fall back like unknown plans.
+  const planId = isPlanId(requestedPlanId) && isPlanPurchasable(requestedPlanId) ? requestedPlanId : "year"
   const checkoutFlow = resolveCheckoutFlow(planId)
   const status = normalizeCheckoutStatus(searchParams.get("status"))
   const redirectOrderId = searchParams.get("order_id")?.trim() || null
@@ -460,7 +461,7 @@ function CheckoutForm() {
       <div className="mt-6 rounded-lg bg-secondary/50 p-4 text-xs text-muted-foreground space-y-1">
         <p className="flex items-center gap-1.5"><ShieldCheck className="h-3.5 w-3.5 text-primary" />Безпечна оплата через платіжний сервіс <strong>Hutko</strong></p>
         {planId === "forever"
-          ? <p>Одноразовий платіж — доступ назавжди без автоматичних списань.</p>
+          ? <p>Одноразовий платіж — доступ назавжди без автоматичних списань. Можна оплатити частинами (розстрочка ПУМБ).</p>
           : <p>Підписка продовжується автоматично після закінчення терміну. Ви можете <Link href="/cancel" className="text-primary underline hover:no-underline">скасувати її на сайті</Link> будь-коли.</p>
         }
         <p>Повернення коштів — протягом 14 днів.</p>
