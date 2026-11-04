@@ -11,11 +11,13 @@ const source = readFileSync(new URL("../app/api/payment/recurring/route.ts", imp
 const compiled = ts.transpileModule(source, { compilerOptions: { module: ts.ModuleKind.CommonJS,
   target: ts.ScriptTarget.ES2022, esModuleInterop: true } }).outputText;
 async function invoke(options: { noSecret?: boolean; unauthorized?: boolean; noClaim?: boolean; claimError?: boolean;
-  queueError?: boolean; networkError?: boolean; nonRecurring?: boolean; plan?: string; planType?: string } = {}) {
+  queueError?: boolean; networkError?: boolean; nonRecurring?: boolean; plan?: string; planType?: string;
+  amount?: unknown; source?: string } = {}) {
   let queueCalls = 0, charges = 0, claimCalls = 0;
   const requests: Array<Record<string, unknown>> = [];
   const row = { id: "subscription", order_id: "parent", plan: options.plan ?? (options.nonRecurring ? "forever" : "month"),
-    plan_type: options.planType, rectoken: "synthetic-fixture-not-a-real-token", email: "fixture@example.test" };
+    plan_type: options.planType, rectoken: "synthetic-fixture-not-a-real-token", email: "fixture@example.test",
+    amount: options.amount, recurring_mode_source: options.source };
   const query = { select() { return query; }, eq() { return query; }, not() { return query; }, lte() { return query; },
     then(resolve: (value: unknown) => unknown) { return Promise.resolve({ data: [row], error: null }).then(resolve); } };
   const client = { from() { return query; }, async rpc(name: string) {
@@ -84,6 +86,15 @@ test("month is off sale but monthly subscribers still renew at 10000", async () 
   const result = await invoke({ plan: "month", planType: "month" });
   assert.equal(result.charges, 1);
   assert.equal(result.requests[0].amount, 10000);
+});
+test("package bought on yarnmk.com.ua renews at the price paid; older subscriptions keep the code price", async () => {
+  const site = await invoke({ plan: "year", planType: "year", amount: 129000, source: "mk_site" });
+  assert.equal(site.requests[0].amount, 129000);
+  const legacy = await invoke({ plan: "year", planType: "year", amount: 459000, source: "legacy" });
+  assert.equal(legacy.requests[0].amount, 91800);
+  const broken = await invoke({ plan: "club", planType: "year", amount: "299000", source: "mk_site" });
+  assert.equal(broken.requests[0].amount, 249000);
+  assert.equal(plans.getSubscriptionRenewalAmount("quarter", { amount: 0, recurring_mode_source: "mk_site" }), 45400);
 });
 test("every recurring plan renews at its configured amount", async () => {
   for (const id of plans.PLAN_IDS.filter((planId) => plans.PLAN_CONFIG[planId].isRecurring)) {
