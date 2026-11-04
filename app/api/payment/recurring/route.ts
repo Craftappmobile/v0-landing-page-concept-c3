@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import crypto from "crypto";
 import { createAdminClient } from "@/lib/supabase";
-import { getPlanRenewalAmount, isPlanId, PLAN_CONFIG } from "@/lib/plans";
+import { getSubscriptionRenewalAmount, isPlanId, PLAN_CONFIG } from "@/lib/plans";
 import { RECURRING_MODE } from "@/lib/recurring-mode";
 import { stopHutkoSubscription } from "@/lib/hutko";
 import { runSubscriptionCancellationJobs } from "@/lib/unlimited-subscriptions";
@@ -124,7 +124,7 @@ export async function GET(request: NextRequest) {
       order_id: newOrderId,
       merchant_id: Number(MERCHANT_ID),
       order_desc: planConfig.recurringDescription || planConfig.paymentDescription,
-      amount: getPlanRenewalAmount(planId),
+      amount: getSubscriptionRenewalAmount(planId, sub),
       currency: "UAH",
       version: "1.0.1",
       rectoken: sub.rectoken,

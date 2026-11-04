@@ -241,6 +241,21 @@ export function getPlanRenewalAmount(planId: PlanId): number {
   return plan.renewalAmount ?? plan.amount
 }
 
+// Сума автоподовження для конкретної підписки. Пакети, оплачені на yarnmk.com.ua (recurring_mode_source 'mk_site'),
+// подовжуються за ціною, за яку їх купили (subscriptions.amount пише mk_activate_subscription: ціна пакета в копійках).
+// Решта — як і раніше, за ціною тарифу в коді: хто платив до нових цін (02.11.2026), той і подовжує за старою.
+// У старих рядках amount ненадійний (бувають суми за кілька оплат), тому для них його не беремо.
+export function getSubscriptionRenewalAmount(
+  planId: PlanId,
+  sub: { amount?: unknown; recurring_mode_source?: unknown },
+): number {
+  const amount = sub.amount
+  if (sub.recurring_mode_source === "mk_site" && typeof amount === "number" && Number.isInteger(amount) && amount > 0) {
+    return amount
+  }
+  return getPlanRenewalAmount(planId)
+}
+
 export function getPlanInitialAccessDays(planId: PlanId): number {
   return PLAN_CONFIG[planId].initialDays
 }
